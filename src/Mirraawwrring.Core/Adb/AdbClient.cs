@@ -72,7 +72,7 @@ public sealed class AdbClient(IProcessRunner runner, IToolRegistry tools, ILogge
 
     public async Task<IReadOnlyList<MdnsService>> GetMdnsServicesAsync(CancellationToken cancellationToken = default)
     {
-        var result = await RunAsync(["mdns", "services"], cancellationToken: cancellationToken).ConfigureAwait(false);
+        var result = await RunAsync(["mdns", "services"], quiet: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         return MdnsServicesParser.Parse(result.StandardOutput);
     }
 

@@ -6,6 +6,7 @@ using Mirraawwrring.Core.Processes;
 using Mirraawwrring.Core.Scrcpy;
 using Mirraawwrring.Core.Settings;
 using Mirraawwrring.Core.Tools;
+using Mirraawwrring.Core.Wireless;
 
 namespace Mirraawwrring.Core;
 
@@ -26,6 +27,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ScrcpyArgumentBuilder>();
         services.AddSingleton<ScrcpySessionManager>();
         services.AddSingleton<ISettingsStore, SettingsStore>();
+        services.AddSingleton<WirelessService>();
+        services.AddSingleton<MdnsWatcher>();
         return services;
     }
 }

@@ -2,7 +2,7 @@
 
 Aplikasi desktop Windows (WPF, .NET 10, C#) untuk mirror dan kontrol HP Android lewat **scrcpy**. Spesifikasi lengkap ada di `PROMPT.md`; file ini adalah ringkasan operasional supaya sesi berikutnya bisa langsung bekerja. **Perbarui file ini setiap kali arsitektur berubah.**
 
-Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0, 1, dan 2 selesai. Berikutnya: Fase 3 (koneksi nirkabel: dialog Pair wireless, Sambung via IP + riwayat, Aktifkan Wi-Fi dari USB, daftar HP via mDNS). Tombol-tombolnya sudah ada di `MainViewModel` (`PairWirelessCommand`, `ConnectViaIpCommand`, `EnableWifiFromUsbCommand`) dan saat ini hanya menampilkan pesan "fase berikutnya".
+Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–3 selesai. Berikutnya: Fase 4 (wizard setup: UsbProbe WMI, InjectionProbe, SetupService unduh+hash+ekstrak+unblock / winget / folder, semua layar wizard). Catatan: `MainViewModel.InitializeAsync` saat ini hanya memberi status "scrcpy/adb belum terpasang" kalau tools tidak lengkap; wizard harus dibuka otomatis dari `App.OnStartup` ketika `ToolLocation.IsComplete == false`.
 
 ## Perintah
 
@@ -30,6 +30,7 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
   Scrcpy/                      ScrcpyOptions + MirrorMode, ScrcpyArgumentBuilder (opsi → argumen), ScrcpyLogClassifier,
                                ScrcpySession (satu proses scrcpy: log terklasifikasi, InjectionBlocked, HWND), ScrcpySessionManager (banyak sesi, env ADB, --version)
   Settings/                    AppSettings (model settings.json), SettingsStore (load/save atomic)
+  Wireless/                    AddressUtil (validasi host:port, kode), WirelessService (pair/connect/tcpip + riwayat), MdnsWatcher (polling mdns 5 s)
   Interop/                     NativeMethods (EnumWindows dsb.), WindowFinder (cari HWND jendela scrcpy dari PID)
 src/Mirraawwrring.App/         WPF
   App.xaml(.cs)                DI container, logging, handler exception global, LocateTools() saat startup (pakai CustomScrcpyPath dari settings)
@@ -39,8 +40,12 @@ src/Mirraawwrring.App/         WPF
   Themes/Controls.Main.xaml    Style.ComboBox, Style.ModeCard (RadioButton kartu), Style.DeviceList/DeviceItem, Style.Badge
   Converters/Converters.cs     EnumToBool (RadioButton↔enum), InvertedBoolToVisibility, NullToCollapsed
   Views/MainWindow             jendela utama (mockup Main/Empty); HyperOsGuideWindow = panduan Security settings
-  ViewModels/MainViewModel     daftar perangkat, mode/kualitas/opsi (disimpan ke settings), log, status, Mulai/Hentikan mirroring
-  ViewModels/DeviceItemViewModel  satu kartu perangkat (subtitle, badge, IsMirroring)
+  Views/PairWirelessWindow     dialog Pair (mockup Pair); logika 6 kotak digit di code-behind
+  Views/ConnectIpWindow        dialog Sambung via IP + riwayat
+  ViewModels/MainViewModel     daftar perangkat + kandidat mDNS, mode/kualitas/opsi (disimpan ke settings), log, status, Mulai/Hentikan mirroring,
+                               event ke View: PairWirelessRequested, ConnectIpRequested, HyperOsGuideRequested, MessageRequested
+  ViewModels/DeviceItemViewModel  satu kartu perangkat (subtitle, badge, IsMirroring); MdnsCandidateViewModel = kartu "HP di jaringan"
+  ViewModels/PairWirelessViewModel, ConnectIpViewModel  dialog nirkabel (event Completed → View menutup dialog)
   Interop/                     NativeMethods (P/Invoke UI), WindowTheming (title bar gelap DWM)
   Resources/Strings.resx       SEMUA teks UI (bahasa Indonesia). XAML: {loc:Str Kunci}; C#: Strings.Get("Kunci") / Strings.Format
 tests/Mirraawwrring.Core.Tests/ xUnit; Fakes/ berisi FakeProcessRunner, FakeFileSystem, FakeAppPaths, FakeAdbClient, FakeTimeProvider
@@ -58,7 +63,9 @@ docs/manual-test.md            checklist uji dengan HP sungguhan
 - **Logging:** `ILogger<T>` dari DI. Setiap perintah eksternal otomatis tercatat oleh `ProcessRunner` ("> adb devices -l" + output). Kategori dipendekkan ke nama kelas. File: `data\logs\Mirraawwrring-yyyyMMdd.log`.
 - **adb shell:** selalu lewat `IAdbClient.ShellAsync(serial, ["cmd", "arg"])`; escaping POSIX dilakukan `ShellQuoting`.
 - **Teks UI:** tambah kunci di `Strings.resx` (konvensi `<Layar>_<Elemen>`), jangan hardcode string di XAML/VM.
-- **Tema:** warna lewat `{StaticResource Brush.*}`; style baru ditambahkan di `Controls.xaml` dengan nama `Style.<Kontrol>[.<Varian>]`.
+- **Tema:** warna lewat `{StaticResource Brush.*}`; style baru ditambahkan di `Controls.xaml` dengan nama `Style.<Kontrol>[.<Varian>]`. Placeholder TextBox: `Tag="teks"`.
+- **Dialog:** Window transient di DI + `Func<Window>` factory untuk MainWindow; VM dialog punya event `Completed`, code-behind set `DialogResult = true`. Tombol dengan konten non-teks wajib `AutomationProperties.Name` (aksesibilitas, dan dipakai uji UI otomatis).
+- **Uji UI otomatis** (tanpa HP): skrip PowerShell UIAutomation (`-STA`) bisa meng-invoke tombol berdasarkan `AutomationProperties.Name`, mengisi TextBox lewat ValuePattern, dan screenshot jendela dengan `PrintWindow`. Contoh skrip pernah dipakai di sesi 14 Okt 2026 (scratchpad); buat ulang kalau perlu.
 - **Fase:** di akhir fase: build bersih, test lulus, CHANGELOG, commit conventional (`feat:`, `fix:`, `docs:`, …), lalu tunggu konfirmasi pemilik.
 
 ## Alur data utama

@@ -101,6 +101,12 @@ public partial class App : Application
         services.AddSingleton<MainWindow>();
         services.AddTransient<HyperOsGuideWindow>();
         services.AddSingleton<Func<HyperOsGuideWindow>>(sp => sp.GetRequiredService<HyperOsGuideWindow>);
+        services.AddTransient<PairWirelessViewModel>();
+        services.AddTransient<PairWirelessWindow>();
+        services.AddSingleton<Func<PairWirelessWindow>>(sp => sp.GetRequiredService<PairWirelessWindow>);
+        services.AddTransient<ConnectIpViewModel>();
+        services.AddTransient<ConnectIpWindow>();
+        services.AddSingleton<Func<ConnectIpWindow>>(sp => sp.GetRequiredService<ConnectIpWindow>);
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

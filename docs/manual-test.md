@@ -34,6 +34,20 @@ Siapkan: folder `scrcpy\` (hasil ekstrak scrcpy-win64-v4.1) di samping `Mirraaww
 - [ ] Tutup aplikasi saat mirroring berjalan: jendela scrcpy ikut tertutup.
 - [ ] Salin log → tempel di Notepad berisi baris-baris panel Log.
 
+## Fase 3 — Koneksi nirkabel
+
+HP dan PC di Wi-Fi yang sama. Di HP: Opsi pengembang › Wireless debugging.
+
+- [ ] Wireless debugging aktif (belum pernah pair ke PC ini): tidak ada kartu "HP di jaringan" (adb hanya melihat HP yang sudah di-pair).
+- [ ] Pair wireless: ketik alamat dari dialog "Pair device with pairing code", paste kode 6 digit ke kotak pertama (Ctrl+V) → semua kotak terisi; tekan Pair & sambungkan → status "Pairing…" lalu "Tersambung: adb-…" dalam ≤ 5 detik; dialog menutup; kartu HP muncul sebagai "Wi-Fi · Wireless debugging" dan terpilih.
+- [ ] Pair dengan kode salah: pesan gagal merah berisi output adb + petunjuk buka ulang dialog di HP.
+- [ ] Jika koneksi otomatis tidak terjadi: langkah 1 jadi nonaktif, langkah 2 aktif, status meminta port koneksi; masukkan port dari layar utama Wireless debugging → Sambungkan → tersambung.
+- [ ] Matikan lalu nyalakan Wireless debugging di HP yang sudah di-pair: kartu "HP di jaringan · ip:port" muncul dalam ≤ 5 detik dengan tombol Sambung; klik → HP tersambung dan kartu mDNS hilang.
+- [ ] Sambung via IP: alamat dari layar Wireless debugging (ip:port) → tersambung; alamat tercatat di Riwayat; buka dialog lagi → riwayat tampil, klik mengisi input, "Hapus dari riwayat" menghapusnya; isi tanpa port → dipakai :5555.
+- [ ] Sambung via IP ke alamat salah: pesan error merah dari adb, riwayat tidak bertambah.
+- [ ] Aktifkan Wi-Fi dari kabel USB (HP tersambung USB, Wi-Fi HP menyala): pesan "Wi-Fi aktif. Tersambung ke ip:5555"; kartu Wi-Fi muncul; cabut kabel USB → kartu USB hilang, kartu Wi-Fi tetap; mirroring lewat Wi-Fi berjalan.
+- [ ] Aktifkan Wi-Fi tanpa HP USB: pesan "Sambungkan HP lewat kabel USB dulu".
+
 ## Belum tercakup (fase berikutnya)
 
-Pair wireless, Sambung via IP, wizard setup, toolbar, file browser: ditambahkan saat fasenya selesai.
+Wizard setup, toolbar, file browser: ditambahkan saat fasenya selesai.

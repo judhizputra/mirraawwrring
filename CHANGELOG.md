@@ -4,6 +4,14 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 3 — Koneksi nirkabel
+- `AddressUtil` (validasi IP:port, kode 6 digit, port default 5555) dan `WirelessService`: pair → tunggu koneksi otomatis via mDNS 5 detik → connect manual ke port koneksi; Sambung via IP dengan riwayat (maks 10, terbaru di depan); Aktifkan Wi-Fi dari USB (IP wlan0 → `adb tcpip 5555` → connect).
+- `MdnsWatcher`: polling `adb mdns services` tiap 5 detik; HP yang Wireless debugging-nya aktif tetapi belum tersambung tampil di daftar perangkat sebagai kartu "HP di jaringan" dengan tombol Sambung.
+- Dialog Pair wireless (mockup `Pair`): alamat penyambungan, 6 kotak digit (auto-maju, backspace mundur, paste 6 digit sekaligus), langkah 2 port koneksi aktif hanya jika koneksi otomatis gagal, status sukses/gagal dengan petunjuk.
+- Dialog Sambung via IP: input + riwayat (klik untuk mengisi, bisa dihapus).
+- Placeholder untuk TextBox lewat `Tag`.
+- 155 unit test.
+
 ### Fase 2 — Jendela utama
 - Layout sesuai mockup `Main`/`Empty`: panel perangkat (kartu dengan badge Terhubung / Belum diizinkan / Offline / Mirroring), state kosong dengan checklist, panel Mode (4 kartu), Kualitas (3 ComboBox), Opsi (6 checkbox), panel Log (bisa disalin, auto-scroll), bar status (adb siap / menunggu perangkat, versi scrcpy), tombol Buka folder rekaman dan Mulai/Hentikan mirroring.
 - `DeviceWatcher` dihubungkan ke UI; info Android/pabrikan diambil lewat `getprop`; perangkat terakhir dipilih otomatis.

@@ -13,6 +13,7 @@ using Mirraawwrring.Core.Logging;
 using Mirraawwrring.Core.Scrcpy;
 using Mirraawwrring.Core.Settings;
 using Mirraawwrring.Core.Tools;
+using Mirraawwrring.Core.Wireless;
 
 namespace Mirraawwrring.App.ViewModels;
 
@@ -36,6 +37,8 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     private readonly IToolRegistry _tools;
     private readonly LogBuffer _logBuffer;
     private readonly IAppPaths _paths;
+    private readonly WirelessService _wireless;
+    private readonly MdnsWatcher _mdns;
     private readonly ILogger<MainViewModel> _logger;
     private readonly SynchronizationContext _ui;
     private readonly Dictionary<string, DeviceDetails> _detailsCache = new(StringComparer.Ordinal);
@@ -52,8 +55,12 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         IToolRegistry tools,
         LogBuffer logBuffer,
         IAppPaths paths,
+        WirelessService wireless,
+        MdnsWatcher mdns,
         ILogger<MainViewModel> logger)
     {
+        _wireless = wireless;
+        _mdns = mdns;
         _watcher = watcher;
         _adb = adb;
         _sessions = sessions;
@@ -96,6 +103,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         _sessions.SessionStarted += OnSessionChanged;
         _sessions.SessionEnded += OnSessionChanged;
         _tools.Changed += _ => Post(UpdateStatus);
+        _mdns.ServicesChanged += OnMdnsChanged;
 
         DeviceCountText = Strings.Get("Main_DeviceCountSearching");
         UpdateStatus();
@@ -277,6 +285,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
 
         UpdateStatus();
         _watcher.Start();
+        _mdns.Start();
 
         if (_tools.Current.HasScrcpy)
         {
@@ -406,6 +415,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         }
 
         HasDevices = Devices.Count > 0;
+        ApplyMdns();
         var ready = Devices.Count(d => d.IsReady);
         DeviceCountText = Devices.Count == 0
             ? Strings.Get("Main_DeviceCountSearching")
@@ -589,15 +599,155 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void ShowHyperOsGuide() => HyperOsGuideRequested?.Invoke();
 
-    // Fase 3: koneksi nirkabel.
-    [RelayCommand]
-    private void PairWireless() => MessageRequested?.Invoke(Strings.Get("Main_NotYet"));
+    // ---------- Koneksi nirkabel (Fase 3) ----------
+
+    /// <summary>HP di jaringan (mDNS) yang belum tersambung ke adb; ditampilkan dengan tombol Sambung.</summary>
+    public ObservableCollection<MdnsCandidateViewModel> MdnsCandidates { get; } = [];
+
+    [ObservableProperty]
+    public partial bool HasMdnsCandidates { get; set; }
+
+    /// <summary>View membuka dialog Pair wireless; setelah tertutup, View memanggil <see cref="AfterWirelessDialogAsync"/>.</summary>
+    public event Action? PairWirelessRequested;
+
+    public event Action? ConnectIpRequested;
 
     [RelayCommand]
-    private void ConnectViaIp() => MessageRequested?.Invoke(Strings.Get("Main_NotYet"));
+    private void PairWireless()
+    {
+        if (!_tools.Current.HasAdb)
+        {
+            MessageRequested?.Invoke(Strings.Get("Main_StatusToolsMissing"));
+            return;
+        }
+
+        PairWirelessRequested?.Invoke();
+    }
 
     [RelayCommand]
-    private void EnableWifiFromUsb() => MessageRequested?.Invoke(Strings.Get("Main_NotYet"));
+    private void ConnectViaIp()
+    {
+        if (!_tools.Current.HasAdb)
+        {
+            MessageRequested?.Invoke(Strings.Get("Main_StatusToolsMissing"));
+            return;
+        }
+
+        ConnectIpRequested?.Invoke();
+    }
+
+    /// <summary>Setelah dialog pair/connect sukses: refresh daftar dan pilih perangkat barunya.</summary>
+    public async Task AfterWirelessDialogAsync(string? connectedSerialOrAddress)
+    {
+        var devices = await _watcher.RefreshAsync();
+        await _mdns.RefreshAsync();
+        if (connectedSerialOrAddress is null)
+        {
+            return;
+        }
+
+        var match = devices.FirstOrDefault(d => d.IsReady && (d.Serial == connectedSerialOrAddress || d.Serial.StartsWith(connectedSerialOrAddress, StringComparison.OrdinalIgnoreCase)));
+        if (match is not null)
+        {
+            SelectedDevice = Devices.FirstOrDefault(i => i.Serial == match.Serial) ?? SelectedDevice;
+        }
+    }
+
+    [RelayCommand]
+    private async Task EnableWifiFromUsbAsync()
+    {
+        var usb = SelectedDevice is { IsReady: true, Device.Transport: DeviceTransport.Usb } sel
+            ? sel
+            : Devices.FirstOrDefault(d => d.IsReady && d.Device.Transport == DeviceTransport.Usb);
+        if (usb is null)
+        {
+            MessageRequested?.Invoke(Strings.Get("Wifi_NoUsbDevice"));
+            return;
+        }
+
+        _logger.LogInformation("{Message}", Strings.Format("Wifi_Working", usb.DisplayName));
+        try
+        {
+            var outcome = await _wireless.EnableWifiFromUsbAsync(usb.Serial);
+            await _watcher.RefreshAsync();
+            if (outcome.Success)
+            {
+                MessageRequested?.Invoke(Strings.Format("Wifi_Success", outcome.Address));
+                await AfterWirelessDialogAsync(outcome.Address);
+            }
+            else
+            {
+                MessageRequested?.Invoke(Strings.Format("Wifi_Failed", outcome.Message));
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _logger.LogError(ex, "Aktifkan Wi-Fi dari USB gagal");
+            MessageRequested?.Invoke(Strings.Format("Wifi_Failed", ex.Message));
+        }
+    }
+
+    [RelayCommand]
+    private async Task ConnectMdnsAsync(MdnsCandidateViewModel? candidate)
+    {
+        if (candidate is null || candidate.IsConnecting)
+        {
+            return;
+        }
+
+        candidate.IsConnecting = true;
+        try
+        {
+            var result = await _wireless.ConnectAsync(candidate.Address);
+            if (result.Success)
+            {
+                await AfterWirelessDialogAsync(result.Address ?? candidate.Address);
+            }
+            else
+            {
+                MessageRequested?.Invoke(Strings.Format("Mdns_Failed", candidate.Address, result.Message));
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _logger.LogError(ex, "Sambung mDNS gagal");
+            MessageRequested?.Invoke(Strings.Format("Mdns_Failed", candidate.Address, ex.Message));
+        }
+        finally
+        {
+            candidate.IsConnecting = false;
+        }
+    }
+
+    private void OnMdnsChanged(IReadOnlyList<MdnsService> services) => Post(ApplyMdns);
+
+    /// <summary>Tampilkan layanan mDNS yang belum ada di daftar adb (serial mDNS diawali nama layanan, atau IP:port sama).</summary>
+    private void ApplyMdns()
+    {
+        var services = _mdns.Services;
+        var known = Devices.Select(d => d.Serial).ToList();
+        var wanted = services
+            .Where(s => !known.Any(k => k.StartsWith(s.Name, StringComparison.OrdinalIgnoreCase) || string.Equals(k, s.Address, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+
+        for (var i = MdnsCandidates.Count - 1; i >= 0; i--)
+        {
+            if (!wanted.Any(s => s.Name == MdnsCandidates[i].Name && s.Address == MdnsCandidates[i].Address))
+            {
+                MdnsCandidates.RemoveAt(i);
+            }
+        }
+
+        foreach (var s in wanted)
+        {
+            if (!MdnsCandidates.Any(c => c.Name == s.Name && c.Address == s.Address))
+            {
+                MdnsCandidates.Add(new MdnsCandidateViewModel(s));
+            }
+        }
+
+        HasMdnsCandidates = MdnsCandidates.Count > 0;
+    }
 
     private void Post(Action action) => _ui.Post(_ => action(), null);
 
@@ -607,5 +757,6 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         _watcher.DevicesChanged -= OnDevicesChanged;
         _sessions.SessionStarted -= OnSessionChanged;
         _sessions.SessionEnded -= OnSessionChanged;
+        _mdns.ServicesChanged -= OnMdnsChanged;
     }
 }

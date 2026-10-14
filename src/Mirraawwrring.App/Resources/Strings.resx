@@ -316,4 +316,152 @@
   <data name="Guide_Close" xml:space="preserve">
     <value>Tutup</value>
   </data>
+
+  <data name="Pair_Title" xml:space="preserve">
+    <value>Pair wireless debugging</value>
+  </data>
+  <data name="Pair_Heading" xml:space="preserve">
+    <value>Sambungkan HP tanpa kabel</value>
+  </data>
+  <data name="Pair_Subtitle" xml:space="preserve">
+    <value>Android 11 ke atas · HP dan PC di jaringan Wi-Fi yang sama</value>
+  </data>
+  <data name="Pair_Step1" xml:space="preserve">
+    <value>Di HP buka Opsi pengembang → Wireless debugging, lalu nyalakan.</value>
+  </data>
+  <data name="Pair_Step2" xml:space="preserve">
+    <value>Ketuk Pair device with pairing code.</value>
+  </data>
+  <data name="Pair_Step3" xml:space="preserve">
+    <value>Salin alamat dan kode yang muncul ke bawah ini.</value>
+  </data>
+  <data name="Pair_Section1" xml:space="preserve">
+    <value>Pairing</value>
+  </data>
+  <data name="Pair_AddressLabel" xml:space="preserve">
+    <value>Alamat IP &amp; port penyambungan</value>
+  </data>
+  <data name="Pair_AddressPlaceholder" xml:space="preserve">
+    <value>contoh 192.168.1.20:37099</value>
+  </data>
+  <data name="Pair_CodeLabel" xml:space="preserve">
+    <value>Kode penyambungan (6 digit)</value>
+  </data>
+  <data name="Pair_Digit" xml:space="preserve">
+    <value>Digit {0}</value>
+  </data>
+  <data name="Pair_Section2" xml:space="preserve">
+    <value>Sambung</value>
+  </data>
+  <data name="Pair_Section2Hint" xml:space="preserve">
+    <value>· biasanya otomatis setelah pairing</value>
+  </data>
+  <data name="Pair_PortLabel" xml:space="preserve">
+    <value>Port koneksi (dari layar utama Wireless debugging, jika diminta)</value>
+  </data>
+  <data name="Pair_PortPlaceholder" xml:space="preserve">
+    <value>contoh 41235</value>
+  </data>
+  <data name="Pair_Qr" xml:space="preserve">
+    <value>Pakai QR code</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="Pair_Primary" xml:space="preserve">
+    <value>Pair &amp; sambungkan</value>
+  </data>
+  <data name="Pair_Connect" xml:space="preserve">
+    <value>Sambungkan</value>
+  </data>
+  <data name="Pair_StatusPairing" xml:space="preserve">
+    <value>Pairing…</value>
+  </data>
+  <data name="Pair_StatusWaiting" xml:space="preserve">
+    <value>Pairing berhasil. Menunggu koneksi otomatis…</value>
+  </data>
+  <data name="Pair_StatusNeedPort" xml:space="preserve">
+    <value>Belum tersambung otomatis. Lihat "Alamat IP &amp; port" di layar utama Wireless debugging (port-nya berbeda dari port penyambungan), masukkan port-nya di bawah, lalu tekan Sambungkan.</value>
+  </data>
+  <data name="Pair_StatusConnected" xml:space="preserve">
+    <value>Tersambung: {0}</value>
+  </data>
+  <data name="Pair_StatusConnecting" xml:space="preserve">
+    <value>Menyambungkan…</value>
+  </data>
+  <data name="Pair_StatusFailedHint" xml:space="preserve">
+    <value>Kode cepat kedaluwarsa dan port penyambungan berubah tiap dialog dibuka. Buka ulang dialognya di HP lalu coba lagi.</value>
+  </data>
+  <data name="Pair_InvalidAddress" xml:space="preserve">
+    <value>Format harus IP:port, sesuai yang tampil di dialog HP.</value>
+  </data>
+  <data name="Pair_InvalidCode" xml:space="preserve">
+    <value>Kode harus 6 digit.</value>
+  </data>
+  <data name="Pair_InvalidPort" xml:space="preserve">
+    <value>Port koneksi harus angka 1–65535.</value>
+  </data>
+  <data name="ConnectIp_Title" xml:space="preserve">
+    <value>Sambung via IP</value>
+  </data>
+  <data name="ConnectIp_Heading" xml:space="preserve">
+    <value>Sambung ke HP lewat IP</value>
+  </data>
+  <data name="ConnectIp_Subtitle" xml:space="preserve">
+    <value>Pakai alamat dari layar Wireless debugging, atau IP HP dengan port 5555 setelah "Aktifkan Wi-Fi dari kabel USB".</value>
+  </data>
+  <data name="ConnectIp_AddressLabel" xml:space="preserve">
+    <value>Alamat IP:port</value>
+  </data>
+  <data name="ConnectIp_Placeholder" xml:space="preserve">
+    <value>contoh 192.168.1.20:5555</value>
+  </data>
+  <data name="ConnectIp_History" xml:space="preserve">
+    <value>Riwayat</value>
+  </data>
+  <data name="ConnectIp_HistoryEmpty" xml:space="preserve">
+    <value>Belum ada riwayat koneksi.</value>
+  </data>
+  <data name="ConnectIp_Forget" xml:space="preserve">
+    <value>Hapus dari riwayat</value>
+  </data>
+  <data name="ConnectIp_Connect" xml:space="preserve">
+    <value>Sambungkan</value>
+  </data>
+  <data name="ConnectIp_StatusConnecting" xml:space="preserve">
+    <value>Menyambungkan…</value>
+  </data>
+  <data name="ConnectIp_StatusConnected" xml:space="preserve">
+    <value>Tersambung: {0}</value>
+  </data>
+  <data name="ConnectIp_Invalid" xml:space="preserve">
+    <value>Alamat tidak valid. Contoh: 192.168.1.20:5555</value>
+  </data>
+  <data name="Mdns_Title" xml:space="preserve">
+    <value>HP di jaringan</value>
+  </data>
+  <data name="Mdns_Subtitle" xml:space="preserve">
+    <value>Wireless debugging · {0}</value>
+  </data>
+  <data name="Mdns_Connect" xml:space="preserve">
+    <value>Sambung</value>
+  </data>
+  <data name="Mdns_Connecting" xml:space="preserve">
+    <value>Menyambungkan…</value>
+  </data>
+  <data name="Mdns_Failed" xml:space="preserve">
+    <value>Gagal menyambung ke {0}: {1}</value>
+  </data>
+  <data name="Wifi_NoUsbDevice" xml:space="preserve">
+    <value>Sambungkan HP lewat kabel USB dulu (status Terhubung), lalu coba lagi.</value>
+  </data>
+  <data name="Wifi_Working" xml:space="preserve">
+    <value>Mengaktifkan Wi-Fi dari {0}…</value>
+  </data>
+  <data name="Wifi_Success" xml:space="preserve">
+    <value>Wi-Fi aktif. Tersambung ke {0}. Kabel USB boleh dicabut.</value>
+  </data>
+  <data name="Wifi_Failed" xml:space="preserve">
+    <value>Gagal mengaktifkan Wi-Fi: {0}</value>
+  </data>
 </root>

@@ -1,0 +1,89 @@
+<Window x:Class="Mirraawwrring.App.Views.ConnectIpWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:Mirraawwrring.App.Resources"
+        xmlns:vm="clr-namespace:Mirraawwrring.App.ViewModels"
+        xmlns:conv="clr-namespace:Mirraawwrring.App.Converters"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:ConnectIpViewModel}"
+        Style="{StaticResource Style.Window}"
+        Background="{StaticResource Brush.Panel}"
+        Title="{loc:Str ConnectIp_Title}"
+        Width="460" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibility" />
+        <conv:NullToCollapsedConverter x:Key="NullToCollapsed" />
+        <Style x:Key="HistoryItem" TargetType="ListBoxItem" BasedOn="{StaticResource Style.DeviceItem}">
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+    </Window.Resources>
+
+    <StackPanel Margin="24,20,24,20">
+        <TextBlock Style="{StaticResource Style.Text.Title}" Text="{loc:Str ConnectIp_Heading}" />
+        <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str ConnectIp_Subtitle}" Margin="0,6,0,16" />
+
+        <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str ConnectIp_AddressLabel}" Margin="0,0,0,6" />
+        <TextBox x:Name="AddressBox" Style="{StaticResource Style.TextBox}" Tag="{loc:Str ConnectIp_Placeholder}"
+                 Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{loc:Str ConnectIp_AddressLabel}" />
+
+        <TextBlock Style="{StaticResource Style.Text.Secondary}" FontWeight="SemiBold" Text="{loc:Str ConnectIp_History}" Margin="0,16,0,8" />
+        <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str ConnectIp_HistoryEmpty}"
+                   Visibility="{Binding HasHistory, Converter={StaticResource InvertedBoolToVisibility}}" />
+        <ListBox Style="{StaticResource Style.DeviceList}" ItemContainerStyle="{StaticResource HistoryItem}" MaxHeight="220"
+                 ItemsSource="{Binding History}" SelectedItem="{Binding SelectedHistory}"
+                 Visibility="{Binding HasHistory, Converter={StaticResource BoolToVisibility}}"
+                 AutomationProperties.Name="{loc:Str ConnectIp_History}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Path Style="{StaticResource Style.Icon}" Width="16" Height="16" Data="{StaticResource Icon.Link}" Stroke="{StaticResource Brush.TextMuted}" Margin="0,0,10,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding}" FontFamily="{StaticResource Font.Mono}" VerticalAlignment="Center" />
+                        <Button Grid.Column="2" Style="{StaticResource Style.Button.Subtle}" Height="24" Padding="6,0" Content="{loc:Str ConnectIp_Forget}"
+                                Command="{Binding DataContext.ForgetCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Border Margin="0,14,0,0" Padding="12,10" CornerRadius="{StaticResource Radius.Card}" BorderThickness="1"
+                Visibility="{Binding StatusText, Converter={StaticResource NullToCollapsed}}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="{StaticResource Brush.AccentSoft}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding StatusIsError}" Value="True">
+                            <Setter Property="Background" Value="{StaticResource Brush.ErrorBackground}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource Brush.ErrorBorder}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="{Binding StatusText}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource Style.Text.Secondary}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding StatusIsError}" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource Brush.ErrorText}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Border>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Style="{StaticResource Style.Button}" Height="40" Content="{loc:Str Pair_Cancel}" IsCancel="True" Margin="0,0,10,0" />
+            <Button Style="{StaticResource Style.Button.Accent}" Content="{loc:Str ConnectIp_Connect}" Command="{Binding ConnectCommand}" IsDefault="True" Padding="20,0" />
+        </StackPanel>
+    </StackPanel>
+</Window>
