@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Setup — selesai</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#7FE3AB}a:hover{color:#B4F0CD}
+button{font:inherit;cursor:pointer}
+.sl-check{width:16px;height:16px;margin:0;accent-color:#3DDC84}
+</style>
+</helmet>
+<div style="width: 640px; height: 560px; box-sizing: border-box; display: flex; flex-direction: column; background: #1F2228; color: #ECEEF1; font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif; font-size: 13px; overflow: hidden">
+
+  <!-- Title bar -->
+  <div style="height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 14px; background: #111317; border-bottom: 1px solid #262A31">
+    <span style="font-size: 12px; color: #C9CDD4">Setup scrcpy Launcher</span>
+    <button aria-label="Tutup" style="width: 46px; height: 36px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"></path></svg></button>
+  </div>
+
+  <!-- Stepper -->
+  <div style="display: flex; align-items: center; gap: 10px; padding: 18px 24px 14px">
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #3DDC84; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0B1F13" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="font-size: 12px; color: #C9CDD4">Deteksi</span></span>
+    <span style="flex: 1; height: 2px; background: #3DDC84"></span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #3DDC84; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0B1F13" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="font-size: 12px; color: #C9CDD4">Pasang</span></span>
+    <span style="flex: 1; height: 2px; background: #3DDC84"></span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #3DDC84; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0B1F13" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="font-size: 12px; color: #C9CDD4">Verifikasi</span></span>
+    <span style="flex: 1; height: 2px; background: #3DDC84"></span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 2px solid #3DDC84; color: #3DDC84; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">4</span><span style="font-size: 12px; font-weight: 600">Selesai</span></span>
+  </div>
+
+  <!-- Content -->
+  <div style="flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; padding: 8px 24px 16px">
+    <div style="display: flex; align-items: center; gap: 14px">
+      <span style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; background: #23402E; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3DDC84" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h1 style="margin: 0; font-size: 18px; font-weight: 600">scrcpy &amp; ADB siap dipakai</h1>
+        <span style="font-size: 12px; color: #A7ADB8">Semua pemeriksaan lolos.</span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid #2C3039; border-radius: 8px; background: #2C3039; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 3px; padding: 10px 14px; background: #262A31"><span style="font-size: 11px; color: #A7ADB8">scrcpy</span><span style="font-size: 13px; font-weight: 600">4.1</span></div>
+      <div style="display: flex; flex-direction: column; gap: 3px; padding: 10px 14px; background: #262A31"><span style="font-size: 11px; color: #A7ADB8">ADB</span><span style="font-size: 13px; font-weight: 600">Bawaan scrcpy · port 5037</span></div>
+      <div style="display: flex; flex-direction: column; gap: 3px; padding: 10px 14px; background: #262A31; grid-column: span 2"><span style="font-size: 11px; color: #A7ADB8">Lokasi</span><span style="font-family: 'Cascadia Mono', Consolas, monospace; font-size: 12px">[folder aplikasi]\scrcpy</span></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #C9CDD4">Berikutnya: sambungkan HP</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <button style="display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 12px 14px; border: 1px solid #343944; border-radius: 8px; background: #262A31; color: inherit">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9CDD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14"></path><path d="M8 6l4-4 4 4"></path><rect x="8" y="16" width="8" height="6" rx="1"></rect></svg>
+          <span style="font-size: 14px; font-weight: 600">Pakai kabel USB</span>
+          <span style="font-size: 12px; color: #A7ADB8; line-height: 1.4">Nyalakan USB debugging, colok kabel data, lalu izinkan popup di HP.</span>
+        </button>
+        <button style="display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 12px 14px; border: 1px solid #343944; border-radius: 8px; background: #262A31; color: inherit">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9CDD4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0"></path><path d="M8.5 16a5 5 0 0 1 7 0"></path><path d="M12 19.5h.01"></path></svg>
+          <span style="font-size: 14px; font-weight: 600">Tanpa kabel</span>
+          <span style="font-size: 12px; color: #A7ADB8; line-height: 1.4">Android 11+: pair lewat Wireless debugging dengan kode 6 digit.</span>
+        </button>
+      </div>
+    </div>
+
+    <label style="display: flex; align-items: center; gap: 10px; min-height: 30px; font-size: 13px; color: #C9CDD4"><input type="checkbox" class="sl-check" checked="checked">Periksa pembaruan scrcpy saat aplikasi dibuka</label>
+  </div>
+
+  <!-- Footer -->
+  <div style="height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; border-top: 1px solid #2C3039">
+    <button style="height: 40px; padding: 0 22px; border: 0; border-radius: 6px; background: #3DDC84; color: #0B1F13; font-size: 14px; font-weight: 600">Buka launcher</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":640,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

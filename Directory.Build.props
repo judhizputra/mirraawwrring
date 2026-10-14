@@ -1,0 +1,22 @@
+<Project>
+  <!-- Pengaturan bersama untuk semua proyek. Versi aplikasi diambil dari sini oleh scripts/publish.ps1. -->
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Product>Mirraawwrring</Product>
+    <Authors>Yudhistira EP</Authors>
+    <Copyright>Copyright © 2026</Copyright>
+    <NeutralLanguage>id-ID</NeutralLanguage>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <!-- Core harus bersih dari warning. -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Mirraawwrring.Core'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>scrcpy Launcher — HP belum terdeteksi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#7FE3AB}a:hover{color:#B4F0CD}
+.sl-select{appearance:none;-webkit-appearance:none;width:100%;height:34px;box-sizing:border-box;padding:0 30px 0 10px;border:1px solid #3A3F4A;border-radius:6px;background:#262A31;color:#ECEEF1;font:inherit;font-size:13px}
+.sl-check{width:16px;height:16px;margin:0;accent-color:#3DDC84}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1000px; height: 700px; box-sizing: border-box; display: flex; flex-direction: column; background: #17191E; color: #ECEEF1; font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif; font-size: 13px; overflow: hidden">
+
+  <!-- Title bar -->
+  <div style="height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 14px; background: #111317; border-bottom: 1px solid #262A31">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3DDC84" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="10" rx="2"></rect><rect x="15" y="9" width="7" height="12" rx="1.5"></rect><path d="M7 18h4"></path></svg>
+      <span style="font-size: 12px; color: #C9CDD4">scrcpy Launcher</span>
+    </div>
+    <div style="display: flex">
+      <button aria-label="Minimize" style="width: 46px; height: 36px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 5h10" stroke="currentColor"></path></svg></button>
+      <button aria-label="Maximize" style="width: 46px; height: 36px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor"></rect></svg></button>
+      <button aria-label="Tutup" style="width: 46px; height: 36px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"></path></svg></button>
+    </div>
+  </div>
+
+  <div style="flex: 1; min-height: 0; display: flex; gap: 14px; padding: 14px 16px 12px">
+
+    <!-- Devices panel: empty state -->
+    <div style="width: 330px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; box-sizing: border-box; padding: 16px; background: #1F2228; border: 1px solid #2C3039; border-radius: 10px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <div style="display: flex; align-items: baseline; gap: 8px">
+          <h2 style="margin: 0; font-size: 15px; font-weight: 600">Perangkat</h2>
+          <span style="font-size: 12px; color: #A7ADB8">mencari…</span>
+        </div>
+        <button aria-label="Refresh daftar perangkat" style="width: 32px; height: 32px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4"></path><path d="M21 3v6h-6"></path></svg></button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 8px 6px; text-align: center">
+        <span style="width: 56px; height: 56px; border-radius: 14px; background: #262A31; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A7ADB8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"></rect><path d="M11 18h2"></path><path d="M3 3l18 18"></path></svg></span>
+        <span style="font-size: 15px; font-weight: 600">Belum ada HP terdeteksi</span>
+        <span style="font-size: 12px; color: #A7ADB8; line-height: 1.45">Daftar diperbarui otomatis saat HP tersambung.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 1px solid #2C3039; border-radius: 8px; background: #262A31">
+        <span style="font-size: 12px; font-weight: 600; color: #C9CDD4">Periksa di HP</span>
+        <div style="display: flex; gap: 8px; font-size: 12px; line-height: 1.4; color: #C9CDD4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3DDC84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>USB debugging menyala di Opsi pengembang</div>
+        <div style="display: flex; gap: 8px; font-size: 12px; line-height: 1.4; color: #C9CDD4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3DDC84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Kabel data, bukan kabel charge saja</div>
+        <div style="display: flex; gap: 8px; font-size: 12px; line-height: 1.4; color: #C9CDD4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3DDC84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Mode USB di HP: Transfer file</div>
+        <div style="display: flex; gap: 8px; font-size: 12px; line-height: 1.4; color: #C9CDD4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3DDC84" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Tekan Izinkan pada popup di layar HP</div>
+      </div>
+
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+        <button style="height: 40px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 6px; background: #3DDC84; color: #0B1F13; font-size: 14px; font-weight: 600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0"></path><path d="M8.5 16a5 5 0 0 1 7 0"></path><path d="M12 19.5h.01"></path></svg>Pair wireless</button>
+        <div style="display: flex; gap: 8px">
+          <button style="flex: 1; height: 36px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #ECEEF1; font-size: 13px">Sambung via IP</button>
+          <button style="flex: 1; height: 36px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #ECEEF1; font-size: 13px">Restart ADB</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode panel: disabled until a device is selected -->
+    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box; padding: 16px 18px; background: #1F2228; border: 1px solid #2C3039; border-radius: 10px">
+      <h2 style="margin: 0; font-size: 15px; font-weight: 600">Mode</h2>
+      <div style="display: flex; flex-direction: column; gap: 16px; opacity: 0.4">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <button disabled="disabled" style="display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 12px 14px; border: 1px solid #343944; border-radius: 8px; background: #262A31; color: inherit"><span style="font-size: 14px; font-weight: 600">Mirror + kontrol</span><span style="font-size: 12px; color: #A7ADB8">Tampilkan layar dan kendalikan</span></button>
+          <button disabled="disabled" style="display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 12px 14px; border: 1px solid #343944; border-radius: 8px; background: #262A31; color: inherit"><span style="font-size: 14px; font-weight: 600">Lihat saja</span><span style="font-size: 12px; color: #A7ADB8">Tanpa kontrol</span></button>
+          <button disabled="disabled" style="display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 12px 14px; border: 1px solid #343944; border-radius: 8px; background: #262A31; color: inherit"><span style="font-size: 14px; font-weight: 600">Layar HP mati</span><span style="font-size: 12px; color: #A7ADB8">Tetap tampil di PC</span></button>
+          <button disabled="disabled" style="display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 12px 14px; border: 1px solid #343944; border-radius: 8px; background: #262A31; color: inherit"><span style="font-size: 14px; font-weight: 600">Hemat data</span><span style="font-size: 12px; color: #A7ADB8">Untuk Wi-Fi lambat</span></button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: #A7ADB8">Resolusi maks<select class="sl-select" disabled="disabled"><option>Asli</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: #A7ADB8">Bitrate video<select class="sl-select" disabled="disabled"><option>8 Mbps</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: #A7ADB8">FPS maks<select class="sl-select" disabled="disabled"><option>60</option></select></label>
+        </div>
+      </div>
+      <div style="margin-top: auto; display: flex; gap: 10px; padding: 12px 14px; border: 1px solid #2C3039; border-radius: 8px; background: #262A31; font-size: 12px; line-height: 1.45; color: #C9CDD4">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A7ADB8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+        Pilihan mode aktif setelah HP tersambung. Pengaturan terakhir tetap diingat.
+      </div>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div style="margin: 0 16px; height: 88px; flex-shrink: 0; box-sizing: border-box; padding: 8px 12px; border: 1px solid #262A31; border-radius: 8px; background: #0F1114; font-family: 'Cascadia Mono', Consolas, monospace; font-size: 11.5px; line-height: 1.55; color: #A7ADB8; overflow: hidden">
+    <div style="font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif; font-size: 11px; margin-bottom: 2px">Log</div>
+    <div>* daemon started successfully</div>
+    <div style="color: #F5C870">ERROR: Could not find any ADB device</div>
+  </div>
+
+  <!-- Action bar -->
+  <div style="height: 64px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #A7ADB8">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #F2B84B"></span>menunggu perangkat</span>
+      <span>scrcpy 4.1</span>
+    </div>
+    <div style="display: flex; gap: 10px">
+      <button style="height: 40px; padding: 0 16px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #ECEEF1; font-size: 13px">Buka folder rekaman</button>
+      <button disabled="disabled" style="height: 40px; padding: 0 22px; display: flex; align-items: center; gap: 8px; border: 0; border-radius: 6px; background: #2F333C; color: #8A909C; font-size: 14px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4l14 8-14 8z"></path></svg>Mulai mirroring</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

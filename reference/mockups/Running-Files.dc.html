@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Saat mirroring — file browser</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#7FE3AB}a:hover{color:#B4F0CD}
+button{font:inherit;cursor:pointer}
+.sl-check{width:15px;height:15px;margin:0;accent-color:#3DDC84}
+.sl-input{width:100%;height:32px;box-sizing:border-box;padding:0 10px 0 30px;border:1px solid #3A3F4A;border-radius:6px;background:#262A31;color:#ECEEF1;font:inherit;font-size:12px}
+</style>
+</helmet>
+<div style="width: 1000px; height: 920px; box-sizing: border-box; display: flex; align-items: flex-start; gap: 6px; padding: 20px; background: #22324A; color: #ECEEF1; font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif; font-size: 13px; overflow: hidden">
+
+  <!-- scrcpy window -->
+  <div style="width: 400px; flex-shrink: 0; display: flex; flex-direction: column; border: 1px solid #0B0D10; box-shadow: 0 12px 32px rgba(0,0,0,0.35)">
+    <div style="height: 30px; display: flex; align-items: center; justify-content: space-between; padding-left: 10px; background: #111317">
+      <span style="font-size: 12px; color: #C9CDD4">scrcpy - Xiaomi 2407FPN8EG</span>
+      <span style="display: flex">
+        <button aria-label="Minimize" style="width: 40px; height: 30px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 5h10" stroke="currentColor"></path></svg></button>
+        <button aria-label="Maximize" style="width: 40px; height: 30px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x="0.5" y="0.5" width="9" height="9" fill="none" stroke="currentColor"></rect></svg></button>
+        <button aria-label="Tutup" style="width: 40px; height: 30px; border: 0; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor"></path></svg></button>
+      </span>
+    </div>
+    <div style="height: 846px; display: flex; flex-direction: column; align-items: center; padding: 84px 28px 18px; box-sizing: border-box; background: #0E1A2B">
+      <span style="font-size: 64px; font-weight: 300; letter-spacing: -1px; color: #F2F4F7">14:37</span>
+      <span style="font-size: 15px; color: #C9D3E0">Rabu, 14 Oktober</span>
+      <div style="flex: 1"></div>
+      <div style="width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 0; justify-items: center">
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #2E4A6B"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #3B5B4E"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #5B4B6B"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #6B5A3B"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #3B5B4E"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #6B5A3B"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #2E4A6B"></span>
+        <span style="width: 54px; height: 54px; border-radius: 16px; background: #5B4B6B"></span>
+      </div>
+      <div style="width: 100%; margin-top: 34px; display: flex; justify-content: space-around; padding: 14px 6px; box-sizing: border-box; border-radius: 26px; background: #1A2A40">
+        <span style="width: 50px; height: 50px; border-radius: 15px; background: #3D6E59"></span>
+        <span style="width: 50px; height: 50px; border-radius: 15px; background: #3A5F8A"></span>
+        <span style="width: 50px; height: 50px; border-radius: 15px; background: #7A5A3A"></span>
+        <span style="width: 50px; height: 50px; border-radius: 15px; background: #5E4A7E"></span>
+      </div>
+      <span style="width: 110px; height: 4px; margin-top: 18px; border-radius: 2px; background: #C9D3E0"></span>
+    </div>
+  </div>
+
+  <!-- Side toolbar (Files active) -->
+  <div style="margin-top: 30px; width: 52px; flex-shrink: 0; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px; background: #1F2228; border: 1px solid #2C3039; border-radius: 10px">
+    <button aria-label="Power" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v10"></path><path d="M18.4 6.6a9 9 0 1 1-12.8 0"></path></svg></button>
+    <button aria-label="Volume naik" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 5a10 10 0 0 1 0 14"></path></svg></button>
+    <button aria-label="Volume turun" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg></button>
+    <button aria-label="Putar layar" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"></path><path d="M21 3v5h-5"></path></svg></button>
+    <span style="width: 28px; height: 1px; margin: 4px 0; background: #343944"></span>
+    <button aria-label="Kembali" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M17 5 7 12l10 7z"></path></svg></button>
+    <button aria-label="Home" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="7"></circle></svg></button>
+    <button aria-label="Aplikasi terbaru" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></button>
+    <button aria-label="Buka notifikasi" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg></button>
+    <span style="width: 28px; height: 1px; margin: 4px 0; background: #343944"></span>
+    <button aria-label="Screenshot" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg></button>
+    <button aria-label="Rekam layar" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="3.5" fill="currentColor"></circle></svg></button>
+    <button aria-label="File browser (aktif)" aria-pressed="true" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: #23402E; color: #3DDC84; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></button>
+    <button aria-label="Install APK" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg></button>
+    <button aria-label="Kirim clipboard ke HP" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg></button>
+    <span style="width: 28px; height: 1px; margin: 4px 0; background: #343944"></span>
+    <button aria-label="Lainnya" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg></button>
+  </div>
+
+  <!-- File browser panel -->
+  <div style="flex: 1; min-width: 0; height: 878px; box-sizing: border-box; display: flex; flex-direction: column; background: #1F2228; border: 1px solid #2C3039; border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.35); overflow: hidden">
+    <div style="height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 16px; border-bottom: 1px solid #2C3039">
+      <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 15px; font-weight: 600">File HP</span><span style="font-size: 12px; color: #A7ADB8">Xiaomi 2407FPN8EG</span></span>
+      <button aria-label="Tutup file browser" style="width: 34px; height: 34px; border: 0; border-radius: 6px; background: transparent; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 0l10 10M10 0L0 10" stroke="currentColor" stroke-width="1.4"></path></svg></button>
+    </div>
+
+    <!-- Quick locations -->
+    <div style="display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px 8px">
+      <button style="height: 28px; padding: 0 10px; border: 1px solid #343944; border-radius: 999px; background: #262A31; color: #C9CDD4; font-size: 12px">Download</button>
+      <button style="height: 28px; padding: 0 10px; border: 1px solid #3DDC84; border-radius: 999px; background: #1C2B22; color: #8BEAB4; font-size: 12px">DCIM</button>
+      <button style="height: 28px; padding: 0 10px; border: 1px solid #343944; border-radius: 999px; background: #262A31; color: #C9CDD4; font-size: 12px">Pictures</button>
+      <button style="height: 28px; padding: 0 10px; border: 1px solid #343944; border-radius: 999px; background: #262A31; color: #C9CDD4; font-size: 12px">Documents</button>
+      <button style="height: 28px; padding: 0 10px; border: 1px solid #343944; border-radius: 999px; background: #262A31; color: #C9CDD4; font-size: 12px">Movies</button>
+    </div>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="Lokasi" style="display: flex; align-items: center; gap: 6px; padding: 4px 16px 10px; font-size: 13px; color: #A7ADB8">
+      <a href="#" style="color: #C9CDD4; text-decoration: none">Penyimpanan internal</a><span>›</span>
+      <a href="#" style="color: #C9CDD4; text-decoration: none">DCIM</a><span>›</span>
+      <span style="color: #ECEEF1; font-weight: 600">Camera</span>
+    </nav>
+
+    <!-- Actions -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 16px 12px">
+      <button style="height: 32px; padding: 0 12px; display: flex; align-items: center; gap: 6px; border: 0; border-radius: 6px; background: #3DDC84; color: #0B1F13; font-size: 12px; font-weight: 600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>Simpan ke PC (2)</button>
+      <button style="height: 32px; padding: 0 12px; display: flex; align-items: center; gap: 6px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #ECEEF1; font-size: 12px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V9"></path><path d="M7 14l5-5 5 5"></path><path d="M5 3h14"></path></svg>Kirim ke HP</button>
+      <button aria-label="Folder baru" style="width: 32px; height: 32px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M12 10v6M9 13h6"></path></svg></button>
+      <button aria-label="Hapus" style="width: 32px; height: 32px; border: 1px solid #3A3F4A; border-radius: 6px; background: #262A31; color: #C9CDD4; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M6 6l1 14h10l1-14"></path></svg></button>
+      <label style="position: relative; flex: 1; min-width: 0; display: block">
+        <span style="position: absolute; left: 10px; top: 9px; color: #A7ADB8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></span>
+        <input class="sl-input" type="search" placeholder="Cari di folder ini" aria-label="Cari file">
+      </label>
+    </div>
+
+    <!-- List header -->
+    <div style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 8px 16px; border-top: 1px solid #2C3039; border-bottom: 1px solid #2C3039; font-size: 11px; font-weight: 600; color: #A7ADB8">
+      <span></span><span>Nama</span><span style="text-align: right">Ukuran</span><span>Diubah</span>
+    </div>
+
+    <!-- Rows -->
+    <div style="flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden">
+      <div style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px">
+        <span></span>
+        <span style="display: flex; align-items: center; gap: 10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="#F2B84B" stroke="none" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>.. (DCIM)</span>
+        <span></span><span></span>
+      </div>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px; background: #1C2B22">
+        <input type="checkbox" class="sl-check" checked="checked">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7FB2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">IMG_20261014_143012.jpg</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">3,2 MB</span><span style="font-size: 12px; color: #A7ADB8">14 Okt 14:30</span>
+      </label>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px; background: #1C2B22">
+        <input type="checkbox" class="sl-check" checked="checked">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7FB2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">IMG_20261014_142955.jpg</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">2,9 MB</span><span style="font-size: 12px; color: #A7ADB8">14 Okt 14:29</span>
+      </label>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px">
+        <input type="checkbox" class="sl-check">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C59BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="15" height="14" rx="2"></rect><path d="M17 10l5-3v10l-5-3"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">VID_20261013_191205.mp4</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">48,6 MB</span><span style="font-size: 12px; color: #A7ADB8">13 Okt 19:12</span>
+      </label>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px">
+        <input type="checkbox" class="sl-check">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7FB2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">IMG_20261012_080341.jpg</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">4,1 MB</span><span style="font-size: 12px; color: #A7ADB8">12 Okt 08:03</span>
+      </label>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px">
+        <input type="checkbox" class="sl-check">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7FB2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">IMG_20261011_171520.jpg</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">3,7 MB</span><span style="font-size: 12px; color: #A7ADB8">11 Okt 17:15</span>
+      </label>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px">
+        <input type="checkbox" class="sl-check">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C59BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="15" height="14" rx="2"></rect><path d="M17 10l5-3v10l-5-3"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">VID_20261010_204418.mp4</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">112 MB</span><span style="font-size: 12px; color: #A7ADB8">10 Okt 20:44</span>
+      </label>
+      <label style="display: grid; grid-template-columns: 28px minmax(0, 1fr) 80px 110px; align-items: center; gap: 8px; padding: 0 16px; min-height: 40px">
+        <input type="checkbox" class="sl-check">
+        <span style="display: flex; align-items: center; gap: 10px; min-width: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7FB2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">IMG_20261009_123004.jpg</span></span>
+        <span style="text-align: right; font-size: 12px; color: #A7ADB8">2,4 MB</span><span style="font-size: 12px; color: #A7ADB8">9 Okt 12:30</span>
+      </label>
+    </div>
+
+    <!-- Drop zone -->
+    <div style="margin: 10px 16px; padding: 14px; display: flex; align-items: center; gap: 12px; border: 1.5px dashed #3A3F4A; border-radius: 8px; color: #A7ADB8; font-size: 12px; line-height: 1.45">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M12 15V3"></path><path d="M7 8l5-5 5 5"></path><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"></path></svg>
+      <span>Tarik file dari PC ke sini untuk dikirim ke folder ini. File APK akan ditawarkan untuk di-install.</span>
+    </div>
+
+    <!-- Transfer status -->
+    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; padding: 12px 16px; border-top: 1px solid #2C3039; background: #1A1D22">
+      <span style="display: flex; justify-content: space-between; font-size: 12px; color: #C9CDD4"><span>Menyimpan 2 file ke Downloads\scrcpy</span><span>48%</span></span>
+      <span style="height: 5px; border-radius: 3px; background: #2F333C; overflow: hidden"><span style="display: block; width: 48%; height: 5px; background: #3DDC84"></span></span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":920}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
