@@ -4,6 +4,11 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 7 — Distribusi & dokumentasi
+- `scripts/publish.ps1`: versi dari `Directory.Build.props`, unit test (bisa dilewati `-SkipTests`), `dotnet publish` win-x64 self-contained single-file terkompresi ke `dist\Mirraawwrring-<versi>\` (exe ±60 MB, plus `config\scrcpy-manifest.json`, README, CHANGELOG), `-BundleScrcpy` mengunduh scrcpy sesuai manifest, memverifikasi SHA-256 (tidak cocok = berhenti dan hapus), mengekstrak ke `scrcpy\` dan Unblock-File; zip `dist\Mirraawwrring-<versi>-win-x64.zip` (`-NoZip` untuk melewati).
+- Diuji: publish dengan `-BundleScrcpy` di PC ini (hash cocok), exe hasil publish berjalan portable (`data\` di samping exe) dan menemukan scrcpy bundel ("menunggu perangkat · scrcpy 4.1").
+- README final (paket rilis, Unblock/SmartScreen, publish, toolbar, file browser, masalah umum), CLAUDE.md final, checklist Fase 7 di `docs/manual-test.md`.
+
 ### Fase 6 — File browser
 - `RemoteEntry`/`RemotePath` (operasi path POSIX, breadcrumb, pintasan Download/DCIM/Pictures/Documents/Movies, validasi nama) dan `RemoteListingParser` (murni): output `find DIR -maxdepth 1 -mindepth 1 -exec stat -c '%F|%s|%Y|%n' {} +`, nama dengan `|` aman, baris error (Permission denied) dikumpulkan, folder dulu lalu nama.
 - `RemoteFileService`: listing, pull/push satu per satu lewat `adb pull/push` dengan progres per file + total byte (bisa dibatalkan), `mkdir -p`, `mv`, `rm -r` (konfirmasi di UI), folder tujuan default `Downloads\Mirraawwrring` (bisa diubah, disimpan di `pullDirectory`).

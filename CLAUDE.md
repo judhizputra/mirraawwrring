@@ -2,7 +2,7 @@
 
 Aplikasi desktop Windows (WPF, .NET 10, C#) untuk mirror dan kontrol HP Android lewat **scrcpy**. Spesifikasi lengkap ada di `PROMPT.md`; file ini adalah ringkasan operasional supaya sesi berikutnya bisa langsung bekerja. **Perbarui file ini setiap kali arsitektur berubah.**
 
-Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–6 selesai. Berikutnya: Fase 7 (distribusi & dokumentasi: `scripts/publish.ps1` portable single-file + opsi `-BundleScrcpy`, README final, CLAUDE.md final, `docs/manual-test.md`). Fase 8 opsional: QR pairing, cek pembaruan scrcpy.
+Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–7 selesai (aplikasi lengkap, paket rilis lewat `scripts/publish.ps1`). Tersisa Fase 8 yang opsional: QR pairing (dialog Pair) dan cek pembaruan scrcpy (`AppSettings.CheckScrcpyUpdates` sudah ada, logikanya belum; aturan §5.7: hash dari `doc/windows.md` tag rilis, tanpa hash jangan pasang otomatis). Fitur yang butuh HP sungguhan belum diverifikasi: ikuti `docs/manual-test.md`.
 
 ## Perintah
 
@@ -10,7 +10,7 @@ Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–6 selesai. Ber
 dotnet build Mirraawwrring.sln              # build semua
 dotnet test Mirraawwrring.sln               # unit test Core (xUnit)
 dotnet run --project src/Mirraawwrring.App  # jalankan aplikasi
-scripts/publish.ps1 [-BundleScrcpy]         # publish portable (Fase 7)
+scripts/publish.ps1 [-BundleScrcpy] [-SkipTests] [-NoZip]   # paket rilis ke dist\ (test → publish single-file → bundel scrcpy terverifikasi → zip)
 ```
 
 Build Core memakai `TreatWarningsAsErrors`; warning di Core = build gagal.
@@ -70,7 +70,9 @@ src/Mirraawwrring.App/         WPF
                                WinEventHook (pembungkus hook, UI thread), InputSender (fokuskan scrcpy + SendInput kombinasi tombol), WindowGeometry (frame/klien/DPI/area kerja)
   Resources/Strings.resx       SEMUA teks UI (bahasa Indonesia). XAML: {loc:Str Kunci}; C#: Strings.Get("Kunci") / Strings.Format
 tests/Mirraawwrring.Core.Tests/ xUnit; Fakes/ berisi FakeProcessRunner, FakeFileSystem, FakeAppPaths, FakeAdbClient, FakeTimeProvider
-config/scrcpy-manifest.json    versi scrcpy yang di-pin + URL + SHA-256 (disalin ke samping exe saat build)
+config/scrcpy-manifest.json    versi scrcpy yang di-pin + URL + SHA-256 (disalin ke samping exe saat build dan publish)
+scripts/publish.ps1            paket rilis: versi dari Directory.Build.props, dotnet publish win-x64 self-contained single-file, -BundleScrcpy (unduh + SHA-256 + Unblock), zip
+dist/                          hasil publish (di-gitignore)
 reference/                     prototipe PowerShell, mockup desain (*.dc.html), scrcpy-4.1-help.txt (output --help resmi)
 docs/manual-test.md            checklist uji dengan HP sungguhan
 ```
@@ -91,6 +93,7 @@ docs/manual-test.md            checklist uji dengan HP sungguhan
 - **Layered window (toolbar):** piksel yang alpha-nya 0 tembus klik ke jendela di bawahnya. Elemen yang harus bisa diklik tetapi "transparan" (pegangan resize) diberi `Background="#01000000"`. Kolom samping toolbar = panel file (bila terbuka, lebar `FilesPanelWidth`) atau 196 px untuk toast/legenda; `ToolbarWindow.WindowWidthDip` menghitungnya.
 - **Toolbar:** jangan `Activate()`/fokus ke toolbar; `WS_EX_NOACTIVATE` disengaja supaya scrcpy tetap menerima keyboard. Posisi selalu dihitung dalam piksel fisik dengan DPI jendela scrcpy (`GetDpiForWindow`), lalu `SetWindowPos`; ukuran di-set dalam DIP. Aksi yang butuh injeksi lewat `RunInjectionAsync` (buka panduan bila diblokir); output yang memuat `INJECT_EVENTS` otomatis menandai blokir.
 - **Fase:** di akhir fase: build bersih, test lulus, CHANGELOG, commit conventional (`feat:`, `fix:`, `docs:`, …), lalu tunggu konfirmasi pemilik.
+- **Rilis:** naikkan `<Version>` di `Directory.Build.props`, pindahkan isi `[Unreleased]` di CHANGELOG ke bagian versi, jalankan `scripts/publish.ps1 -BundleScrcpy`, uji exe di `dist\` (bukan `bin\Debug`), lalu tag `v<versi>`. Single-file: `AppContext.BaseDirectory` = folder exe, jadi `AppPaths` dan manifest tetap bekerja; jangan memakai `Assembly.Location` (kosong di single-file).
 
 ## Alur data utama
 

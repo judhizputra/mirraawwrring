@@ -101,6 +101,17 @@ Buka dari tombol File browser di toolbar saat mirroring.
 - [ ] Resize lebar panel lewat tepi luar (kanan saat panel di kanan, kiri saat di kiri); lebar tetap setelah aplikasi dibuka lagi. Panel ikut berpindah ke kiri bila jendela scrcpy di tepi kanan layar.
 - [ ] Tutup panel (X atau tombol toolbar) lalu buka lagi: lokasi terakhir tetap; mirroring dihentikan → panel ikut tertutup, transfer yang berjalan dibatalkan.
 
-## Belum tercakup (fase berikutnya)
+## Fase 7 — Paket rilis
 
-Distribusi (`publish.ps1`) diuji di Fase 7.
+Buat paket dengan `.\scripts\publish.ps1 -BundleScrcpy`, lalu uji di PC lain (atau akun Windows lain) yang tidak punya .NET dan scrcpy.
+
+- [ ] Zip diekstrak ke folder biasa (mis. `D:\Apps`): SmartScreen muncul sekali → More info → Run anyway; aplikasi terbuka tanpa minta .NET.
+- [ ] Tanpa Unblock di zip: `scrcpy.exe` dari bundel tetap bisa dijalankan (publish sudah Unblock-File sebelum zip); kalau Windows tetap memblokir, Unblock folder lalu catat di README.
+- [ ] Folder `data\` terbentuk di samping exe; `settings.json` dan `logs\` ada di sana. Taruh di `C:\Program Files\...` → data pindah ke `%LOCALAPPDATA%\Mirraawwrring` dan log menyebut "LocalAppData".
+- [ ] Paket tanpa `-BundleScrcpy`: wizard terbuka otomatis, unduhan berjalan, hash cocok, aplikasi siap.
+- [ ] Seluruh alur dengan HP sungguhan (Fase 1–6) diulang memakai exe hasil publish, bukan `bin\Debug`.
+- [ ] Antivirus/Defender tidak mengkarantina exe single-file (kalau ya, catat nama deteksinya).
+
+## Belum tercakup
+
+Fase 8 (opsional): QR pairing, cek pembaruan scrcpy.
