@@ -261,6 +261,9 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     /// <summary>View membuka wizard setup; setelah tertutup View memanggil <see cref="ReinitializeAsync"/>.</summary>
     public event Action? SetupRequested;
 
+    /// <summary>Sesi mirroring baru dimulai; View membuat toolbar samping untuknya (Fase 5).</summary>
+    public event Action<ScrcpySession, DeviceItemViewModel, ScrcpyOptions>? ToolbarRequested;
+
     [RelayCommand]
     private void OpenSetup() => SetupRequested?.Invoke();
 
@@ -525,9 +528,11 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
 
         try
         {
-            var session = _sessions.Start(CurrentOptions, item.Device, item.DisplayName);
+            var options = CurrentOptions;
+            var session = _sessions.Start(options, item.Device, item.DisplayName);
             session.InjectionBlockedDetected += _ => Post(() => InjectionBlocked = true);
             _logger.LogInformation("{Command}", session.Plan.ToCommandLine());
+            ToolbarRequested?.Invoke(session, item, options);
         }
         catch (Exception ex) when (ex is InvalidOperationException or ToolNotFoundException)
         {

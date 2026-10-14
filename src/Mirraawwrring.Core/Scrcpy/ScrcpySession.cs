@@ -36,6 +36,9 @@ public sealed class ScrcpySession : IDisposable
 
     public ScrcpyLaunchPlan Plan { get; }
 
+    /// <summary>True untuk proses rekam tanpa jendela (<c>--no-window</c>); tidak mendapat toolbar.</summary>
+    public bool IsHeadless => Plan.Arguments.Contains("--no-window");
+
     public DateTimeOffset StartedAt { get; }
 
     public int ProcessId => _process.ProcessId;

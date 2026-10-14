@@ -996,4 +996,228 @@
   <data name="Main_OpenSetup" xml:space="preserve">
     <value>Setup…</value>
   </data>
+
+  <data name="Toolbar_Power" xml:space="preserve">
+    <value>Power</value>
+  </data>
+
+  <data name="Toolbar_VolumeUp" xml:space="preserve">
+    <value>Volume naik</value>
+  </data>
+
+  <data name="Toolbar_VolumeDown" xml:space="preserve">
+    <value>Volume turun</value>
+  </data>
+
+  <data name="Toolbar_Rotate" xml:space="preserve">
+    <value>Putar layar</value>
+  </data>
+
+  <data name="Toolbar_Back" xml:space="preserve">
+    <value>Kembali</value>
+  </data>
+
+  <data name="Toolbar_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+
+  <data name="Toolbar_Recents" xml:space="preserve">
+    <value>Aplikasi terbaru</value>
+  </data>
+
+  <data name="Toolbar_Notifications" xml:space="preserve">
+    <value>Buka notifikasi</value>
+  </data>
+
+  <data name="Toolbar_NotificationsClose" xml:space="preserve">
+    <value>Tutup notifikasi</value>
+  </data>
+
+  <data name="Toolbar_Screenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+
+  <data name="Toolbar_Record" xml:space="preserve">
+    <value>Rekam layar</value>
+  </data>
+
+  <data name="Toolbar_RecordStop" xml:space="preserve">
+    <value>Hentikan rekaman</value>
+  </data>
+
+  <data name="Toolbar_Files" xml:space="preserve">
+    <value>File browser</value>
+  </data>
+
+  <data name="Toolbar_FilesSoon" xml:space="preserve">
+    <value>File browser (tersedia di versi berikutnya)</value>
+  </data>
+
+  <data name="Toolbar_InstallApk" xml:space="preserve">
+    <value>Install APK</value>
+  </data>
+
+  <data name="Toolbar_SendClipboard" xml:space="preserve">
+    <value>Kirim clipboard ke HP</value>
+  </data>
+
+  <data name="Toolbar_More" xml:space="preserve">
+    <value>Lainnya</value>
+  </data>
+
+  <data name="Toolbar_KeyPower" xml:space="preserve">
+    <value>Alt+P</value>
+  </data>
+
+  <data name="Toolbar_KeyVolumeUp" xml:space="preserve">
+    <value>Alt+↑</value>
+  </data>
+
+  <data name="Toolbar_KeyVolumeDown" xml:space="preserve">
+    <value>Alt+↓</value>
+  </data>
+
+  <data name="Toolbar_KeyRotate" xml:space="preserve">
+    <value>Alt+R</value>
+  </data>
+
+  <data name="Toolbar_KeyBack" xml:space="preserve">
+    <value>Alt+B</value>
+  </data>
+
+  <data name="Toolbar_KeyHome" xml:space="preserve">
+    <value>Alt+H</value>
+  </data>
+
+  <data name="Toolbar_KeyRecents" xml:space="preserve">
+    <value>Alt+S</value>
+  </data>
+
+  <data name="Toolbar_KeyNotifications" xml:space="preserve">
+    <value>Alt+N</value>
+  </data>
+
+  <data name="Toolbar_KeySendClipboard" xml:space="preserve">
+    <value>Ctrl+V</value>
+  </data>
+
+  <data name="Toolbar_Blocked" xml:space="preserve">
+    <value>Butuh USB debugging (Security settings) di Xiaomi. Klik untuk melihat caranya.</value>
+  </data>
+
+  <data name="Toolbar_MenuShowTouches" xml:space="preserve">
+    <value>Tampilkan sentuhan</value>
+  </data>
+
+  <data name="Toolbar_MenuScreenOff" xml:space="preserve">
+    <value>Matikan layar HP (mirroring tetap jalan)</value>
+  </data>
+
+  <data name="Toolbar_MenuScreenOn" xml:space="preserve">
+    <value>Nyalakan layar HP</value>
+  </data>
+
+  <data name="Toolbar_MenuOpenScreenshots" xml:space="preserve">
+    <value>Buka folder screenshot</value>
+  </data>
+
+  <data name="Toolbar_MenuOpenRecordings" xml:space="preserve">
+    <value>Buka folder rekaman</value>
+  </data>
+
+  <data name="Toolbar_MenuCopyInfo" xml:space="preserve">
+    <value>Salin info device</value>
+  </data>
+
+  <data name="Toast_ScreenshotSaved" xml:space="preserve">
+    <value>Screenshot disimpan</value>
+  </data>
+
+  <data name="Toast_ScreenshotBody" xml:space="preserve">
+    <value>{0} · juga disalin ke clipboard</value>
+  </data>
+
+  <data name="Toast_ScreenshotFailed" xml:space="preserve">
+    <value>Screenshot gagal</value>
+  </data>
+
+  <data name="Toast_RecordingStarted" xml:space="preserve">
+    <value>Merekam layar…</value>
+  </data>
+
+  <data name="Toast_RecordingBody" xml:space="preserve">
+    <value>Klik tombol rekam lagi untuk berhenti</value>
+  </data>
+
+  <data name="Toast_RecordingSaved" xml:space="preserve">
+    <value>Rekaman disimpan</value>
+  </data>
+
+  <data name="Toast_RecordingFailed" xml:space="preserve">
+    <value>Rekaman gagal</value>
+  </data>
+
+  <data name="Toast_ApkInstalling" xml:space="preserve">
+    <value>Memasang APK…</value>
+  </data>
+
+  <data name="Toast_ApkInstalled" xml:space="preserve">
+    <value>APK terpasang</value>
+  </data>
+
+  <data name="Toast_ApkFailed" xml:space="preserve">
+    <value>Install APK gagal</value>
+  </data>
+
+  <data name="Toast_ClipboardSent" xml:space="preserve">
+    <value>Clipboard dikirim ke HP</value>
+  </data>
+
+  <data name="Toast_ClipboardEmpty" xml:space="preserve">
+    <value>Clipboard PC kosong</value>
+  </data>
+
+  <data name="Toast_ClipboardNoWindow" xml:space="preserve">
+    <value>Jendela scrcpy tidak bisa difokuskan</value>
+  </data>
+
+  <data name="Toast_InfoCopied" xml:space="preserve">
+    <value>Info device disalin</value>
+  </data>
+
+  <data name="Toast_ActionFailed" xml:space="preserve">
+    <value>Perintah gagal</value>
+  </data>
+
+  <data name="Toast_ScreenOff" xml:space="preserve">
+    <value>Layar HP dimatikan</value>
+  </data>
+
+  <data name="Toast_ScreenOn" xml:space="preserve">
+    <value>Layar HP dinyalakan</value>
+  </data>
+
+  <data name="Toast_Open" xml:space="preserve">
+    <value>Buka</value>
+  </data>
+
+  <data name="Toast_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+
+  <data name="Toast_Dismiss" xml:space="preserve">
+    <value>Tutup notifikasi</value>
+  </data>
+
+  <data name="Apk_DialogTitle" xml:space="preserve">
+    <value>Pilih file APK</value>
+  </data>
+
+  <data name="Apk_Filter" xml:space="preserve">
+    <value>Paket Android (*.apk)|*.apk</value>
+  </data>
+
+  <data name="Toolbar_Title" xml:space="preserve">
+    <value>Toolbar Mirraawwrring</value>
+  </data>
 </root>

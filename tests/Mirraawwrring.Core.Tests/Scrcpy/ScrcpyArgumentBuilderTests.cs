@@ -126,7 +126,8 @@ public sealed class ScrcpyArgumentBuilderTests
         Assert.Contains("--no-control", plan.Arguments);
         Assert.Contains("--no-audio", plan.Arguments);
         Assert.NotNull(plan.RecordFilePath);
-        Assert.EndsWith(".mp4", plan.RecordFilePath);
+        Assert.EndsWith(".mkv", plan.RecordFilePath);
+        Assert.Contains($"--record={plan.RecordFilePath}", plan.Arguments);
     }
 
     [Fact]

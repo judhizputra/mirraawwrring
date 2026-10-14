@@ -36,6 +36,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IUsbProbe, WmiUsbProbe>();
         services.AddSingleton<UsbWatcher>();
         services.AddSingleton<InjectionProbe>();
+        services.AddSingleton<DeviceActions>();
         services.TryAddSingleton(_ => new HttpClient { DefaultRequestHeaders = { { "User-Agent", "Mirraawwrring" } } });
         services.AddSingleton<SetupService>();
         services.AddSingleton<VerificationService>();

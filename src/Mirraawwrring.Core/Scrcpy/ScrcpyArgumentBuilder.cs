@@ -26,6 +26,12 @@ public sealed class ScrcpyArgumentBuilder(IAppPaths paths, TimeProvider time)
     public const string RecordFilePrefix = "scrcpy_";
     public const string RecordFileExtension = ".mp4";
 
+    /// <summary>
+    /// Rekaman dari toolbar dihentikan dengan mematikan proses scrcpy (tidak ada jendela untuk ditutup), sehingga trailer MP4
+    /// tidak pernah ditulis dan filenya tak bisa diputar. Matroska tetap bisa diputar walau terpotong, jadi rekaman headless memakai .mkv.
+    /// </summary>
+    public const string HeadlessRecordFileExtension = ".mkv";
+
     public const int DataSaverMaxSize = 1024;
     public const int DataSaverBitRateMbps = 4;
     public const int DataSaverMaxFps = 30;
@@ -118,7 +124,7 @@ public sealed class ScrcpyArgumentBuilder(IAppPaths paths, TimeProvider time)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(serial);
         var title = WindowTitlePrefix + (string.IsNullOrWhiteSpace(modelName) ? serial : modelName.Trim()) + " (rekam)";
-        var recordPath = NewRecordFilePath();
+        var recordPath = NewRecordFilePath(HeadlessRecordFileExtension);
         var args = new List<string>
         {
             $"--serial={serial}",
@@ -135,11 +141,11 @@ public sealed class ScrcpyArgumentBuilder(IAppPaths paths, TimeProvider time)
         return new ScrcpyLaunchPlan(args, title, recordPath);
     }
 
-    /// <summary><c>Videos\Mirraawwrring\scrcpy_yyyyMMdd_HHmmss.mp4</c>.</summary>
-    public string NewRecordFilePath()
+    /// <summary><c>Videos\Mirraawwrring\scrcpy_yyyyMMdd_HHmmss.mp4</c> (atau ekstensi lain).</summary>
+    public string NewRecordFilePath(string extension = RecordFileExtension)
     {
         var stamp = time.GetLocalNow().ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
-        return Path.Combine(paths.RecordingsDirectory, $"{RecordFilePrefix}{stamp}{RecordFileExtension}");
+        return Path.Combine(paths.RecordingsDirectory, $"{RecordFilePrefix}{stamp}{extension}");
     }
 
     private static string Invariant(int value) => value.ToString(CultureInfo.InvariantCulture);

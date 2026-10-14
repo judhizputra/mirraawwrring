@@ -14,14 +14,16 @@ public partial class MainWindow : Window
     private readonly Func<PairWirelessWindow> _pairFactory;
     private readonly Func<ConnectIpWindow> _connectFactory;
     private readonly Func<SetupWindow> _setupFactory;
+    private readonly Func<ToolbarWindow> _toolbarFactory;
 
-    public MainWindow(MainViewModel viewModel, Func<HyperOsGuideWindow> guideFactory, Func<PairWirelessWindow> pairFactory, Func<ConnectIpWindow> connectFactory, Func<SetupWindow> setupFactory)
+    public MainWindow(MainViewModel viewModel, Func<HyperOsGuideWindow> guideFactory, Func<PairWirelessWindow> pairFactory, Func<ConnectIpWindow> connectFactory, Func<SetupWindow> setupFactory, Func<ToolbarWindow> toolbarFactory)
     {
         _viewModel = viewModel;
         _guideFactory = guideFactory;
         _pairFactory = pairFactory;
         _connectFactory = connectFactory;
         _setupFactory = setupFactory;
+        _toolbarFactory = toolbarFactory;
         InitializeComponent();
         DataContext = viewModel;
         SourceInitialized += (_, _) => WindowTheming.Apply(this);
@@ -31,6 +33,7 @@ public partial class MainWindow : Window
         viewModel.PairWirelessRequested += ShowPairWireless;
         viewModel.ConnectIpRequested += ShowConnectIp;
         viewModel.SetupRequested += OnSetupRequested;
+        viewModel.ToolbarRequested += OnToolbarRequested;
         viewModel.LogLines.CollectionChanged += OnLogChanged;
     }
 
@@ -61,6 +64,14 @@ public partial class MainWindow : Window
     }
 
     private async void OnSetupRequested() => await ShowSetupAsync();
+
+    /// <summary>Toolbar samping per sesi scrcpy; menutup sendiri saat sesi berakhir.</summary>
+    private async void OnToolbarRequested(Core.Scrcpy.ScrcpySession session, DeviceItemViewModel item, Core.Scrcpy.ScrcpyOptions options)
+    {
+        var toolbar = _toolbarFactory();
+        toolbar.GuideRequested += ShowGuide;
+        await toolbar.AttachAsync(session, item.Device, options);
+    }
 
     private async Task ShowSetupAsync()
     {

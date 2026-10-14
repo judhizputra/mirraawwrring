@@ -65,6 +65,25 @@ Untuk memaksa wizard: hapus/ganti nama folder `scrcpy\` di samping exe (dan past
 - [ ] Selesai: versi 4.1, lokasi folder; "Tanpa kabel" menutup wizard dan membuka dialog Pair; "Buka Mirraawwrring" menutup wizard, status bar jendela utama menjadi "adb siap"/"menunggu perangkat" dengan "scrcpy 4.1".
 - [ ] Tombol "Setup…" di bar status membuka wizard lagi kapan saja.
 
+## Fase 5 — Toolbar samping
+
+Mulai mirroring dari jendela utama; toolbar muncul di kanan jendela scrcpy setelah jendelanya tampil.
+
+- [ ] Toolbar menempel di kanan jendela scrcpy, sejajar dengan tepi atas area gambar (bukan title bar); geser/resize jendela scrcpy → toolbar mengikuti tanpa lag berarti; dekatkan ke tepi kanan layar → toolbar pindah ke kiri.
+- [ ] Monitor kedua dengan skala DPI berbeda: toolbar tetap menempel rapat dan ukurannya proporsional saat jendela scrcpy dipindah antar monitor.
+- [ ] Minimize scrcpy → toolbar ikut hilang; restore → muncul lagi. Tutup jendela scrcpy / Hentikan mirroring → toolbar hilang.
+- [ ] Klik tombol toolbar tidak memindahkan fokus keyboard dari jendela scrcpy (ketik di scrcpy tetap masuk ke HP setelah menekan tombol).
+- [ ] Power, Volume naik/turun, Kembali, Home, Aplikasi terbaru: HP merespons; tooltip menampilkan pintasan (Alt+P, Alt+↑, …).
+- [ ] Putar layar: HP berputar 90° tiap klik (rotasi otomatis dimatikan); Buka notifikasi lalu klik lagi → panel tertutup.
+- [ ] Screenshot (tombol dan Ctrl+Shift+S saat jendela scrcpy aktif): file di `Pictures\Mirraawwrring\screenshot_<waktu>.png` sesuai layar HP, Ctrl+V di Paint menempelkan gambar, toast "Screenshot disimpan" → Buka membuka gambar, Folder membuka Explorer dengan file terpilih. Hotkey tidak bereaksi saat aplikasi lain yang aktif.
+- [ ] Ubah `screenshotHotkey` di `data\settings.json` (mis. "Ctrl+Alt+P"), buka ulang aplikasi → tooltip dan hotkey mengikuti.
+- [ ] Rekam layar: tombol merah saat merekam; klik lagi → toast "Rekaman disimpan"; file `.mkv` di `Videos\Mirraawwrring` bisa diputar (VLC/mpv) dan berisi audio bila "Teruskan audio" aktif. Rekaman ikut berhenti saat mirroring dihentikan.
+- [ ] Install APK: pilih file .apk → toast "Memasang APK…" lalu "APK terpasang"; APK rusak → toast gagal berisi pesan adb.
+- [ ] Kirim clipboard ke HP: salin teks di PC, fokus ke kolom teks di HP, klik tombol → teks tertempel.
+- [ ] Lainnya › Tampilkan sentuhan: lingkaran sentuh muncul di HP, item menu dicentang; klik lagi → mati. Layar HP mati: layar HP padam tapi mirroring jalan; Layar HP nyala mengembalikannya. Salin info device → tempel di Notepad berisi serial, model, Android, resolusi.
+- [ ] Xiaomi tanpa Security settings: titik kuning di Power/Volume/Kembali/Home/Recent/Clipboard, legenda kuning muncul 12 detik; tooltip tombol itu berisi penjelasan; klik → jendela panduan. Volume tetap mencoba `cmd media_session volume --adj raise/lower` (catat apakah berhasil di HyperOS). Setelah Security settings diaktifkan dan mirroring dimulai ulang → titik hilang.
+- [ ] Dua HP sekaligus: masing-masing sesi punya toolbar sendiri yang mengikuti jendelanya; hotkey screenshot mengambil dari HP yang jendelanya aktif.
+
 ## Belum tercakup (fase berikutnya)
 
-Toolbar, file browser: ditambahkan saat fasenya selesai.
+File browser: ditambahkan saat fasenya selesai.

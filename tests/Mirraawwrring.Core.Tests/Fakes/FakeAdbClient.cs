@@ -51,8 +51,11 @@ public sealed class FakeAdbClient : IAdbClient
         return Task.FromResult(_lastResponse());
     }
 
-    public Task<DeviceDetails> GetDeviceDetailsAsync(string serial, CancellationToken cancellationToken = default) =>
-        Task.FromResult(new DeviceDetails("Xiaomi", "2407FPN8EG", "16"));
+    public Task<DeviceDetails> GetDeviceDetailsAsync(string serial, CancellationToken cancellationToken = default)
+    {
+        Calls.Add($"details {serial}");
+        return Task.FromResult(new DeviceDetails("Xiaomi", "2407FPN8EG", "16"));
+    }
 
     public Task<PairResult> PairAsync(string hostPort, string code, CancellationToken cancellationToken = default)
     {
@@ -118,7 +121,14 @@ public sealed class FakeAdbClient : IAdbClient
         Calls.Add($"shell {serial} {string.Join(' ', command)}");
         return Task.FromResult(ShellResponse(serial, command));
     }
-    public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, bool quiet = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    /// <summary>Jawaban untuk RunAsync (install, exec-out, …); default sukses kosong.</summary>
+    public Func<IReadOnlyList<string>, ProcessResult> RunResponse { get; set; } = _ => ProcessResult.Ok();
+
+    public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, bool quiet = false, CancellationToken cancellationToken = default)
+    {
+        Calls.Add($"run {string.Join(' ', arguments)}");
+        return Task.FromResult(RunResponse(arguments));
+    }
 }
 
 public static class TestDevices

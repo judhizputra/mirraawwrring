@@ -20,6 +20,23 @@
     <Geometry x:Key="Icon.Usb">M12,2 V22 M12,22 L8,18 M12,22 L16,18 M12,8 L17,11 V14 M12,11 L7,13 V17 M17,11 A1.5,1.5 0 1 0 17,8 A1.5,1.5 0 1 0 17,11 Z</Geometry>
     <Geometry x:Key="Icon.Monitor">M4,4 H16 A2,2 0 0 1 18,6 V12 A2,2 0 0 1 16,14 H4 A2,2 0 0 1 2,12 V6 A2,2 0 0 1 4,4 Z M15,9 H22 V21 H15 Z M7,18 H11</Geometry>
 
+    <!-- Toolbar (mockup Running-Toolbar) -->
+    <Geometry x:Key="Icon.Power">M12,2 V12 M18.4,6.6 A9,9 0 1 1 5.6,6.6</Geometry>
+    <Geometry x:Key="Icon.VolumeUp">M11,5 L6,9 H2 V15 H6 L11,19 Z M15.5,8.5 A5,5 0 0 1 15.5,15.5 M19,5 A10,10 0 0 1 19,19</Geometry>
+    <Geometry x:Key="Icon.VolumeDown">M11,5 L6,9 H2 V15 H6 L11,19 Z M15.5,8.5 A5,5 0 0 1 15.5,15.5</Geometry>
+    <Geometry x:Key="Icon.Rotate">M21,12 A9,9 0 1 1 18.4,5.6 L21,8 M21,3 V8 H16</Geometry>
+    <Geometry x:Key="Icon.Back">M17,5 L7,12 L17,19 Z</Geometry>
+    <Geometry x:Key="Icon.HomeCircle">M19,12 A7,7 0 1 1 5,12 A7,7 0 1 1 19,12</Geometry>
+    <Geometry x:Key="Icon.Recents">M7,5 H17 A2,2 0 0 1 19,7 V17 A2,2 0 0 1 17,19 H7 A2,2 0 0 1 5,17 V7 A2,2 0 0 1 7,5 Z</Geometry>
+    <Geometry x:Key="Icon.Bell">M6,8 A6,6 0 0 1 18,8 C18,15 21,17 21,17 H3 C3,17 6,15 6,8 M10.3,21 A1.9,1.9 0 0 0 13.7,21</Geometry>
+    <Geometry x:Key="Icon.Camera">M22,19 A2,2 0 0 1 20,21 H4 A2,2 0 0 1 2,19 V8 A2,2 0 0 1 4,6 H7 L9,3 H15 L17,6 H20 A2,2 0 0 1 22,8 Z M16,13 A4,4 0 1 1 8,13 A4,4 0 1 1 16,13</Geometry>
+    <Geometry x:Key="Icon.RecordRing">M20.5,12 A8.5,8.5 0 1 1 3.5,12 A8.5,8.5 0 1 1 20.5,12</Geometry>
+    <Geometry x:Key="Icon.RecordDot">M15.5,12 A3.5,3.5 0 1 1 8.5,12 A3.5,3.5 0 1 1 15.5,12</Geometry>
+    <Geometry x:Key="Icon.Folder">M3,7 A2,2 0 0 1 5,5 H9 L11,7 H19 A2,2 0 0 1 21,9 V17 A2,2 0 0 1 19,19 H5 A2,2 0 0 1 3,17 Z</Geometry>
+    <Geometry x:Key="Icon.Download">M12,3 V15 M7,10 L12,15 L17,10 M5,21 H19</Geometry>
+    <Geometry x:Key="Icon.Clipboard">M9,2 H15 A1,1 0 0 1 16,3 V5 A1,1 0 0 1 15,6 H9 A1,1 0 0 1 8,5 V3 A1,1 0 0 1 9,2 Z M16,4 H18 A2,2 0 0 1 20,6 V20 A2,2 0 0 1 18,22 H6 A2,2 0 0 1 4,20 V6 A2,2 0 0 1 6,4 H8</Geometry>
+    <Geometry x:Key="Icon.More">M6.8,12 A1.8,1.8 0 1 1 3.2,12 A1.8,1.8 0 1 1 6.8,12 M13.8,12 A1.8,1.8 0 1 1 10.2,12 A1.8,1.8 0 1 1 13.8,12 M20.8,12 A1.8,1.8 0 1 1 17.2,12 A1.8,1.8 0 1 1 20.8,12</Geometry>
+
     <!-- Terisi (fill), tanpa stroke -->
     <Geometry x:Key="Icon.Play">M6,4 L20,12 L6,20 Z</Geometry>
 

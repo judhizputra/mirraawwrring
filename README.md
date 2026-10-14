@@ -25,6 +25,12 @@ Publish portable (satu exe): `scripts/publish.ps1` (tersedia pada fase distribus
 
 Jika folder `data\` di samping `Mirraawwrring.exe` bisa ditulisi, pengaturan dan log disimpan di sana. Jika tidak, dipakai `%LOCALAPPDATA%\Mirraawwrring\`. Log harian disimpan 7 hari terakhir.
 
+## Saat mirroring: toolbar samping
+
+Setelah jendela scrcpy muncul, toolbar kecil menempel di sisi kanannya (atau kiri bila tidak muat) dan mengikuti jendela itu. Isinya: Power, volume, putar layar, Kembali/Home/Aplikasi terbaru, notifikasi, Screenshot (`Pictures\Mirraawwrring`, juga ke clipboard; hotkey `Ctrl+Shift+S` saat jendela scrcpy aktif), Rekam layar (`Videos\Mirraawwrring\*.mkv`), Install APK, Kirim clipboard ke HP, dan menu Lainnya. Di Xiaomi/HyperOS, tombol bertitik kuning butuh "USB debugging (Security settings)"; klik tombolnya untuk melihat caranya.
+
+Hotkey screenshot bisa diubah di `data\settings.json` (`"screenshotHotkey": "Ctrl+Alt+P"`; modifier Ctrl/Alt/Shift/Win + huruf, angka, F1–F24, atau nama tombol seperti PrintScreen).
+
 ## Aplikasi tidak di-sign
 
 Exe tidak ditandatangani (keputusan pemilik). Saat pertama dijalankan, Windows SmartScreen mungkin menampilkan peringatan:

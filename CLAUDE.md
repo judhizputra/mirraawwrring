@@ -2,7 +2,7 @@
 
 Aplikasi desktop Windows (WPF, .NET 10, C#) untuk mirror dan kontrol HP Android lewat **scrcpy**. Spesifikasi lengkap ada di `PROMPT.md`; file ini adalah ringkasan operasional supaya sesi berikutnya bisa langsung bekerja. **Perbarui file ini setiap kali arsitektur berubah.**
 
-Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–4 selesai. Berikutnya: Fase 5 (toolbar samping: docking ke HWND scrcpy, DeviceActions, titik kuning injeksi dari `InjectionProbe`, toast, hotkey screenshot, rekam layar lewat `ScrcpySessionManager.StartHeadlessRecording`).
+Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–5 selesai. Berikutnya: Fase 6 (file browser: `RemoteFileService` + parser `find … -exec stat`, panel menempel di kanan toolbar, pull/push/drag & drop, progress, install APK dari drop; tombol "File browser" di toolbar sudah ada tapi `IsEnabled=False`).
 
 ## Perintah
 
@@ -33,8 +33,12 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
   Wireless/                    AddressUtil (validasi host:port, kode), WirelessService (pair/connect/tcpip + riwayat), MdnsWatcher (polling mdns 5 s)
   Usb/                         UsbVendorTable (VID → merek), UsbProbeParser (murni) + WmiUsbProbe (WMI) + UsbWatcher, PhoneStatusEvaluator (USB + adb → PhoneUsbStatus)
   Devices/InjectionProbe       uji `input keyevent 0`, cache per serial
+  Devices/DeviceActions        SEMUA perintah tombol toolbar (§5.8): keyevent, volume + cadangan, rotasi, notifikasi, show_touches,
+                               screenshot (exec-out screencap → Pictures), install APK, info device; tabel RequiresInjection; Chords (Ctrl+V, Alt+O)
+  Input/Hotkey                 parser "Ctrl+Shift+S" → HotkeyModifiers (= MOD_*) + virtual key (murni)
   Setup/                       ScrcpyManifest, SetupService (unduh/hash/ekstrak/unblock, winget, validasi folder, cek internet), VerificationService (7 pemeriksaan + FixAction)
-  Interop/                     NativeMethods (EnumWindows dsb.), WindowFinder (cari HWND jendela scrcpy dari PID)
+  Interop/                     NativeMethods (EnumWindows dsb.), WindowFinder (cari HWND jendela scrcpy dari PID),
+                               DockPlacement (posisi toolbar kanan/kiri scrcpy dalam piksel fisik, murni)
 src/Mirraawwrring.App/         WPF
   App.xaml(.cs)                DI container, logging, handler exception global, LocateTools() saat startup (pakai CustomScrcpyPath dari settings)
   Themes/Colors.xaml           token warna/font/radius dari mockup (§7). Jangan tulis hex di View.
@@ -52,7 +56,13 @@ src/Mirraawwrring.App/         WPF
   ViewModels/Setup/            SetupViewModel (navigasi + footer per langkah) dan halaman: DetectPage, InstallPage, VerifyPage, PhonePage, DonePage
   Views/SetupWindow            wizard (DataTemplate per tipe halaman, stepper Grid); dibuka dari MainWindow.OnLoaded jika tools tidak lengkap atau tombol "Setup…"
   Themes/Controls.Setup.xaml   Style.ProgressBar, Style.OptionCard, Style.Button.Danger, Style.ChoiceCard
-  Interop/                     NativeMethods (P/Invoke UI), WindowTheming (title bar gelap DWM)
+  Themes/Controls.Toolbar.xaml Style.Button.Toolbar (40x40), Style.Icon.Toolbar, Style.InjectionDot, Style.Toast, Style.ToolbarLegend, Style.ContextMenu/MenuItem
+  Views/ToolbarWindow          toolbar samping per sesi scrcpy: owner = HWND scrcpy, WS_EX_NOACTIVATE, mengikuti lewat WinEventHook, RegisterHotKey screenshot,
+                               Reposition() = WindowGeometry + DockPlacement; menu "Lainnya" = ContextMenu; dibuat MainWindow.OnToolbarRequested
+  ViewModels/ToolbarViewModel  semua command tombol (memanggil DeviceActions), InjectionBlocked (RecheckAsync tiap sesi + log scrcpy) → tooltip/titik kuning/legenda,
+                               rekam headless (ScrcpySessionManager.StartHeadlessRecording), toast (ToastItem), PickApkFile (Func dari View), GuideRequested
+  Interop/                     NativeMethods (P/Invoke UI: DWM, geometri, SetWinEventHook, RegisterHotKey, SendInput), WindowTheming (title bar gelap DWM),
+                               WinEventHook (pembungkus hook, UI thread), InputSender (fokuskan scrcpy + SendInput kombinasi tombol), WindowGeometry (frame/klien/DPI/area kerja)
   Resources/Strings.resx       SEMUA teks UI (bahasa Indonesia). XAML: {loc:Str Kunci}; C#: Strings.Get("Kunci") / Strings.Format
 tests/Mirraawwrring.Core.Tests/ xUnit; Fakes/ berisi FakeProcessRunner, FakeFileSystem, FakeAppPaths, FakeAdbClient, FakeTimeProvider
 config/scrcpy-manifest.json    versi scrcpy yang di-pin + URL + SHA-256 (disalin ke samping exe saat build)
@@ -72,6 +82,8 @@ docs/manual-test.md            checklist uji dengan HP sungguhan
 - **Tema:** warna lewat `{StaticResource Brush.*}`; style baru ditambahkan di `Controls.xaml` dengan nama `Style.<Kontrol>[.<Varian>]`. Placeholder TextBox: `Tag="teks"`.
 - **Dialog:** Window transient di DI + `Func<Window>` factory untuk MainWindow; VM dialog punya event `Completed`, code-behind set `DialogResult = true`. Tombol dengan konten non-teks wajib `AutomationProperties.Name` (aksesibilitas, dan dipakai uji UI otomatis).
 - **Uji UI otomatis** (tanpa HP): skrip PowerShell UIAutomation (`-STA`) bisa meng-invoke tombol berdasarkan `AutomationProperties.Name`, mengisi TextBox lewat ValuePattern, dan screenshot jendela dengan `PrintWindow`. Contoh skrip pernah dipakai di sesi 14 Okt 2026 (scratchpad); buat ulang kalau perlu.
+  Untuk alur yang butuh HP (toolbar, nanti file browser), Fase 5 memakai **adb & scrcpy palsu**: dua program .NET kecil bernama `adb.exe` (menjawab `devices -l`, `shell getprop/input/settings/cmd/wm`, `exec-out screencap -p` → PNG dummy, `install`; file `BLOCK` di foldernya = INJECT_EVENTS) dan `scrcpy.exe` (jendela WPF berjudul `--window-title`, mencetak `KEY: Ctrl+V` saat menerima tombol; `--no-window` menulis byte dummy ke `--record`). Folder berisi keduanya + `scrcpy-server` dummy dipakai lewat `customScrcpyPath` di `data\settings.json` setelah folder `scrcpy\` di bin disembunyikan. Jendela toolbar (`WS_EX_TOOLWINDOW`) tidak muncul di daftar anak root UIA; pakai `EnumWindows` untuk mencarinya.
+- **Toolbar:** jangan `Activate()`/fokus ke toolbar; `WS_EX_NOACTIVATE` disengaja supaya scrcpy tetap menerima keyboard. Posisi selalu dihitung dalam piksel fisik dengan DPI jendela scrcpy (`GetDpiForWindow`), lalu `SetWindowPos`; ukuran di-set dalam DIP. Aksi yang butuh injeksi lewat `RunInjectionAsync` (buka panduan bila diblokir); output yang memuat `INJECT_EVENTS` otomatis menandai blokir.
 - **Fase:** di akhir fase: build bersih, test lulus, CHANGELOG, commit conventional (`feat:`, `fix:`, `docs:`, …), lalu tunggu konfirmasi pemilik.
 
 ## Alur data utama
@@ -125,6 +137,10 @@ VID dibaca dari `DeviceID` (`USB\VID_XXXX&PID_YYYY\…`) oleh `UsbProbeParser`; 
 - **`--mouse=uhid`** menangkap mouse PC (mode relatif); LAlt/LSuper melepasnya. Jelaskan di tooltip opsi UHID.
 - **Aplikasi tidak di-sign:** SmartScreen akan memperingatkan; README menjelaskan "Run anyway" dan Unblock.
 - **adb lain di PATH** (Android SDK) bisa bentrok di port 5037; aplikasi selalu memakai adb dari folder scrcpy dan mengatur env `ADB` saat menjalankan scrcpy.
-- **Menutup aplikasi menghentikan semua sesi scrcpy** (ScrcpySessionManager.Dispose lewat DI). Toolbar (Fase 5) bergantung pada aplikasi, jadi ini disengaja.
+- **Menutup aplikasi menghentikan semua sesi scrcpy** (ScrcpySessionManager.Dispose lewat DI). Toolbar bergantung pada aplikasi, jadi ini disengaja.
+- **Rekaman dari toolbar = .mkv**, bukan .mp4: proses scrcpy `--no-window` hanya bisa dihentikan dengan kill, dan MP4 tanpa trailer tidak bisa diputar. Rekaman dari opsi "Rekam ke file" di jendela utama tetap .mp4 (scrcpy ditutup normal lewat jendelanya).
+- **Cadangan `cmd media_session volume --adj`** saat injeksi diblokir belum diverifikasi di HyperOS. Cadangan `screenrecord` untuk rekaman tidak dibuat (rekaman tidak butuh injeksi).
+- **Hotkey screenshot** memakai `RegisterHotKey` global yang hanya didaftarkan saat jendela scrcpy/toolbar foreground; kalau aplikasi lain sudah memakai kombinasi itu, pendaftaran gagal dan dicatat di log. Ubah lewat `screenshotHotkey` di settings.json (belum ada UI).
+- **DPI campuran** (monitor dengan skala berbeda) belum diuji dengan sungguhan; PC pengembang 100%.
 - Pengembangan tanpa scrcpy terpasang: salin isi `scrcpy-win64-v4.1` ke `src/Mirraawwrring.App/bin/Debug/net10.0-windows/scrcpy/` (folder bin tidak masuk git).
 - Fitur yang butuh HP fisik belum teruji otomatis; lihat `docs/manual-test.md`.

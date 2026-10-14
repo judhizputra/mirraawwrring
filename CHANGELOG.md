@@ -4,6 +4,18 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 5 — Toolbar samping
+- `DeviceActions` (satu-satunya tempat perintah tombol toolbar, §5.8): Power/Back/Home/Recent (`input keyevent`), volume dengan cadangan `cmd media_session volume --adj` saat injeksi diblokir, putar layar (`accelerometer_rotation 0` + `user_rotation`), notifikasi (`cmd statusbar expand-notifications`/`collapse`), tampilkan sentuhan, screenshot (`exec-out screencap -p` → `Pictures\Mirraawwrring\screenshot_<waktu>.png`, validasi tanda PNG, akhiran -2 bila nama bentrok), install APK (`install -r`, timeout 3 menit), teks info device; tabel aksi yang butuh injeksi; kombinasi tombol scrcpy (Ctrl+V, Alt+O, Alt+Shift+O).
+- `Hotkey` (parser "Ctrl+Shift+S" → modifier + virtual key, murni) dan `DockPlacement` (posisi toolbar di kanan/kiri jendela scrcpy dalam piksel fisik, clamp ke area kerja monitor; konversi DIP ↔ piksel per DPI).
+- `ToolbarWindow` (mockup Running-Toolbar): jendela transparan tanpa bingkai, owner = HWND scrcpy, `WS_EX_NOACTIVATE` (tidak merebut fokus keyboard), mengikuti gerak/resize/minimize/restore lewat `SetWinEventHook` yang difilter ke proses dan HWND scrcpy, menutup sendiri saat sesi berakhir, pindah ke kiri bila tidak muat di kanan. Tooltip dengan badge pintasan scrcpy (dari `reference/scrcpy-4.1-help.txt`), titik kuning + legenda saat `InjectionProbe` (diuji ulang tiap sesi) atau log scrcpy melaporkan INJECT_EVENTS; klik tombol yang diblokir membuka panduan Security settings.
+- Hotkey screenshot `Ctrl+Shift+S` (`RegisterHotKey`, hanya terdaftar saat jendela scrcpy/toolbar jadi foreground; bisa diubah lewat `screenshotHotkey` di settings.json). Screenshot juga disalin ke clipboard.
+- Rekam layar dari toolbar: proses scrcpy kedua `--no-window --no-playback --no-control --record=…mkv` (Matroska supaya file tetap bisa diputar saat proses dihentikan); tombol berubah merah; toast "Rekaman disimpan" dengan Buka/Folder.
+- Kirim clipboard ke HP: fokuskan jendela scrcpy lalu `SendInput` Ctrl+V. Menu "Lainnya": tampilkan sentuhan (dicentang sesuai nilai HP), layar HP mati/nyala (Alt+O / Alt+Shift+O ke scrcpy), buka folder screenshot/rekaman, salin info device.
+- Toast di samping toolbar (7 detik, bisa ditutup) untuk screenshot, rekaman, install APK, clipboard, dan kegagalan perintah.
+- Tombol File browser sudah ada tetapi nonaktif sampai Fase 6.
+- Diuji di PC ini dengan adb dan scrcpy palsu (scratchpad): docking kanan/kiri, mengikuti pindah jendela, minimize/restore, tutup otomatis, screenshot via tombol dan hotkey, Ctrl+V diterima jendela scrcpy, rekam mulai/berhenti, menu Lainnya, titik kuning + legenda + panduan. Belum diuji dengan HP sungguhan.
+- 245 unit test.
+
 ### Fase 4 — Wizard setup
 - `UsbProbe` (WMI `Win32_PnPEntity`): deteksi HP tercolok dari tabel VID (`UsbVendorTable`, mudah ditambah) / MTP, dan antarmuka ADB (`USB\Class_FF&SubClass_42&Prot_01`); `UsbWatcher` memakai `Win32_DeviceChangeEvent` + polling 2 detik; `PhoneStatusEvaluator` menggabungkan dengan adb (TidakTercolok / TercolokDebuggingMati / DebuggingAktifTapiAdbTidakMelihat / BelumDiizinkan / Siap).
 - `InjectionProbe`: `adb shell input keyevent 0`, deteksi INJECT_EVENTS, cache per sesi per device, uji ulang.
