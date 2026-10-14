@@ -5,20 +5,385 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:loc="clr-namespace:Mirraawwrring.App.Resources"
         xmlns:vm="clr-namespace:Mirraawwrring.App.ViewModels"
+        xmlns:conv="clr-namespace:Mirraawwrring.App.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Style="{StaticResource Style.Window}"
         Title="{loc:Str Main_Title}"
-        Width="1000" Height="700" MinWidth="900" MinHeight="600"
+        Width="1000" Height="700" MinWidth="900" MinHeight="620"
         WindowStartupLocation="CenterScreen">
 
-    <Grid Margin="16,14,16,12">
-        <Border Style="{StaticResource Style.Panel}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="520">
-                <TextBlock Style="{StaticResource Style.Text.Title}" Text="{loc:Str App_Name}" HorizontalAlignment="Center" />
-                <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str Main_FoundationPlaceholder}" Margin="0,8,0,0" TextAlignment="Center" />
-                <TextBlock Style="{StaticResource Style.Text.Mono}" Text="{Binding DataLocation}" Margin="0,16,0,0" TextAlignment="Center" />
-            </StackPanel>
+    <Window.Resources>
+        <conv:EnumToBoolConverter x:Key="EnumToBool" />
+        <conv:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibility" />
+        <conv:NullToCollapsedConverter x:Key="NullToCollapsed" />
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+
+        <!-- Template kartu perangkat -->
+        <DataTemplate x:Key="DeviceCardTemplate" DataType="{x:Type vm:DeviceItemViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="IconBox" Width="36" Height="36" CornerRadius="8" Background="{StaticResource Brush.CardPressed}" Margin="0,0,12,0" VerticalAlignment="Center">
+                    <Path x:Name="IconPath" Style="{StaticResource Style.Icon}" Data="{StaticResource Icon.Phone}" Stroke="{StaticResource Brush.TextMuted}" />
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding DisplayName}" FontSize="{StaticResource FontSize.Emphasis}" FontWeight="SemiBold" Foreground="{StaticResource Brush.Text}" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding Subtitle}" Style="{StaticResource Style.Text.Muted}" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding AndroidText}" Style="{StaticResource Style.Text.Muted}" Margin="0,2,0,0"
+                               Visibility="{Binding AndroidText, Converter={StaticResource NullToCollapsed}}" />
+                </StackPanel>
+                <Border x:Name="Badge" Grid.Column="2" Style="{StaticResource Style.Badge}" Margin="8,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse x:Name="Dot" Width="6" Height="6" Fill="{StaticResource Brush.Accent}" Margin="0,0,6,0" VerticalAlignment="Center" Visibility="Collapsed" />
+                        <TextBlock x:Name="BadgeLabel" Text="{Binding BadgeText}" Style="{StaticResource Style.BadgeText}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding BadgeKind}" Value="Connected">
+                    <Setter TargetName="Badge" Property="Background" Value="{StaticResource Brush.AccentBadge}" />
+                    <Setter TargetName="BadgeLabel" Property="Foreground" Value="{StaticResource Brush.AccentText}" />
+                    <Setter TargetName="Dot" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="IconBox" Property="Background" Value="{StaticResource Brush.AccentBadge}" />
+                    <Setter TargetName="IconPath" Property="Stroke" Value="{StaticResource Brush.Accent}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding BadgeKind}" Value="Mirroring">
+                    <Setter TargetName="Badge" Property="Background" Value="{StaticResource Brush.Accent}" />
+                    <Setter TargetName="BadgeLabel" Property="Foreground" Value="{StaticResource Brush.OnAccent}" />
+                    <Setter TargetName="IconBox" Property="Background" Value="{StaticResource Brush.AccentBadge}" />
+                    <Setter TargetName="IconPath" Property="Stroke" Value="{StaticResource Brush.Accent}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding BadgeKind}" Value="Warning">
+                    <Setter TargetName="Badge" Property="Background" Value="{StaticResource Brush.WarningBadge}" />
+                    <Setter TargetName="BadgeLabel" Property="Foreground" Value="{StaticResource Brush.WarningText}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- Baris checklist di state kosong -->
+        <Style x:Key="CheckRow" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="64" />
+        </Grid.RowDefinitions>
+
+        <!-- Body -->
+        <Grid Margin="16,14,16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="330" />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Panel perangkat -->
+            <Border Style="{StaticResource Style.Panel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <Grid Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource Style.Text.Heading}" Text="{loc:Str Main_Devices}" />
+                            <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{Binding DeviceCountText}" Margin="8,0,0,0" VerticalAlignment="Bottom" />
+                        </StackPanel>
+                        <Button Style="{StaticResource Style.Button.Icon}" HorizontalAlignment="Right" Command="{Binding RefreshDevicesCommand}"
+                                ToolTip="{loc:Str Main_Refresh}" AutomationProperties.Name="{loc:Str Main_Refresh}">
+                            <Path Style="{StaticResource Style.Icon}" Width="16" Height="16" Data="{StaticResource Icon.Refresh}" />
+                        </Button>
+                    </Grid>
+
+                    <!-- Daftar perangkat -->
+                    <ListBox Grid.Row="1" Style="{StaticResource Style.DeviceList}" ItemContainerStyle="{StaticResource Style.DeviceItem}"
+                             ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" ItemTemplate="{StaticResource DeviceCardTemplate}"
+                             Visibility="{Binding HasDevices, Converter={StaticResource BoolToVisibility}}"
+                             AutomationProperties.Name="{loc:Str Main_Devices}" />
+
+                    <!-- State kosong -->
+                    <StackPanel Grid.Row="1" Visibility="{Binding HasNoDevices, Converter={StaticResource BoolToVisibility}}">
+                        <StackPanel HorizontalAlignment="Center" Margin="8,18,8,14">
+                            <Border Width="56" Height="56" CornerRadius="14" Background="{StaticResource Brush.Card}" HorizontalAlignment="Center">
+                                <Path Style="{StaticResource Style.Icon}" Width="26" Height="26" Data="{StaticResource Icon.Phone}" Stroke="{StaticResource Brush.TextMuted}" />
+                            </Border>
+                            <TextBlock Style="{StaticResource Style.Text.Heading}" Text="{loc:Str Main_EmptyTitle}" HorizontalAlignment="Center" Margin="0,10,0,4" />
+                            <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str Main_EmptySubtitle}" TextAlignment="Center" />
+                        </StackPanel>
+                        <Border Style="{StaticResource Style.Card}" Padding="14,12">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Style.Text.Secondary}" FontWeight="SemiBold" Text="{loc:Str Main_CheckOnPhone}" Margin="0,0,0,8" />
+                                <StackPanel Style="{StaticResource CheckRow}">
+                                    <Path Style="{StaticResource Style.Icon}" Width="14" Height="14" Data="{StaticResource Icon.Check}" Stroke="{StaticResource Brush.Accent}" Margin="0,2,8,0" VerticalAlignment="Top" />
+                                    <TextBlock Style="{StaticResource Style.Text.Secondary}" Text="{loc:Str Main_Check1}" />
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource CheckRow}">
+                                    <Path Style="{StaticResource Style.Icon}" Width="14" Height="14" Data="{StaticResource Icon.Check}" Stroke="{StaticResource Brush.Accent}" Margin="0,2,8,0" VerticalAlignment="Top" />
+                                    <TextBlock Style="{StaticResource Style.Text.Secondary}" Text="{loc:Str Main_Check2}" />
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource CheckRow}">
+                                    <Path Style="{StaticResource Style.Icon}" Width="14" Height="14" Data="{StaticResource Icon.Check}" Stroke="{StaticResource Brush.Accent}" Margin="0,2,8,0" VerticalAlignment="Top" />
+                                    <TextBlock Style="{StaticResource Style.Text.Secondary}" Text="{loc:Str Main_Check3}" />
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource CheckRow}" Margin="0">
+                                    <Path Style="{StaticResource Style.Icon}" Width="14" Height="14" Data="{StaticResource Icon.Check}" Stroke="{StaticResource Brush.Accent}" Margin="0,2,8,0" VerticalAlignment="Top" />
+                                    <TextBlock Style="{StaticResource Style.Text.Secondary}" Text="{loc:Str Main_Check4}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Bawah: aksi koneksi + banner -->
+                    <StackPanel Grid.Row="2">
+                        <!-- Ada perangkat: dua tombol sekunder + link -->
+                        <StackPanel Visibility="{Binding HasDevices, Converter={StaticResource BoolToVisibility}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Style="{StaticResource Style.Button}" Padding="8,0" Command="{Binding PairWirelessCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Path Style="{StaticResource Style.Icon}" Width="15" Height="15" Data="{StaticResource Icon.Wifi}" Stroke="{StaticResource Brush.Text}" Margin="0,0,8,0" />
+                                        <TextBlock Text="{loc:Str Main_PairWireless}" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Column="2" Style="{StaticResource Style.Button}" Padding="8,0" Command="{Binding ConnectViaIpCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Path Style="{StaticResource Style.Icon}" Width="15" Height="15" Data="{StaticResource Icon.Link}" Stroke="{StaticResource Brush.Text}" Margin="0,0,8,0" />
+                                        <TextBlock Text="{loc:Str Main_ConnectIp}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <Button Style="{StaticResource Style.Button.Subtle}" Content="{loc:Str Main_EnableWifiUsb}" Command="{Binding EnableWifiFromUsbCommand}" Margin="0,4,0,0" HorizontalAlignment="Left" />
+                        </StackPanel>
+
+                        <!-- Kosong: Pair wireless sebagai aksi utama -->
+                        <StackPanel Visibility="{Binding HasNoDevices, Converter={StaticResource BoolToVisibility}}">
+                            <Button Style="{StaticResource Style.Button.Accent}" Command="{Binding PairWirelessCommand}" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Style="{StaticResource Style.Icon}" Width="16" Height="16" Data="{StaticResource Icon.Wifi}" Stroke="{StaticResource Brush.OnAccent}" Margin="0,0,8,0" />
+                                    <TextBlock Text="{loc:Str Main_PairWireless}" />
+                                </StackPanel>
+                            </Button>
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Style="{StaticResource Style.Button}" Padding="8,0" Content="{loc:Str Main_ConnectIp}" Command="{Binding ConnectViaIpCommand}" />
+                                <Button Grid.Column="2" Style="{StaticResource Style.Button}" Padding="8,0" Content="{loc:Str Main_RestartAdb}" Command="{Binding RestartAdbCommand}" />
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Banner HyperOS -->
+                        <Border Margin="0,10,0,0" Padding="12" CornerRadius="{StaticResource Radius.Card}"
+                                Background="{StaticResource Brush.WarningBackground}" BorderBrush="{StaticResource Brush.WarningBorder}" BorderThickness="1"
+                                Visibility="{Binding InjectionBlocked, Converter={StaticResource BoolToVisibility}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Path Style="{StaticResource Style.Icon}" Data="{StaticResource Icon.Warning}" Stroke="{StaticResource Brush.WarningIcon}" Margin="0,1,10,0" VerticalAlignment="Top" />
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{loc:Str Main_BannerTitle}" FontWeight="SemiBold" Foreground="{StaticResource Brush.WarningText}" />
+                                    <TextBlock Text="{loc:Str Main_BannerBody}" Style="{StaticResource Style.Text.Muted}" Foreground="{StaticResource Brush.WarningBody}" Margin="0,4,0,4" />
+                                    <TextBlock FontSize="{StaticResource FontSize.Small}">
+                                        <Hyperlink Style="{StaticResource Style.Hyperlink}" Command="{Binding ShowHyperOsGuideCommand}">
+                                            <Run Text="{loc:Str Main_BannerLink}" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Panel mode & opsi -->
+            <Border Grid.Column="2" Style="{StaticResource Style.Panel}" Padding="18,16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource Style.Text.Heading}" Text="{loc:Str Main_Mode}" Margin="0,0,0,16" />
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,-4,0" Padding="0,0,4,0">
+                        <StackPanel x:Name="ModePanel" IsEnabled="{Binding IsDeviceSelected}">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0.4" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+
+                            <!-- Mode 2x2 -->
+                            <UniformGrid Columns="2" Margin="-5,0">
+                                <RadioButton Style="{StaticResource Style.ModeCard}" Margin="5,0,5,10" Tag="{StaticResource Icon.Cursor}" GroupName="Mode"
+                                             IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=MirrorAndControl}"
+                                             AutomationProperties.Name="{loc:Str Main_ModeMirror}">
+                                    <StackPanel>
+                                        <TextBlock Text="{loc:Str Main_ModeMirror}" FontSize="{StaticResource FontSize.Emphasis}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{loc:Str Main_ModeMirrorDesc}" Style="{StaticResource Style.Text.Muted}" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource Style.ModeCard}" Margin="5,0,5,10" Tag="{StaticResource Icon.Eye}" GroupName="Mode"
+                                             IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=ViewOnly}"
+                                             AutomationProperties.Name="{loc:Str Main_ModeView}">
+                                    <StackPanel>
+                                        <TextBlock Text="{loc:Str Main_ModeView}" FontSize="{StaticResource FontSize.Emphasis}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{loc:Str Main_ModeViewDesc}" Style="{StaticResource Style.Text.Muted}" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource Style.ModeCard}" Margin="5,0,5,10" Tag="{StaticResource Icon.Moon}" GroupName="Mode"
+                                             IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=ScreenOff}"
+                                             AutomationProperties.Name="{loc:Str Main_ModeScreenOff}">
+                                    <StackPanel>
+                                        <TextBlock Text="{loc:Str Main_ModeScreenOff}" FontSize="{StaticResource FontSize.Emphasis}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{loc:Str Main_ModeScreenOffDesc}" Style="{StaticResource Style.Text.Muted}" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton Style="{StaticResource Style.ModeCard}" Margin="5,0,5,10" Tag="{StaticResource Icon.Bolt}" GroupName="Mode"
+                                             IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=DataSaver}"
+                                             AutomationProperties.Name="{loc:Str Main_ModeDataSaver}">
+                                    <StackPanel>
+                                        <TextBlock Text="{loc:Str Main_ModeDataSaver}" FontSize="{StaticResource FontSize.Emphasis}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{loc:Str Main_ModeDataSaverDesc}" Style="{StaticResource Style.Text.Muted}" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                </RadioButton>
+                            </UniformGrid>
+
+                            <!-- Kualitas -->
+                            <TextBlock Style="{StaticResource Style.Text.Secondary}" FontSize="{StaticResource FontSize.Body}" FontWeight="SemiBold" Text="{loc:Str Main_Quality}" Margin="0,6,0,8" />
+                            <UniformGrid Columns="3" Margin="-5,0">
+                                <StackPanel Margin="5,0">
+                                    <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str Main_MaxSize}" Margin="0,0,0,5" />
+                                    <ComboBox Style="{StaticResource Style.ComboBox}" ItemsSource="{Binding ResolutionChoices}" SelectedItem="{Binding SelectedResolution}" AutomationProperties.Name="{loc:Str Main_MaxSize}" />
+                                </StackPanel>
+                                <StackPanel Margin="5,0">
+                                    <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str Main_Bitrate}" Margin="0,0,0,5" />
+                                    <ComboBox Style="{StaticResource Style.ComboBox}" ItemsSource="{Binding BitrateChoices}" SelectedItem="{Binding SelectedBitrate}" AutomationProperties.Name="{loc:Str Main_Bitrate}" />
+                                </StackPanel>
+                                <StackPanel Margin="5,0">
+                                    <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{loc:Str Main_MaxFps}" Margin="0,0,0,5" />
+                                    <ComboBox Style="{StaticResource Style.ComboBox}" ItemsSource="{Binding FpsChoices}" SelectedItem="{Binding SelectedFps}" AutomationProperties.Name="{loc:Str Main_MaxFps}" />
+                                </StackPanel>
+                            </UniformGrid>
+
+                            <!-- Opsi (disembunyikan saat belum ada HP terpilih, seperti mockup Empty) -->
+                            <TextBlock Style="{StaticResource Style.Text.Secondary}" FontSize="{StaticResource FontSize.Body}" FontWeight="SemiBold" Text="{loc:Str Main_Options}" Margin="0,16,0,8"
+                                       Visibility="{Binding IsDeviceSelected, Converter={StaticResource BoolToVisibility}}" />
+                            <UniformGrid Columns="2" Margin="-8,0" Visibility="{Binding IsDeviceSelected, Converter={StaticResource BoolToVisibility}}">
+                                <CheckBox Style="{StaticResource Style.CheckBox}" Margin="8,0" Content="{loc:Str Main_OptAudio}" IsChecked="{Binding ForwardAudio}" />
+                                <CheckBox Style="{StaticResource Style.CheckBox}" Margin="8,0" Content="{loc:Str Main_OptUhid}" IsChecked="{Binding UhidInput}" ToolTip="{loc:Str Main_OptUhidTip}" />
+                                <CheckBox Style="{StaticResource Style.CheckBox}" Margin="8,0" Content="{loc:Str Main_OptTopmost}" IsChecked="{Binding AlwaysOnTop}" />
+                                <CheckBox Style="{StaticResource Style.CheckBox}" Margin="8,0" Content="{loc:Str Main_OptFullscreen}" IsChecked="{Binding Fullscreen}" />
+                                <CheckBox Style="{StaticResource Style.CheckBox}" Margin="8,0" Content="{loc:Str Main_OptStayAwake}" IsChecked="{Binding StayAwake}" />
+                                <CheckBox Style="{StaticResource Style.CheckBox}" Margin="8,0" Content="{loc:Str Main_OptRecord}" IsChecked="{Binding RecordToFile}" />
+                            </UniformGrid>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Info saat belum ada perangkat terpilih -->
+                    <Border Grid.Row="2" Style="{StaticResource Style.Card}" Padding="14,12" Margin="0,12,0,0"
+                            Visibility="{Binding IsDeviceSelected, Converter={StaticResource InvertedBoolToVisibility}}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Style="{StaticResource Style.Icon}" Data="{StaticResource Icon.Info}" Stroke="{StaticResource Brush.TextMuted}" Margin="0,0,10,0" VerticalAlignment="Top" />
+                            <TextBlock Style="{StaticResource Style.Text.Secondary}" Text="{loc:Str Main_ModeHint}" MaxWidth="520" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Log -->
+        <Border Grid.Row="1" Margin="16,12,16,0" Height="88" Padding="12,8" CornerRadius="{StaticResource Radius.Card}"
+                Background="{StaticResource Brush.Log}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <TextBlock Text="{loc:Str Main_Log}" FontSize="{StaticResource FontSize.Tiny}" Foreground="{StaticResource Brush.TextMuted}" VerticalAlignment="Center" />
+                    <Button Style="{StaticResource Style.Button.Subtle}" Height="20" Padding="4,0" FontSize="{StaticResource FontSize.Tiny}" HorizontalAlignment="Right"
+                            Content="{loc:Str Main_CopyLog}" Command="{Binding CopyLogCommand}" AutomationProperties.Name="{loc:Str Main_CopyLogName}" />
+                </Grid>
+                <ItemsControl x:Name="LogList" Grid.Row="1" ItemsSource="{Binding LogLines}" Margin="0,2,0,0" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="Pixel">
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer x:Name="LogScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" CanContentScroll="True">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:LogLineItem}">
+                            <TextBlock x:Name="Line" Text="{Binding Text}" FontFamily="{StaticResource Font.Mono}" FontSize="{StaticResource FontSize.Log}"
+                                       Foreground="{StaticResource Brush.TextMuted}" LineHeight="18" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsProblem}" Value="True">
+                                    <Setter TargetName="Line" Property="Foreground" Value="{StaticResource Brush.WarningText}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </Border>
+
+        <!-- Action bar -->
+        <Grid Grid.Row="2" Margin="16,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Width="7" Height="7" Margin="0,1,6,0" VerticalAlignment="Center">
+                    <Ellipse.Style>
+                        <Style TargetType="Ellipse">
+                            <Setter Property="Fill" Value="{StaticResource Brush.WarningIcon}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding StatusOk}" Value="True">
+                                    <Setter Property="Fill" Value="{StaticResource Brush.Accent}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Ellipse.Style>
+                </Ellipse>
+                <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{Binding StatusText}" VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{Binding ScrcpyVersionText}" Margin="14,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Style="{StaticResource Style.Button}" Height="40" Content="{loc:Str Main_OpenRecordings}" Command="{Binding OpenRecordingsFolderCommand}" Margin="0,0,10,0" />
+                <Button Style="{StaticResource Style.Button.Accent}" Command="{Binding StartMirroringCommand}" IsDefault="True">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource Icon.Play}" Fill="{StaticResource Brush.OnAccent}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding StartButtonText}" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

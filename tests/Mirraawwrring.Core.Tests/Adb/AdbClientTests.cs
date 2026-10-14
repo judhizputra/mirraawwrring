@@ -28,6 +28,7 @@ public sealed class AdbClientTests
         Assert.Equal(AdbPath, _runner.Last.FileName);
         Assert.Equal(["devices", "-l"], _runner.Last.Arguments);
         Assert.Equal(ProcessRequest.DefaultTimeout, _runner.Last.Timeout);
+        Assert.True(_runner.Last.Quiet);
         var d = Assert.Single(devices);
         Assert.Equal("SM G998B", d.Model);
     }

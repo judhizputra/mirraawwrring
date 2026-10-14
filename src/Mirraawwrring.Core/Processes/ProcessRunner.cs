@@ -12,7 +12,7 @@ public sealed class ProcessRunner(ILogger<ProcessRunner> logger) : IProcessRunne
 
     public async Task<ProcessResult> RunAsync(ProcessRequest request, CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("> {Command}", request.ToLogString());
+        logger.Log(request.Quiet ? LogLevel.Debug : LogLevel.Information, "> {Command}", request.ToLogString());
         var stopwatch = Stopwatch.StartNew();
 
         using var process = new Process { StartInfo = CreateStartInfo(request) };
@@ -175,7 +175,7 @@ public sealed class ProcessRunner(ILogger<ProcessRunner> logger) : IProcessRunne
         }
         else if (output.Length > 0)
         {
-            logger.LogInformation("{Output}", output);
+            logger.Log(request.Quiet ? LogLevel.Debug : LogLevel.Information, "{Output}", output);
         }
 
         static string Prefix(string output) => output.Length == 0 ? string.Empty : Environment.NewLine + output;

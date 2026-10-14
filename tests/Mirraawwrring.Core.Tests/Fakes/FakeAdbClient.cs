@@ -49,7 +49,7 @@ public sealed class FakeAdbClient : IAdbClient
     public Task<ProcessResult> KillServerAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
     public Task<ProcessResult> VersionAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
     public Task<ProcessResult> ShellAsync(string serial, IReadOnlyList<string> command, TimeSpan? timeout = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-    public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, bool quiet = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 }
 
 public static class TestDevices

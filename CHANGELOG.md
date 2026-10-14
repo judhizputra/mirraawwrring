@@ -4,6 +4,15 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 2 — Jendela utama
+- Layout sesuai mockup `Main`/`Empty`: panel perangkat (kartu dengan badge Terhubung / Belum diizinkan / Offline / Mirroring), state kosong dengan checklist, panel Mode (4 kartu), Kualitas (3 ComboBox), Opsi (6 checkbox), panel Log (bisa disalin, auto-scroll), bar status (adb siap / menunggu perangkat, versi scrcpy), tombol Buka folder rekaman dan Mulai/Hentikan mirroring.
+- `DeviceWatcher` dihubungkan ke UI; info Android/pabrikan diambil lewat `getprop`; perangkat terakhir dipilih otomatis.
+- `ScrcpySession` + `ScrcpySessionManager`: beberapa sesi sekaligus, scrcpy tanpa konsol, env `ADB`, log diklasifikasi, event INJECT_EVENTS → banner HyperOS + jendela panduan Security settings; HWND jendela scrcpy via `WindowFinder` (EnumWindows).
+- `SettingsStore` (`settings.json`, atomic write, toleran file rusak): mode/kualitas/opsi dan perangkat terakhir diingat.
+- Polling `adb devices` dicatat di level Debug (tidak membanjiri panel Log).
+- Tombol Pair wireless / Sambung via IP / Aktifkan Wi-Fi dari USB sudah ada di UI, isinya menyusul di Fase 3.
+- 116 unit test.
+
 ### Fase 1 — Core
 - `IProcessRunner`/`ProcessRunner`: async, timeout, pembatalan, tangkap stdout/stderr/exit code, stdout biner, proses berjalan lama (`Start`), semua perintah dan output tercatat ke log.
 - `ToolLocator` (§5.1): bundel → folder exe → path kustom → symlink winget (di-resolve) → PATH; adb diutamakan dari folder scrcpy; adb lain di PATH/Android SDK dilaporkan. `ToolRegistry` menyimpan lokasi aktif.

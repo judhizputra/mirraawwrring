@@ -14,7 +14,7 @@ public sealed class AdbClient(IProcessRunner runner, IToolRegistry tools, ILogge
 
     public async Task<IReadOnlyList<Device>> GetDevicesAsync(CancellationToken cancellationToken = default)
     {
-        var result = await RunAsync(["devices", "-l"], cancellationToken: cancellationToken).ConfigureAwait(false);
+        var result = await RunAsync(["devices", "-l"], quiet: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         return AdbDevicesParser.Parse(result.StandardOutput);
     }
 
@@ -100,7 +100,7 @@ public sealed class AdbClient(IProcessRunner runner, IToolRegistry tools, ILogge
         return RunAsync(["-s", serial, "shell", ShellQuoting.Join(command)], timeout, cancellationToken: cancellationToken);
     }
 
-    public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, CancellationToken cancellationToken = default)
+    public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, bool quiet = false, CancellationToken cancellationToken = default)
     {
         var request = new ProcessRequest
         {
@@ -108,6 +108,7 @@ public sealed class AdbClient(IProcessRunner runner, IToolRegistry tools, ILogge
             Arguments = arguments,
             Timeout = timeout ?? ProcessRequest.DefaultTimeout,
             BinaryStdout = binaryStdout,
+            Quiet = quiet,
         };
         return runner.RunAsync(request, cancellationToken);
     }

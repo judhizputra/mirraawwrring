@@ -7,6 +7,7 @@ using Mirraawwrring.App.ViewModels;
 using Mirraawwrring.App.Views;
 using Mirraawwrring.Core;
 using Mirraawwrring.Core.Logging;
+using Mirraawwrring.Core.Settings;
 using Mirraawwrring.Core.Tools;
 
 namespace Mirraawwrring.App;
@@ -51,14 +52,16 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         _logger?.LogInformation("Mirraawwrring ditutup (kode {Code})", e.ApplicationExitCode);
-        _services?.Dispose();
+        // DisposeAsync: DeviceWatcher hanya IAsyncDisposable; sesi scrcpy yang masih jalan dihentikan oleh ScrcpySessionManager.Dispose.
+        _services?.DisposeAsync().AsTask().GetAwaiter().GetResult();
         base.OnExit(e);
     }
 
     /// <summary>Cari scrcpy/adb (§5.1) dan simpan ke registry. Path kustom dari settings menyusul di Fase 2.</summary>
     private void LocateTools()
     {
-        var location = Services.GetRequiredService<IToolLocator>().Locate();
+        var customPath = Services.GetRequiredService<ISettingsStore>().Current.CustomScrcpyPath;
+        var location = Services.GetRequiredService<IToolLocator>().Locate(customPath);
         Services.GetRequiredService<IToolRegistry>().Update(location);
         if (location.IsComplete)
         {
@@ -96,6 +99,8 @@ public partial class App : Application
         // ViewModel dan View
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainWindow>();
+        services.AddTransient<HyperOsGuideWindow>();
+        services.AddSingleton<Func<HyperOsGuideWindow>>(sp => sp.GetRequiredService<HyperOsGuideWindow>);
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

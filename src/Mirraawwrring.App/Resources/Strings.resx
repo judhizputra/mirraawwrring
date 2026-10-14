@@ -75,10 +75,245 @@
   <data name="Main_Title" xml:space="preserve">
     <value>Mirraawwrring</value>
   </data>
-  <data name="Main_FoundationPlaceholder" xml:space="preserve">
-    <value>Fondasi aplikasi siap. Jendela utama akan diisi pada Fase 2.</value>
+
+  <data name="Main_Devices" xml:space="preserve">
+    <value>Perangkat</value>
   </data>
-  <data name="Main_DataLocation" xml:space="preserve">
-    <value>Data disimpan di: {0}</value>
+  <data name="Main_DeviceCountSearching" xml:space="preserve">
+    <value>mencari…</value>
+  </data>
+  <data name="Main_DeviceCount" xml:space="preserve">
+    <value>{0} terhubung</value>
+  </data>
+  <data name="Main_Refresh" xml:space="preserve">
+    <value>Refresh daftar perangkat</value>
+  </data>
+  <data name="Main_PairWireless" xml:space="preserve">
+    <value>Pair wireless</value>
+  </data>
+  <data name="Main_ConnectIp" xml:space="preserve">
+    <value>Sambung via IP</value>
+  </data>
+  <data name="Main_RestartAdb" xml:space="preserve">
+    <value>Restart ADB</value>
+  </data>
+  <data name="Main_EnableWifiUsb" xml:space="preserve">
+    <value>Aktifkan Wi-Fi dari kabel USB…</value>
+  </data>
+  <data name="Main_EmptyTitle" xml:space="preserve">
+    <value>Belum ada HP terdeteksi</value>
+  </data>
+  <data name="Main_EmptySubtitle" xml:space="preserve">
+    <value>Daftar diperbarui otomatis saat HP tersambung.</value>
+  </data>
+  <data name="Main_CheckOnPhone" xml:space="preserve">
+    <value>Periksa di HP</value>
+  </data>
+  <data name="Main_Check1" xml:space="preserve">
+    <value>USB debugging menyala di Opsi pengembang</value>
+  </data>
+  <data name="Main_Check2" xml:space="preserve">
+    <value>Kabel data, bukan kabel charge saja</value>
+  </data>
+  <data name="Main_Check3" xml:space="preserve">
+    <value>Mode USB di HP: Transfer file</value>
+  </data>
+  <data name="Main_Check4" xml:space="preserve">
+    <value>Tekan Izinkan pada popup di layar HP</value>
+  </data>
+  <data name="Main_Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Main_ModeMirror" xml:space="preserve">
+    <value>Mirror + kontrol</value>
+  </data>
+  <data name="Main_ModeMirrorDesc" xml:space="preserve">
+    <value>Tampilkan layar dan kendalikan dengan mouse &amp; keyboard</value>
+  </data>
+  <data name="Main_ModeView" xml:space="preserve">
+    <value>Lihat saja</value>
+  </data>
+  <data name="Main_ModeViewDesc" xml:space="preserve">
+    <value>Hanya menampilkan layar, tanpa kontrol</value>
+  </data>
+  <data name="Main_ModeScreenOff" xml:space="preserve">
+    <value>Layar HP mati</value>
+  </data>
+  <data name="Main_ModeScreenOffDesc" xml:space="preserve">
+    <value>Layar HP dimatikan, tetap tampil di PC</value>
+  </data>
+  <data name="Main_ModeDataSaver" xml:space="preserve">
+    <value>Hemat data</value>
+  </data>
+  <data name="Main_ModeDataSaverDesc" xml:space="preserve">
+    <value>1024px · 4 Mbps · 30 fps, untuk Wi-Fi lambat</value>
+  </data>
+  <data name="Main_Quality" xml:space="preserve">
+    <value>Kualitas</value>
+  </data>
+  <data name="Main_MaxSize" xml:space="preserve">
+    <value>Resolusi maks</value>
+  </data>
+  <data name="Main_Bitrate" xml:space="preserve">
+    <value>Bitrate video</value>
+  </data>
+  <data name="Main_MaxFps" xml:space="preserve">
+    <value>FPS maks</value>
+  </data>
+  <data name="Main_Options" xml:space="preserve">
+    <value>Opsi</value>
+  </data>
+  <data name="Main_OptAudio" xml:space="preserve">
+    <value>Teruskan audio HP ke PC</value>
+  </data>
+  <data name="Main_OptUhid" xml:space="preserve">
+    <value>Input UHID (untuk Xiaomi/HyperOS)</value>
+  </data>
+  <data name="Main_OptUhidTip" xml:space="preserve">
+    <value>Mengirim keyboard dan mouse sebagai perangkat HID fisik, jalan walau injeksi diblokir HyperOS. Mouse PC akan ditangkap oleh jendela scrcpy; tekan Alt kiri untuk melepasnya.</value>
+  </data>
+  <data name="Main_OptTopmost" xml:space="preserve">
+    <value>Jendela selalu di atas</value>
+  </data>
+  <data name="Main_OptFullscreen" xml:space="preserve">
+    <value>Mulai dalam layar penuh</value>
+  </data>
+  <data name="Main_OptStayAwake" xml:space="preserve">
+    <value>Layar HP tetap menyala</value>
+  </data>
+  <data name="Main_OptRecord" xml:space="preserve">
+    <value>Rekam ke file (Videos\Mirraawwrring)</value>
+  </data>
+  <data name="Main_ModeHint" xml:space="preserve">
+    <value>Pilihan mode aktif setelah HP tersambung. Pengaturan terakhir tetap diingat.</value>
+  </data>
+  <data name="Main_Log" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="Main_CopyLog" xml:space="preserve">
+    <value>Salin</value>
+  </data>
+  <data name="Main_CopyLogName" xml:space="preserve">
+    <value>Salin log</value>
+  </data>
+  <data name="Main_OpenRecordings" xml:space="preserve">
+    <value>Buka folder rekaman</value>
+  </data>
+  <data name="Main_StartMirroring" xml:space="preserve">
+    <value>Mulai mirroring</value>
+  </data>
+  <data name="Main_StopMirroring" xml:space="preserve">
+    <value>Hentikan mirroring</value>
+  </data>
+  <data name="Main_StatusAdbReady" xml:space="preserve">
+    <value>adb siap</value>
+  </data>
+  <data name="Main_StatusWaiting" xml:space="preserve">
+    <value>menunggu perangkat</value>
+  </data>
+  <data name="Main_StatusToolsMissing" xml:space="preserve">
+    <value>scrcpy/adb belum terpasang</value>
+  </data>
+  <data name="Main_StatusAdbFailed" xml:space="preserve">
+    <value>adb gagal dijalankan</value>
+  </data>
+  <data name="Main_ScrcpyVersion" xml:space="preserve">
+    <value>scrcpy {0}</value>
+  </data>
+  <data name="Main_BannerTitle" xml:space="preserve">
+    <value>Kontrol diblokir HyperOS</value>
+  </data>
+  <data name="Main_BannerBody" xml:space="preserve">
+    <value>Aktifkan USB debugging (Security settings) di HP, atau nyalakan Input UHID.</value>
+  </data>
+  <data name="Main_BannerLink" xml:space="preserve">
+    <value>Lihat langkahnya</value>
+  </data>
+  <data name="Main_NotYet" xml:space="preserve">
+    <value>Fitur ini tersedia pada fase berikutnya.</value>
+  </data>
+  <data name="Device_Android" xml:space="preserve">
+    <value>Android {0}</value>
+  </data>
+  <data name="Device_Subtitle_Wifi" xml:space="preserve">
+    <value>Wi-Fi · {0}</value>
+  </data>
+  <data name="Device_Subtitle_WifiMdns" xml:space="preserve">
+    <value>Wi-Fi · Wireless debugging</value>
+  </data>
+  <data name="Device_Subtitle_Emulator" xml:space="preserve">
+    <value>Emulator · {0}</value>
+  </data>
+  <data name="Device_Subtitle_Usb" xml:space="preserve">
+    <value>USB · {0}</value>
+  </data>
+  <data name="Device_Subtitle_UsbUnauthorized" xml:space="preserve">
+    <value>USB · izinkan popup di layar HP</value>
+  </data>
+  <data name="Device_Subtitle_UsbOffline" xml:space="preserve">
+    <value>USB · offline, coba cabut-colok kabel</value>
+  </data>
+  <data name="Device_Badge_Connected" xml:space="preserve">
+    <value>Terhubung</value>
+  </data>
+  <data name="Device_Badge_Unauthorized" xml:space="preserve">
+    <value>Belum diizinkan</value>
+  </data>
+  <data name="Device_Badge_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Device_Badge_NoPermissions" xml:space="preserve">
+    <value>Driver bermasalah</value>
+  </data>
+  <data name="Device_Badge_Recovery" xml:space="preserve">
+    <value>Recovery</value>
+  </data>
+  <data name="Device_Badge_Sideload" xml:space="preserve">
+    <value>Sideload</value>
+  </data>
+  <data name="Device_Badge_Mirroring" xml:space="preserve">
+    <value>Mirroring</value>
+  </data>
+  <data name="Resolution_Native" xml:space="preserve">
+    <value>Asli</value>
+  </data>
+  <data name="Resolution_Px" xml:space="preserve">
+    <value>{0} px</value>
+  </data>
+  <data name="Bitrate_Mbps" xml:space="preserve">
+    <value>{0} Mbps</value>
+  </data>
+  <data name="Fps_Unlimited" xml:space="preserve">
+    <value>Tanpa batas</value>
+  </data>
+  <data name="Guide_Title" xml:space="preserve">
+    <value>USB debugging (Security settings)</value>
+  </data>
+  <data name="Guide_Heading" xml:space="preserve">
+    <value>Aktifkan kontrol di Xiaomi/HyperOS</value>
+  </data>
+  <data name="Guide_Intro" xml:space="preserve">
+    <value>HyperOS memblokir injeksi input dari scrcpy sampai opsi ini aktif. Butuh akun Xiaomi yang login dan data seluler aktif saat mengaktifkannya.</value>
+  </data>
+  <data name="Guide_Step1" xml:space="preserve">
+    <value>Settings › About phone, ketuk OS version 7 kali sampai muncul pesan developer.</value>
+  </data>
+  <data name="Guide_Step2" xml:space="preserve">
+    <value>Buka Settings › Additional settings › Developer options.</value>
+  </data>
+  <data name="Guide_Step3" xml:space="preserve">
+    <value>Nyalakan USB debugging.</value>
+  </data>
+  <data name="Guide_Step4" xml:space="preserve">
+    <value>Nyalakan juga USB debugging (Security settings). Setujui peringatannya, lalu restart HP.</value>
+  </data>
+  <data name="Guide_Step5" xml:space="preserve">
+    <value>Tekan Allow pada popup di HP, centang Always allow.</value>
+  </data>
+  <data name="Guide_UhidHint" xml:space="preserve">
+    <value>Alternatif tanpa Security settings: centang "Input UHID" di panel Opsi lalu mulai ulang mirroring. Mouse PC akan ditangkap jendela scrcpy; Alt kiri melepasnya.</value>
+  </data>
+  <data name="Guide_Close" xml:space="preserve">
+    <value>Tutup</value>
   </data>
 </root>

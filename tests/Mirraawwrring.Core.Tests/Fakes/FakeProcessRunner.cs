@@ -39,10 +39,47 @@ public sealed class FakeProcessRunner : IProcessRunner
         return Task.FromResult(DefaultResult);
     }
 
-    public IRunningProcess Start(ProcessRequest request, Action<ProcessOutputLine>? onOutput = null) =>
-        throw new NotSupportedException("FakeProcessRunner.Start belum dibutuhkan di fase ini.");
+    public List<(ProcessRequest Request, FakeRunningProcess Process)> Started { get; } = [];
+
+    private int _nextPid = 4000;
+
+    public IRunningProcess Start(ProcessRequest request, Action<ProcessOutputLine>? onOutput = null)
+    {
+        Requests.Add(request);
+        var process = new FakeRunningProcess(_nextPid++, onOutput);
+        Started.Add((request, process));
+        return process;
+    }
 
     public ProcessRequest Last => Requests[^1];
+
+    /// <summary>Proses palsu yang berjalan lama: test mengirim baris output dan mengakhirinya secara manual.</summary>
+    public sealed class FakeRunningProcess(int pid, Action<ProcessOutputLine>? onOutput) : IRunningProcess
+    {
+        private readonly TaskCompletionSource<int> _exit = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        public int ProcessId { get; } = pid;
+
+        public bool HasExited => _exit.Task.IsCompleted;
+
+        public bool KillCalled { get; private set; }
+
+        public void EmitStdout(string line) => onOutput?.Invoke(new ProcessOutputLine(false, line));
+
+        public void EmitStderr(string line) => onOutput?.Invoke(new ProcessOutputLine(true, line));
+
+        public void Exit(int code) => _exit.TrySetResult(code);
+
+        public Task<int> WaitForExitAsync(CancellationToken cancellationToken = default) => _exit.Task.WaitAsync(cancellationToken);
+
+        public void Kill()
+        {
+            KillCalled = true;
+            _exit.TrySetResult(-1);
+        }
+
+        public void Dispose() { }
+    }
 
     private static bool StartsWith(IReadOnlyList<string> args, string[] prefix)
     {

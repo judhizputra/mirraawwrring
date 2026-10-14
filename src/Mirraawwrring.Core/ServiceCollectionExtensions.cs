@@ -4,6 +4,7 @@ using Mirraawwrring.Core.Adb;
 using Mirraawwrring.Core.IO;
 using Mirraawwrring.Core.Processes;
 using Mirraawwrring.Core.Scrcpy;
+using Mirraawwrring.Core.Settings;
 using Mirraawwrring.Core.Tools;
 
 namespace Mirraawwrring.Core;
@@ -23,6 +24,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAdbClient, AdbClient>();
         services.AddSingleton<DeviceWatcher>();
         services.AddSingleton<ScrcpyArgumentBuilder>();
+        services.AddSingleton<ScrcpySessionManager>();
+        services.AddSingleton<ISettingsStore, SettingsStore>();
         return services;
     }
 }

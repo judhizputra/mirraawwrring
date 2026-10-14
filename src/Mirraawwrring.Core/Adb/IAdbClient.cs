@@ -34,5 +34,5 @@ public interface IAdbClient
     Task<ProcessResult> ShellAsync(string serial, IReadOnlyList<string> command, TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
     /// <summary>Jalankan adb dengan argumen mentah (install, pull, push, exec-out, …).</summary>
-    Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, CancellationToken cancellationToken = default);
+    Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, bool quiet = false, CancellationToken cancellationToken = default);
 }

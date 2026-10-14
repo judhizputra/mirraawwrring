@@ -22,6 +22,9 @@ public sealed record ProcessRequest
     /// <summary>True untuk membaca stdout sebagai byte mentah (mis. <c>adb exec-out screencap -p</c>).</summary>
     public bool BinaryStdout { get; init; }
 
+    /// <summary>True untuk perintah rutin (polling <c>adb devices</c>): dicatat di level Debug supaya tidak membanjiri panel Log.</summary>
+    public bool Quiet { get; init; }
+
     public static ProcessRequest Create(string fileName, params string[] arguments) =>
         new() { FileName = fileName, Arguments = arguments };
 

@@ -2,7 +2,7 @@
 
 Aplikasi desktop Windows (WPF, .NET 10, C#) untuk mirror dan kontrol HP Android lewat **scrcpy**. Spesifikasi lengkap ada di `PROMPT.md`; file ini adalah ringkasan operasional supaya sesi berikutnya bisa langsung bekerja. **Perbarui file ini setiap kali arsitektur berubah.**
 
-Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0 dan 1 selesai. Berikutnya: Fase 2 (jendela utama).
+Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0, 1, dan 2 selesai. Berikutnya: Fase 3 (koneksi nirkabel: dialog Pair wireless, Sambung via IP + riwayat, Aktifkan Wi-Fi dari USB, daftar HP via mDNS). Tombol-tombolnya sudah ada di `MainViewModel` (`PairWirelessCommand`, `ConnectViaIpCommand`, `EnableWifiFromUsbCommand`) dan saat ini hanya menampilkan pesan "fase berikutnya".
 
 ## Perintah
 
@@ -27,14 +27,21 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
   Tools/                       ToolLocator (cari scrcpy/adb §5.1), ToolLocation, ToolRegistry (lokasi aktif), ToolNotFoundException
   Adb/                         Device model, AdbDevicesParser, AdbResultParsers (pair/connect/server/mdns/wifi-ip),
                                ShellQuoting, IAdbClient + AdbClient, DeviceWatcher (polling 2 s)
-  Scrcpy/                      ScrcpyOptions + MirrorMode, ScrcpyArgumentBuilder (opsi → argumen), ScrcpyLogClassifier
+  Scrcpy/                      ScrcpyOptions + MirrorMode, ScrcpyArgumentBuilder (opsi → argumen), ScrcpyLogClassifier,
+                               ScrcpySession (satu proses scrcpy: log terklasifikasi, InjectionBlocked, HWND), ScrcpySessionManager (banyak sesi, env ADB, --version)
+  Settings/                    AppSettings (model settings.json), SettingsStore (load/save atomic)
+  Interop/                     NativeMethods (EnumWindows dsb.), WindowFinder (cari HWND jendela scrcpy dari PID)
 src/Mirraawwrring.App/         WPF
-  App.xaml(.cs)                DI container, logging, handler exception global, LocateTools() saat startup
+  App.xaml(.cs)                DI container, logging, handler exception global, LocateTools() saat startup (pakai CustomScrcpyPath dari settings)
   Themes/Colors.xaml           token warna/font/radius dari mockup (§7). Jangan tulis hex di View.
-  Themes/Controls.xaml         style: Style.Window, Style.Button(.Accent/.Icon/.Subtle), Style.TextBox, Style.CheckBox, Style.Panel, Style.Card, …
-  Views/                       XAML + code-behind tipis
-  ViewModels/                  CommunityToolkit.Mvvm (ObservableObject, [ObservableProperty], [RelayCommand])
-  Interop/                     NativeMethods (P/Invoke terpusat), WindowTheming (title bar gelap DWM)
+  Themes/Icons.xaml            Geometry ikon garis (Icon.*) + Style.Icon
+  Themes/Controls.xaml         style: Style.Window, Style.Button(.Accent/.Icon/.Subtle), Style.TextBox, Style.CheckBox, Style.Panel, Style.Card, ToolTip, ScrollBar
+  Themes/Controls.Main.xaml    Style.ComboBox, Style.ModeCard (RadioButton kartu), Style.DeviceList/DeviceItem, Style.Badge
+  Converters/Converters.cs     EnumToBool (RadioButton↔enum), InvertedBoolToVisibility, NullToCollapsed
+  Views/MainWindow             jendela utama (mockup Main/Empty); HyperOsGuideWindow = panduan Security settings
+  ViewModels/MainViewModel     daftar perangkat, mode/kualitas/opsi (disimpan ke settings), log, status, Mulai/Hentikan mirroring
+  ViewModels/DeviceItemViewModel  satu kartu perangkat (subtitle, badge, IsMirroring)
+  Interop/                     NativeMethods (P/Invoke UI), WindowTheming (title bar gelap DWM)
   Resources/Strings.resx       SEMUA teks UI (bahasa Indonesia). XAML: {loc:Str Kunci}; C#: Strings.Get("Kunci") / Strings.Format
 tests/Mirraawwrring.Core.Tests/ xUnit; Fakes/ berisi FakeProcessRunner, FakeFileSystem, FakeAppPaths, FakeAdbClient, FakeTimeProvider
 config/scrcpy-manifest.json    versi scrcpy yang di-pin + URL + SHA-256 (disalin ke samping exe saat build)
@@ -54,13 +61,17 @@ docs/manual-test.md            checklist uji dengan HP sungguhan
 - **Tema:** warna lewat `{StaticResource Brush.*}`; style baru ditambahkan di `Controls.xaml` dengan nama `Style.<Kontrol>[.<Varian>]`.
 - **Fase:** di akhir fase: build bersih, test lulus, CHANGELOG, commit conventional (`feat:`, `fix:`, `docs:`, …), lalu tunggu konfirmasi pemilik.
 
-## Alur data utama (setelah Fase 2)
+## Alur data utama
 
 ```
-ToolLocator → ToolRegistry ──► AdbClient ──► DeviceWatcher ──► MainViewModel (daftar perangkat)
-                        └────► ScrcpySession ◄── ScrcpyArgumentBuilder(ScrcpyOptions)
+ToolLocator → ToolRegistry ──► AdbClient ──► DeviceWatcher ──► MainViewModel.Devices (DeviceItemViewModel)
+                        └────► ScrcpySessionManager.Start(ScrcpyOptions, Device) ──► ScrcpySession (events: LogLine, InjectionBlockedDetected, Exited)
+ScrcpyArgumentBuilder(ScrcpyOptions) ──► ScrcpyLaunchPlan (argumen + judul jendela + path rekaman)
 ProcessRunner ──► ILogger ──► LogBuffer (panel Log) + FileLogWriter
+MainViewModel ⇄ ISettingsStore (Options, LastDeviceSerial)
 ```
+
+Event Core datang dari thread pool; `MainViewModel` memakai `SynchronizationContext` yang ditangkap di konstruktor (`Post`) untuk kembali ke UI thread. Perintah `adb devices` polling memakai `ProcessRequest.Quiet` (log Debug).
 
 ## Resep
 
@@ -74,9 +85,9 @@ ProcessRunner ──► ILogger ──► LogBuffer (panel Log) + FileLogWriter
 ### Menambah opsi scrcpy baru
 1. `Core/Scrcpy/ScrcpyOptions.cs`: tambah properti.
 2. `Core/Scrcpy/ScrcpyArgumentBuilder.cs`: petakan ke flag; cek nama flag di `reference/scrcpy-4.1-help.txt` (jangan menebak). Tulis aturan konflik di komentar kelas.
-3. Settings (Fase 2): tambah ke model pengaturan agar diingat.
-4. UI: checkbox/combobox di panel Opsi, teks di `Strings.resx`.
-5. Test: `ScrcpyArgumentBuilderTests`.
+3. `MainViewModel`: tambah `[ObservableProperty]` + `partial void On<Nama>Changed → SaveOptions()`, masukkan ke `CurrentOptions` dan `LoadOptions`.
+4. UI: checkbox/combobox di `MainWindow.xaml` (panel Opsi), teks di `Strings.resx`.
+5. Test: `ScrcpyArgumentBuilderTests`; `SettingsStoreTests` kalau tipe datanya baru.
 
 ### Menambah merek HP ke tabel VID (Fase 4)
 1. `Core/Usb/UsbVendorTable.cs`: tambah baris `VID → merek`.
@@ -94,4 +105,6 @@ ProcessRunner ──► ILogger ──► LogBuffer (panel Log) + FileLogWriter
 - **`--mouse=uhid`** menangkap mouse PC (mode relatif); LAlt/LSuper melepasnya. Jelaskan di tooltip opsi UHID.
 - **Aplikasi tidak di-sign:** SmartScreen akan memperingatkan; README menjelaskan "Run anyway" dan Unblock.
 - **adb lain di PATH** (Android SDK) bisa bentrok di port 5037; aplikasi selalu memakai adb dari folder scrcpy dan mengatur env `ADB` saat menjalankan scrcpy.
+- **Menutup aplikasi menghentikan semua sesi scrcpy** (ScrcpySessionManager.Dispose lewat DI). Toolbar (Fase 5) bergantung pada aplikasi, jadi ini disengaja.
+- Pengembangan tanpa scrcpy terpasang: salin isi `scrcpy-win64-v4.1` ke `src/Mirraawwrring.App/bin/Debug/net10.0-windows/scrcpy/` (folder bin tidak masuk git).
 - Fitur yang butuh HP fisik belum teruji otomatis; lihat `docs/manual-test.md`.
