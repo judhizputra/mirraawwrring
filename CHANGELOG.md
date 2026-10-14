@@ -4,6 +4,17 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 1 — Core
+- `IProcessRunner`/`ProcessRunner`: async, timeout, pembatalan, tangkap stdout/stderr/exit code, stdout biner, proses berjalan lama (`Start`), semua perintah dan output tercatat ke log.
+- `ToolLocator` (§5.1): bundel → folder exe → path kustom → symlink winget (di-resolve) → PATH; adb diutamakan dari folder scrcpy; adb lain di PATH/Android SDK dilaporkan. `ToolRegistry` menyimpan lokasi aktif.
+- `AdbClient`: devices, getprop, pair, connect, disconnect, tcpip, IP Wi-Fi, mdns services, start/kill server (deteksi bentrok versi), shell dengan escaping POSIX (`ShellQuoting`).
+- Parser murni + test dari output nyata: `AdbDevicesParser`, `AdbPairResultParser`, `AdbConnectResultParser`, `AdbServerOutputParser`, `MdnsServicesParser`, `WifiIpParser`.
+- `DeviceWatcher`: polling 2 detik, event hanya saat daftar berubah, kegagalan dilaporkan sekali per rentetan.
+- `ScrcpyArgumentBuilder` (§5.5) dengan aturan konflik yang diuji; semua flag diverifikasi terhadap `scrcpy 4.1 --help` (`reference/scrcpy-4.1-help.txt`). Termasuk argumen rekam tanpa jendela.
+- `ScrcpyLogClassifier` (§5.6): versi, info device, INJECT_EVENTS, tidak ada device, server gagal, device terputus, renderer.
+- Aplikasi mencari tools saat startup dan mencatat hasilnya.
+- 105 unit test.
+
 ### Fase 0 — Fondasi
 - Solution .NET 10 / WPF dengan tiga proyek: `Mirraawwrring.Core`, `Mirraawwrring.App`, `Mirraawwrring.Core.Tests`.
 - `Directory.Build.props` (versi aplikasi, LangVersion, Nullable, x64, TreatWarningsAsErrors untuk Core).

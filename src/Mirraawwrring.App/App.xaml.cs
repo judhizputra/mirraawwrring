@@ -7,6 +7,7 @@ using Mirraawwrring.App.ViewModels;
 using Mirraawwrring.App.Views;
 using Mirraawwrring.Core;
 using Mirraawwrring.Core.Logging;
+using Mirraawwrring.Core.Tools;
 
 namespace Mirraawwrring.App;
 
@@ -40,6 +41,8 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
         TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
+        LocateTools();
+
         var window = _services.GetRequiredService<MainWindow>();
         MainWindow = window;
         window.Show();
@@ -50,6 +53,27 @@ public partial class App : Application
         _logger?.LogInformation("Mirraawwrring ditutup (kode {Code})", e.ApplicationExitCode);
         _services?.Dispose();
         base.OnExit(e);
+    }
+
+    /// <summary>Cari scrcpy/adb (§5.1) dan simpan ke registry. Path kustom dari settings menyusul di Fase 2.</summary>
+    private void LocateTools()
+    {
+        var location = Services.GetRequiredService<IToolLocator>().Locate();
+        Services.GetRequiredService<IToolRegistry>().Update(location);
+        if (location.IsComplete)
+        {
+            _logger?.LogInformation("scrcpy: {Scrcpy} ({ScrcpySource}); adb: {Adb} ({AdbSource})",
+                location.ScrcpyPath, location.ScrcpySource, location.AdbPath, location.AdbSource);
+        }
+        else
+        {
+            _logger?.LogWarning("Tools belum lengkap. scrcpy: {Scrcpy}; adb: {Adb}", location.ScrcpyPath ?? "-", location.AdbPath ?? "-");
+        }
+
+        if (location.OtherAdbPaths.Count > 0)
+        {
+            _logger?.LogWarning("adb lain terdeteksi (potensi bentrok versi): {Others}", string.Join("; ", location.OtherAdbPaths));
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services)
