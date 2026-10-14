@@ -26,4 +26,7 @@ public sealed class AppSettings
 
     /// <summary>Folder tujuan "Simpan ke PC" di file browser; null = Downloads\Mirraawwrring.</summary>
     public string? PullDirectory { get; set; }
+
+    /// <summary>Lebar panel file browser di samping toolbar (DIP), bisa di-resize.</summary>
+    public double FilesPanelWidth { get; set; } = 496;
 }

@@ -6,6 +6,7 @@
         xmlns:loc="clr-namespace:Mirraawwrring.App.Resources"
         xmlns:conv="clr-namespace:Mirraawwrring.App.Converters"
         xmlns:vm="clr-namespace:Mirraawwrring.App.ViewModels"
+        xmlns:views="clr-namespace:Mirraawwrring.App.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:ToolbarViewModel}"
         Title="{loc:Str Toolbar_Title}"
@@ -41,6 +42,14 @@
             </StackPanel>
         </DataTemplate>
 
+        <Style x:Key="Style.Button.Toolbar.Files" TargetType="Button" BasedOn="{StaticResource Style.Button.Toolbar}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFilesOpen}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource Brush.AccentBadge}" />
+                    <Setter Property="Foreground" Value="{StaticResource Brush.Accent}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <Style x:Key="Style.Icon.Record" TargetType="Path" BasedOn="{StaticResource Style.Icon.Toolbar}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsRecording}" Value="True">
@@ -147,7 +156,7 @@
                         <Path Style="{StaticResource Style.Icon.RecordDot}" />
                     </Grid>
                 </Button>
-                <Button Style="{StaticResource Style.Button.Toolbar}" IsEnabled="False" AutomationProperties.Name="{loc:Str Toolbar_Files}">
+                <Button Style="{StaticResource Style.Button.Toolbar.Files}" Command="{Binding ToggleFilesCommand}" AutomationProperties.Name="{loc:Str Toolbar_Files}">
                     <Button.ToolTip><ToolTip Content="{Binding FilesTip}" ContentTemplate="{StaticResource TipTemplate}" /></Button.ToolTip>
                     <Path Style="{StaticResource Style.Icon.Toolbar}" Data="{StaticResource Icon.Folder}" />
                 </Button>
@@ -185,6 +194,12 @@
 
         <!-- Sisi: legenda titik kuning (atas) dan toast (bawah) -->
         <Grid x:Name="SidePanel" Grid.Column="1" Margin="8,0,0,0">
+            <!-- Panel file browser (Fase 6); legenda dan toast menumpuk di atasnya -->
+            <views:FilesPanel x:Name="FilesPanelView" DataContext="{Binding FilesPanel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              Visibility="{Binding DataContext.IsFilesOpen, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVis}}" />
+            <Thumb x:Name="ResizeThumb" Style="{StaticResource Style.ResizeThumb}" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,12"
+                   Visibility="{Binding IsFilesOpen, Converter={StaticResource BoolToVis}}" ToolTip="{loc:Str Files_ResizeHint}"
+                   DragDelta="OnResizeDelta" DragCompleted="OnResizeCompleted" AutomationProperties.Name="{loc:Str Files_ResizeHint}" />
             <Border Style="{StaticResource Style.ToolbarLegend}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"

@@ -31,6 +31,10 @@ Setelah jendela scrcpy muncul, toolbar kecil menempel di sisi kanannya (atau kir
 
 Hotkey screenshot bisa diubah di `data\settings.json` (`"screenshotHotkey": "Ctrl+Alt+P"`; modifier Ctrl/Alt/Shift/Win + huruf, angka, F1–F24, atau nama tombol seperti PrintScreen).
 
+## File browser
+
+Tombol folder di toolbar membuka panel file HP di sampingnya (bisa di-resize). Pintasan Download/DCIM/Pictures/Documents/Movies, pilih banyak file lalu "Simpan ke PC" (default `Downloads\Mirraawwrring`, bisa diubah), "Kirim ke HP" atau tarik file dari Explorer ke panel (file `.apk` ditawarkan untuk di-install), folder baru, ganti nama, hapus (selalu dengan konfirmasi), dan pencarian di folder aktif.
+
 ## Aplikasi tidak di-sign
 
 Exe tidak ditandatangani (keputusan pemilik). Saat pertama dijalankan, Windows SmartScreen mungkin menampilkan peringatan:

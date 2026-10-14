@@ -34,6 +34,8 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
 {
     public static readonly TimeSpan ToastDuration = TimeSpan.FromSeconds(7);
     public static readonly TimeSpan LegendDuration = TimeSpan.FromSeconds(12);
+    public const double MinFilesPanelWidth = 380;
+    public const double MaxFilesPanelWidth = 1000;
 
     private readonly DeviceActions _actions;
     private readonly InjectionProbe _injection;
@@ -50,8 +52,12 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
     private CancellationTokenSource? _legendCts;
     private bool _stopRequested;
 
-    public ToolbarViewModel(DeviceActions actions, InjectionProbe injection, ScrcpySessionManager sessions, ISettingsStore settings, IAppPaths paths, ILogger<ToolbarViewModel> logger)
+    public ToolbarViewModel(DeviceActions actions, InjectionProbe injection, ScrcpySessionManager sessions, ISettingsStore settings, IAppPaths paths, FilesPanelViewModel filesPanel, ILogger<ToolbarViewModel> logger)
     {
+        FilesPanel = filesPanel;
+        FilesPanelWidth = Math.Clamp(settings.Current.FilesPanelWidth, MinFilesPanelWidth, MaxFilesPanelWidth);
+        filesPanel.ToastRequested += ShowToast;
+        filesPanel.CloseRequested += () => IsFilesOpen = false;
         _actions = actions;
         _injection = injection;
         _sessions = sessions;
@@ -84,6 +90,7 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
         _options = options;
         OnPropertyChanged(nameof(Serial));
         OnPropertyChanged(nameof(DisplayName));
+        FilesPanel.Initialize(device.Serial, session.DisplayName);
         session.InjectionBlockedDetected += OnInjectionBlockedBySession;
         if (session.InjectionBlocked)
         {
@@ -135,7 +142,36 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
     public ToolbarTip NotificationsTip => new(Strings.Get(NotificationsExpanded ? "Toolbar_NotificationsClose" : "Toolbar_Notifications"), Strings.Get("Toolbar_KeyNotifications"));
     public ToolbarTip ScreenshotTip => new(Strings.Get("Toolbar_Screenshot"), ScreenshotHotkey.Display);
     public ToolbarTip RecordTip => new(Strings.Get(IsRecording ? "Toolbar_RecordStop" : "Toolbar_Record"), null);
-    public ToolbarTip FilesTip { get; } = new(Strings.Get("Toolbar_FilesSoon"), null);
+    public ToolbarTip FilesTip { get; } = new(Strings.Get("Toolbar_Files"), null);
+
+    // ---------- File browser (Fase 6) ----------
+
+    public FilesPanelViewModel FilesPanel { get; }
+
+    [ObservableProperty]
+    public partial bool IsFilesOpen { get; set; }
+
+    /// <summary>Lebar panel file (DIP), diubah lewat pegangan resize di View; disimpan ke settings saat selesai digeser.</summary>
+    [ObservableProperty]
+    public partial double FilesPanelWidth { get; set; }
+
+    [RelayCommand]
+    private async Task ToggleFilesAsync()
+    {
+        IsFilesOpen = !IsFilesOpen;
+        if (IsFilesOpen)
+        {
+            await FilesPanel.EnsureLoadedAsync();
+        }
+    }
+
+    public void SaveFilesPanelWidth()
+    {
+        var width = FilesPanelWidth;
+        Task.Run(() => _settings.Update(s => s.FilesPanelWidth = width));
+    }
+
+    private void ShowToast(ToastItem item) => ShowToast(item.Title, item.Body, item.IsError, item.FilePath, item.FolderPath);
     public ToolbarTip InstallApkTip { get; } = new(Strings.Get("Toolbar_InstallApk"), null);
     public ToolbarTip MoreTip { get; } = new(Strings.Get("Toolbar_More"), null);
 
@@ -696,5 +732,6 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
 
         _toastCts?.Cancel();
         _legendCts?.Cancel();
+        FilesPanel.Dispose();
     }
 }

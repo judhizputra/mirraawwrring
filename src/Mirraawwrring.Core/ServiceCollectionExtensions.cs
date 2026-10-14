@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mirraawwrring.Core.Adb;
 using Mirraawwrring.Core.Devices;
+using Mirraawwrring.Core.Files;
 using Mirraawwrring.Core.IO;
 using Mirraawwrring.Core.Setup;
 using Mirraawwrring.Core.Usb;
@@ -37,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<UsbWatcher>();
         services.AddSingleton<InjectionProbe>();
         services.AddSingleton<DeviceActions>();
+        services.AddSingleton<RemoteFileService>();
         services.TryAddSingleton(_ => new HttpClient { DefaultRequestHeaders = { { "User-Agent", "Mirraawwrring" } } });
         services.AddSingleton<SetupService>();
         services.AddSingleton<VerificationService>();

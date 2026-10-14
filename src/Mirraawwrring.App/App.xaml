@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Themes/Controls.Main.xaml" />
                 <ResourceDictionary Source="Themes/Controls.Setup.xaml" />
                 <ResourceDictionary Source="Themes/Controls.Toolbar.xaml" />
+                <ResourceDictionary Source="Themes/Controls.Files.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

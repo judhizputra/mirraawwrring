@@ -1220,4 +1220,206 @@
   <data name="Toolbar_Title" xml:space="preserve">
     <value>Toolbar Mirraawwrring</value>
   </data>
+
+  <data name="Files_Title" xml:space="preserve">
+    <value>File HP</value>
+  </data>
+
+  <data name="Files_Close" xml:space="preserve">
+    <value>Tutup file browser</value>
+  </data>
+
+  <data name="Files_Storage" xml:space="preserve">
+    <value>Penyimpanan internal</value>
+  </data>
+
+  <data name="Files_Up" xml:space="preserve">
+    <value>.. ({0})</value>
+  </data>
+
+  <data name="Files_Pull" xml:space="preserve">
+    <value>Simpan ke PC</value>
+  </data>
+
+  <data name="Files_PullCount" xml:space="preserve">
+    <value>Simpan ke PC ({0})</value>
+  </data>
+
+  <data name="Files_Push" xml:space="preserve">
+    <value>Kirim ke HP</value>
+  </data>
+
+  <data name="Files_NewFolder" xml:space="preserve">
+    <value>Folder baru</value>
+  </data>
+
+  <data name="Files_Rename" xml:space="preserve">
+    <value>Ganti nama</value>
+  </data>
+
+  <data name="Files_Delete" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+
+  <data name="Files_Search" xml:space="preserve">
+    <value>Cari di folder ini</value>
+  </data>
+
+  <data name="Files_ColName" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+
+  <data name="Files_ColSize" xml:space="preserve">
+    <value>Ukuran</value>
+  </data>
+
+  <data name="Files_ColModified" xml:space="preserve">
+    <value>Diubah</value>
+  </data>
+
+  <data name="Files_DropHint" xml:space="preserve">
+    <value>Tarik file dari PC ke sini untuk dikirim ke folder ini. File APK akan ditawarkan untuk di-install.</value>
+  </data>
+
+  <data name="Files_Loading" xml:space="preserve">
+    <value>Memuat…</value>
+  </data>
+
+  <data name="Files_Empty" xml:space="preserve">
+    <value>Folder kosong</value>
+  </data>
+
+  <data name="Files_ListFailed" xml:space="preserve">
+    <value>Tidak bisa membaca folder: {0}</value>
+  </data>
+
+  <data name="Files_Filtered" xml:space="preserve">
+    <value>{0} dari {1} entri</value>
+  </data>
+
+  <data name="Files_NewFolderPrompt" xml:space="preserve">
+    <value>Nama folder baru</value>
+  </data>
+
+  <data name="Files_RenamePrompt" xml:space="preserve">
+    <value>Nama baru</value>
+  </data>
+
+  <data name="Files_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+
+  <data name="Files_Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+
+  <data name="Files_InvalidName" xml:space="preserve">
+    <value>Nama tidak valid</value>
+  </data>
+
+  <data name="Files_DeleteConfirm" xml:space="preserve">
+    <value>Hapus {0} item dari HP?
+
+{1}
+
+Tindakan ini tidak bisa dibatalkan.</value>
+  </data>
+
+  <data name="Files_DeleteTitle" xml:space="preserve">
+    <value>Hapus dari HP</value>
+  </data>
+
+  <data name="Files_Pulling" xml:space="preserve">
+    <value>Menyimpan {0} file ke {1}</value>
+  </data>
+
+  <data name="Files_Pushing" xml:space="preserve">
+    <value>Mengirim {0} file ke {1}</value>
+  </data>
+
+  <data name="Files_TransferFile" xml:space="preserve">
+    <value>{0} ({1}/{2})</value>
+  </data>
+
+  <data name="Files_CancelTransfer" xml:space="preserve">
+    <value>Batalkan</value>
+  </data>
+
+  <data name="Files_PullDone" xml:space="preserve">
+    <value>{0} file disimpan</value>
+  </data>
+
+  <data name="Files_PushDone" xml:space="preserve">
+    <value>{0} file dikirim</value>
+  </data>
+
+  <data name="Files_TransferFailed" xml:space="preserve">
+    <value>{0} gagal: {1}</value>
+  </data>
+
+  <data name="Files_TransferCancelled" xml:space="preserve">
+    <value>Transfer dibatalkan</value>
+  </data>
+
+  <data name="Files_PullDir" xml:space="preserve">
+    <value>Tujuan: {0}</value>
+  </data>
+
+  <data name="Files_ChangePullDir" xml:space="preserve">
+    <value>ubah</value>
+  </data>
+
+  <data name="Files_PickPullDir" xml:space="preserve">
+    <value>Pilih folder tujuan</value>
+  </data>
+
+  <data name="Files_PickPush" xml:space="preserve">
+    <value>Pilih file untuk dikirim ke HP</value>
+  </data>
+
+  <data name="Files_AllFiles" xml:space="preserve">
+    <value>Semua file (*.*)|*.*</value>
+  </data>
+
+  <data name="Files_ApkConfirm" xml:space="preserve">
+    <value>Install {0} di HP?
+
+Pilih Tidak untuk hanya menyalin file ke folder ini.</value>
+  </data>
+
+  <data name="Files_ApkTitle" xml:space="preserve">
+    <value>File APK</value>
+  </data>
+
+  <data name="Files_CommandFailed" xml:space="preserve">
+    <value>Gagal: {0}</value>
+  </data>
+
+  <data name="Files_ResizeHint" xml:space="preserve">
+    <value>Tarik untuk mengubah lebar panel</value>
+  </data>
+
+  <data name="Files_SelectAll" xml:space="preserve">
+    <value>Pilih semua</value>
+  </data>
+
+  <data name="Files_ClearSelection" xml:space="preserve">
+    <value>Batalkan pilihan</value>
+  </data>
+
+  <data name="Size_Bytes" xml:space="preserve">
+    <value>{0} B</value>
+  </data>
+
+  <data name="Size_KB" xml:space="preserve">
+    <value>{0} KB</value>
+  </data>
+
+  <data name="Size_MB" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+
+  <data name="Size_GB" xml:space="preserve">
+    <value>{0} GB</value>
+  </data>
 </root>

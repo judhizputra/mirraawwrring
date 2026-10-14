@@ -4,6 +4,14 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 6 — File browser
+- `RemoteEntry`/`RemotePath` (operasi path POSIX, breadcrumb, pintasan Download/DCIM/Pictures/Documents/Movies, validasi nama) dan `RemoteListingParser` (murni): output `find DIR -maxdepth 1 -mindepth 1 -exec stat -c '%F|%s|%Y|%n' {} +`, nama dengan `|` aman, baris error (Permission denied) dikumpulkan, folder dulu lalu nama.
+- `RemoteFileService`: listing, pull/push satu per satu lewat `adb pull/push` dengan progres per file + total byte (bisa dibatalkan), `mkdir -p`, `mv`, `rm -r` (konfirmasi di UI), folder tujuan default `Downloads\Mirraawwrring` (bisa diubah, disimpan di `pullDirectory`).
+- Panel file browser (mockup Running-Files) di dalam jendela toolbar, menempel di kanan toolbar dan bisa di-resize lewat pegangan di tepi luar (lebar disimpan di `filesPanelWidth`): header + nama HP, chip pintasan, breadcrumb, Simpan ke PC (n), Kirim ke HP (dialog pilih banyak file), folder baru / ganti nama (editor inline, Enter/Esc), Hapus dengan dialog konfirmasi berisi daftar item, pencarian lokal, daftar dengan checkbox + ikon jenis (folder/gambar/video), baris ".. (induk)", klik ganda membuka folder, area drop (drag & drop dari Explorer; .apk ditawarkan untuk di-install, sisanya dikirim), bar progres transfer dengan Batalkan, toast hasil (Folder/Buka).
+- Tombol File browser di toolbar aktif (hijau saat panel terbuka).
+- Diuji di PC ini dengan adb palsu berbasis folder lokal: navigasi chip/klik ganda/induk, pilih 2 file → pull dengan progres → toast → file ada di Downloads, folder baru, ganti nama, filter, hapus (dialog konfirmasi, Tidak/Ya), resize panel, tutup panel. Push lewat dialog file dan drag & drop belum diuji otomatis (logikanya sama dengan pull dan tercakup unit test).
+- 291 unit test.
+
 ### Fase 5 — Toolbar samping
 - `DeviceActions` (satu-satunya tempat perintah tombol toolbar, §5.8): Power/Back/Home/Recent (`input keyevent`), volume dengan cadangan `cmd media_session volume --adj` saat injeksi diblokir, putar layar (`accelerometer_rotation 0` + `user_rotation`), notifikasi (`cmd statusbar expand-notifications`/`collapse`), tampilkan sentuhan, screenshot (`exec-out screencap -p` → `Pictures\Mirraawwrring\screenshot_<waktu>.png`, validasi tanda PNG, akhiran -2 bila nama bentrok), install APK (`install -r`, timeout 3 menit), teks info device; tabel aksi yang butuh injeksi; kombinasi tombol scrcpy (Ctrl+V, Alt+O, Alt+Shift+O).
 - `Hotkey` (parser "Ctrl+Shift+S" → modifier + virtual key, murni) dan `DockPlacement` (posisi toolbar di kanan/kiri jendela scrcpy dalam piksel fisik, clamp ke area kerja monitor; konversi DIP ↔ piksel per DPI).

@@ -111,6 +111,7 @@ public partial class App : Application
         services.AddTransient<SetupViewModel>();
         services.AddTransient<SetupWindow>();
         services.AddSingleton<Func<SetupWindow>>(sp => sp.GetRequiredService<SetupWindow>);
+        services.AddTransient<FilesPanelViewModel>();
         services.AddTransient<ToolbarViewModel>();
         services.AddTransient<ToolbarWindow>();
         services.AddSingleton<Func<ToolbarWindow>>(sp => sp.GetRequiredService<ToolbarWindow>);

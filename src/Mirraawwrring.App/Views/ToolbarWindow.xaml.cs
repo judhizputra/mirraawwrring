@@ -19,7 +19,8 @@ namespace Mirraawwrring.App.Views;
 public partial class ToolbarWindow : Window
 {
     private const int HotkeyId = 0x4D52; // "MR"
-    private const double WindowWidthDip = 256;
+    private const double ToolbarColumnDip = 52 + 8;
+    private const double SideColumnDip = 196;
 
     private readonly ToolbarViewModel _viewModel;
     private readonly ILogger<ToolbarWindow> _logger;
@@ -45,7 +46,25 @@ public partial class ToolbarWindow : Window
         SourceInitialized += OnSourceInitialized;
         DpiChanged += (_, _) => Reposition();
         Closed += OnClosed;
+        viewModel.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(ToolbarViewModel.IsFilesOpen) or nameof(ToolbarViewModel.FilesPanelWidth))
+            {
+                Reposition();
+            }
+        };
     }
+
+    /// <summary>Lebar jendela: kolom toolbar + kolom samping (panel file bila terbuka, kalau tidak lebar toast/legenda).</summary>
+    private double WindowWidthDip => ToolbarColumnDip + (_viewModel.IsFilesOpen ? _viewModel.FilesPanelWidth : SideColumnDip);
+
+    private void OnResizeDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    {
+        var delta = _side == DockSide.Right ? e.HorizontalChange : -e.HorizontalChange;
+        _viewModel.FilesPanelWidth = Math.Clamp(_viewModel.FilesPanelWidth + delta, ToolbarViewModel.MinFilesPanelWidth, ToolbarViewModel.MaxFilesPanelWidth);
+    }
+
+    private void OnResizeCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e) => _viewModel.SaveFilesPanelWidth();
 
     /// <summary>Pengguna minta panduan Security settings (titik kuning / legenda); MainWindow yang menampilkan dialognya.</summary>
     public event Action? GuideRequested;
@@ -206,7 +225,8 @@ public partial class ToolbarWindow : Window
             Grid.SetColumn(ToolbarPanel, 0);
             Grid.SetColumn(SidePanel, 1);
             SidePanel.Margin = new Thickness(8, 0, 0, 0);
-            SidePanel.HorizontalAlignment = HorizontalAlignment.Left;
+            SidePanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            ResizeThumb.HorizontalAlignment = HorizontalAlignment.Right;
         }
         else
         {
@@ -215,12 +235,13 @@ public partial class ToolbarWindow : Window
             Grid.SetColumn(ToolbarPanel, 1);
             Grid.SetColumn(SidePanel, 0);
             SidePanel.Margin = new Thickness(0, 0, 8, 0);
-            SidePanel.HorizontalAlignment = HorizontalAlignment.Right;
+            SidePanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            ResizeThumb.HorizontalAlignment = HorizontalAlignment.Left;
         }
 
         foreach (var child in LogicalTreeHelper.GetChildren(SidePanel))
         {
-            if (child is FrameworkElement fe)
+            if (child is FrameworkElement fe && !ReferenceEquals(fe, FilesPanelView) && !ReferenceEquals(fe, ResizeThumb))
             {
                 fe.HorizontalAlignment = side == DockSide.Right ? HorizontalAlignment.Left : HorizontalAlignment.Right;
             }

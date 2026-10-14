@@ -84,6 +84,23 @@ Mulai mirroring dari jendela utama; toolbar muncul di kanan jendela scrcpy setel
 - [ ] Xiaomi tanpa Security settings: titik kuning di Power/Volume/Kembali/Home/Recent/Clipboard, legenda kuning muncul 12 detik; tooltip tombol itu berisi penjelasan; klik → jendela panduan. Volume tetap mencoba `cmd media_session volume --adj raise/lower` (catat apakah berhasil di HyperOS). Setelah Security settings diaktifkan dan mirroring dimulai ulang → titik hilang.
 - [ ] Dua HP sekaligus: masing-masing sesi punya toolbar sendiri yang mengikuti jendelanya; hotkey screenshot mengambil dari HP yang jendelanya aktif.
 
+## Fase 6 — File browser
+
+Buka dari tombol File browser di toolbar saat mirroring.
+
+- [ ] Panel muncul di kanan toolbar setinggi jendela scrcpy, berisi folder `/sdcard` (Android, DCIM, Download, …); chip DCIM/Download/Pictures/Documents/Movies membuka foldernya dan ditandai hijau; breadcrumb bisa diklik; klik ganda folder membukanya; ".. (induk)" naik satu tingkat.
+- [ ] Ukuran dan tanggal file cocok dengan aplikasi Files di HP (format `stat` toybox: cek tidak ada baris yang hilang/salah untuk nama berisi spasi, `|`, atau huruf non-Latin).
+- [ ] Folder tanpa izin (`/sdcard/Android/data`): pesan "Tidak bisa membaca folder: … Permission denied", tidak crash.
+- [ ] Pilih beberapa file (checkbox / Shift+klik) → Simpan ke PC (n): progres per file dan persen total; file ada di `Downloads\Mirraawwrring`; toast dengan Folder/Buka. Pilih folder → ditarik rekursif. Batalkan di tengah transfer: berhenti, pesan "Transfer dibatalkan".
+- [ ] "ubah" folder tujuan → dialog folder → tujuan baru dipakai dan tersimpan di `settings.json`.
+- [ ] Kirim ke HP: pilih beberapa file di PC → progres → file muncul di folder HP (cek di aplikasi Files HP / MTP).
+- [ ] Drag & drop dari Explorer ke panel: kotak drop menyala hijau; file non-APK dikirim ke folder aktif; file .apk → dialog "Install … di HP?" → Ya memasang (toast "APK terpasang"), Tidak menyalin file saja.
+- [ ] Folder baru (nama berspasi) dan Ganti nama: perubahan terlihat di HP; nama tidak valid (`a/b`, kosong) ditolak dengan pesan.
+- [ ] Hapus: dialog konfirmasi menyebut jumlah dan nama item; Tidak → tidak ada yang dihapus; Ya → hilang di HP (periksa juga di aplikasi Files HP).
+- [ ] Pencarian lokal menyaring daftar tanpa perintah ke HP (log tidak bertambah).
+- [ ] Resize lebar panel lewat tepi luar (kanan saat panel di kanan, kiri saat di kiri); lebar tetap setelah aplikasi dibuka lagi. Panel ikut berpindah ke kiri bila jendela scrcpy di tepi kanan layar.
+- [ ] Tutup panel (X atau tombol toolbar) lalu buka lagi: lokasi terakhir tetap; mirroring dihentikan → panel ikut tertutup, transfer yang berjalan dibatalkan.
+
 ## Belum tercakup (fase berikutnya)
 
-File browser: ditambahkan saat fasenya selesai.
+Distribusi (`publish.ps1`) diuji di Fase 7.
