@@ -2,7 +2,7 @@
 
 Aplikasi desktop Windows (WPF, .NET 10, C#) untuk mirror dan kontrol HP Android lewat **scrcpy**. Spesifikasi lengkap ada di `PROMPT.md`; file ini adalah ringkasan operasional supaya sesi berikutnya bisa langsung bekerja. **Perbarui file ini setiap kali arsitektur berubah.**
 
-Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–3 selesai. Berikutnya: Fase 4 (wizard setup: UsbProbe WMI, InjectionProbe, SetupService unduh+hash+ekstrak+unblock / winget / folder, semua layar wizard). Catatan: `MainViewModel.InitializeAsync` saat ini hanya memberi status "scrcpy/adb belum terpasang" kalau tools tidak lengkap; wizard harus dibuka otomatis dari `App.OnStartup` ketika `ToolLocation.IsComplete == false`.
+Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–4 selesai. Berikutnya: Fase 5 (toolbar samping: docking ke HWND scrcpy, DeviceActions, titik kuning injeksi dari `InjectionProbe`, toast, hotkey screenshot, rekam layar lewat `ScrcpySessionManager.StartHeadlessRecording`).
 
 ## Perintah
 
@@ -31,6 +31,9 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
                                ScrcpySession (satu proses scrcpy: log terklasifikasi, InjectionBlocked, HWND), ScrcpySessionManager (banyak sesi, env ADB, --version)
   Settings/                    AppSettings (model settings.json), SettingsStore (load/save atomic)
   Wireless/                    AddressUtil (validasi host:port, kode), WirelessService (pair/connect/tcpip + riwayat), MdnsWatcher (polling mdns 5 s)
+  Usb/                         UsbVendorTable (VID → merek), UsbProbeParser (murni) + WmiUsbProbe (WMI) + UsbWatcher, PhoneStatusEvaluator (USB + adb → PhoneUsbStatus)
+  Devices/InjectionProbe       uji `input keyevent 0`, cache per serial
+  Setup/                       ScrcpyManifest, SetupService (unduh/hash/ekstrak/unblock, winget, validasi folder, cek internet), VerificationService (7 pemeriksaan + FixAction)
   Interop/                     NativeMethods (EnumWindows dsb.), WindowFinder (cari HWND jendela scrcpy dari PID)
 src/Mirraawwrring.App/         WPF
   App.xaml(.cs)                DI container, logging, handler exception global, LocateTools() saat startup (pakai CustomScrcpyPath dari settings)
@@ -46,6 +49,9 @@ src/Mirraawwrring.App/         WPF
                                event ke View: PairWirelessRequested, ConnectIpRequested, HyperOsGuideRequested, MessageRequested
   ViewModels/DeviceItemViewModel  satu kartu perangkat (subtitle, badge, IsMirroring); MdnsCandidateViewModel = kartu "HP di jaringan"
   ViewModels/PairWirelessViewModel, ConnectIpViewModel  dialog nirkabel (event Completed → View menutup dialog)
+  ViewModels/Setup/            SetupViewModel (navigasi + footer per langkah) dan halaman: DetectPage, InstallPage, VerifyPage, PhonePage, DonePage
+  Views/SetupWindow            wizard (DataTemplate per tipe halaman, stepper Grid); dibuka dari MainWindow.OnLoaded jika tools tidak lengkap atau tombol "Setup…"
+  Themes/Controls.Setup.xaml   Style.ProgressBar, Style.OptionCard, Style.Button.Danger, Style.ChoiceCard
   Interop/                     NativeMethods (P/Invoke UI), WindowTheming (title bar gelap DWM)
   Resources/Strings.resx       SEMUA teks UI (bahasa Indonesia). XAML: {loc:Str Kunci}; C#: Strings.Get("Kunci") / Strings.Format
 tests/Mirraawwrring.Core.Tests/ xUnit; Fakes/ berisi FakeProcessRunner, FakeFileSystem, FakeAppPaths, FakeAdbClient, FakeTimeProvider
@@ -96,9 +102,16 @@ Event Core datang dari thread pool; `MainViewModel` memakai `SynchronizationCont
 4. UI: checkbox/combobox di `MainWindow.xaml` (panel Opsi), teks di `Strings.resx`.
 5. Test: `ScrcpyArgumentBuilderTests`; `SettingsStoreTests` kalau tipe datanya baru.
 
-### Menambah merek HP ke tabel VID (Fase 4)
-1. `Core/Usb/UsbVendorTable.cs`: tambah baris `VID → merek`.
-2. Test tabel.
+### Menambah merek HP ke tabel VID
+1. `Core/Usb/UsbVendorTable.cs`: tambah baris `["XXXX"] = "Merek"` (4 digit heksadesimal huruf besar) di `Vendors`.
+2. Tambah `InlineData` di `UsbProbeParserTests.VendorTable`.
+VID dibaca dari `DeviceID` (`USB\VID_XXXX&PID_YYYY\…`) oleh `UsbProbeParser`; antarmuka ADB dikenali dari CompatibleID `USB\Class_FF&SubClass_42&Prot_01`.
+
+### Menambah pemeriksaan baru di wizard Verifikasi
+1. `Core/Setup/VerificationService.cs`: tambah anggota `CheckId`, metode `Check…Async`, panggil di `RunAsync` (urutan = urutan tampil), tambahkan ke `AllChecks`.
+2. `ViewModels/Setup/VerifyPageViewModel.cs`: tambah `VerifyRowViewModel` di konstruktor (judul, judul gagal, deskripsi gagal) dengan `CheckGroup` yang sesuai.
+3. Kalau butuh tombol perbaikan: tambah `FixAction` + penanganannya di `SetupViewModel.OnFixRequested`, teks di `Strings.resx` (`Verify_Fix…`), dan `VerifyRowViewModel.FixText`.
+4. Test di `VerificationServiceTests`.
 
 ### Memperbarui versi scrcpy yang dibundel
 1. Ambil SHA-256 dari `doc/windows.md` di tag rilis resmi scrcpy (bukan dari sumber lain).

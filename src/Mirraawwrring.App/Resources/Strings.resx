@@ -464,4 +464,536 @@
   <data name="Wifi_Failed" xml:space="preserve">
     <value>Gagal mengaktifkan Wi-Fi: {0}</value>
   </data>
+
+  <data name="Setup_Title" xml:space="preserve">
+    <value>Setup Mirraawwrring</value>
+  </data>
+
+  <data name="Setup_Step1" xml:space="preserve">
+    <value>Deteksi</value>
+  </data>
+
+  <data name="Setup_Step2" xml:space="preserve">
+    <value>Pasang</value>
+  </data>
+
+  <data name="Setup_Step3" xml:space="preserve">
+    <value>Verifikasi</value>
+  </data>
+
+  <data name="Setup_Step4" xml:space="preserve">
+    <value>Selesai</value>
+  </data>
+
+  <data name="Setup_Back" xml:space="preserve">
+    <value>Kembali</value>
+  </data>
+
+  <data name="Setup_Recheck" xml:space="preserve">
+    <value>Periksa ulang</value>
+  </data>
+
+  <data name="Setup_NextInstall" xml:space="preserve">
+    <value>Lanjut: Pasang</value>
+  </data>
+
+  <data name="Setup_NextVerify" xml:space="preserve">
+    <value>Lanjut: Verifikasi</value>
+  </data>
+
+  <data name="Setup_Next" xml:space="preserve">
+    <value>Lanjut</value>
+  </data>
+
+  <data name="Setup_Skip" xml:space="preserve">
+    <value>Lewati</value>
+  </data>
+
+  <data name="Detect_Heading" xml:space="preserve">
+    <value>Memeriksa komponen</value>
+  </data>
+
+  <data name="Detect_Intro" xml:space="preserve">
+    <value>Mirraawwrring butuh scrcpy dan ADB untuk menampilkan dan mengontrol HP. Dicari di folder aplikasi, subfolder scrcpy, dan PATH Windows.</value>
+  </data>
+
+  <data name="Detect_Scrcpy" xml:space="preserve">
+    <value>scrcpy</value>
+  </data>
+
+  <data name="Detect_ScrcpyDesc" xml:space="preserve">
+    <value>Menampilkan layar HP dan meneruskan input</value>
+  </data>
+
+  <data name="Detect_Adb" xml:space="preserve">
+    <value>ADB (Android Debug Bridge)</value>
+  </data>
+
+  <data name="Detect_AdbDesc" xml:space="preserve">
+    <value>Penghubung PC dengan HP lewat USB atau Wi-Fi</value>
+  </data>
+
+  <data name="Detect_Internet" xml:space="preserve">
+    <value>Koneksi internet</value>
+  </data>
+
+  <data name="Detect_InternetDesc" xml:space="preserve">
+    <value>Dibutuhkan untuk mengunduh scrcpy (±11 MB)</value>
+  </data>
+
+  <data name="Detect_Phone" xml:space="preserve">
+    <value>HP · USB debugging</value>
+  </data>
+
+  <data name="Detect_PhoneDescNone" xml:space="preserve">
+    <value>Belum ada HP tercolok lewat USB</value>
+  </data>
+
+  <data name="Detect_PhoneDescOff" xml:space="preserve">
+    <value>{0} tersambung USB, tapi antarmuka ADB belum aktif</value>
+  </data>
+
+  <data name="Detect_PhoneDescBlind" xml:space="preserve">
+    <value>Antarmuka ADB aktif, tapi adb belum melihatnya (driver USB?)</value>
+  </data>
+
+  <data name="Detect_PhoneDescUnauthorized" xml:space="preserve">
+    <value>Tekan Izinkan pada popup di layar HP</value>
+  </data>
+
+  <data name="Detect_PhoneDescReady" xml:space="preserve">
+    <value>{0} siap</value>
+  </data>
+
+  <data name="Detect_Found" xml:space="preserve">
+    <value>Ditemukan</value>
+  </data>
+
+  <data name="Detect_NotFound" xml:space="preserve">
+    <value>Tidak ditemukan</value>
+  </data>
+
+  <data name="Detect_Available" xml:space="preserve">
+    <value>Tersedia</value>
+  </data>
+
+  <data name="Detect_Unavailable" xml:space="preserve">
+    <value>Tidak ada</value>
+  </data>
+
+  <data name="Detect_Checking" xml:space="preserve">
+    <value>Memeriksa…</value>
+  </data>
+
+  <data name="Detect_PhoneNone" xml:space="preserve">
+    <value>Tidak tercolok</value>
+  </data>
+
+  <data name="Detect_PhoneOff" xml:space="preserve">
+    <value>Belum aktif</value>
+  </data>
+
+  <data name="Detect_PhoneBlind" xml:space="preserve">
+    <value>Driver?</value>
+  </data>
+
+  <data name="Detect_PhoneUnauthorized" xml:space="preserve">
+    <value>Belum diizinkan</value>
+  </data>
+
+  <data name="Detect_PhoneReady" xml:space="preserve">
+    <value>Siap</value>
+  </data>
+
+  <data name="Detect_HowTo" xml:space="preserve">
+    <value>Cara mengaktifkan</value>
+  </data>
+
+  <data name="Detect_Hint" xml:space="preserve">
+    <value>ADB sudah termasuk di paket scrcpy resmi. USB debugging bisa diaktifkan sambil menunggu pemasangan.</value>
+  </data>
+
+  <data name="Install_Heading" xml:space="preserve">
+    <value>Pasang scrcpy &amp; ADB</value>
+  </data>
+
+  <data name="Install_Auto" xml:space="preserve">
+    <value>Unduh otomatis</value>
+  </data>
+
+  <data name="Install_Recommended" xml:space="preserve">
+    <value>Disarankan</value>
+  </data>
+
+  <data name="Install_AutoDesc" xml:space="preserve">
+    <value>scrcpy {0} resmi dari GitHub, sudah termasuk ADB. Disimpan di folder aplikasi, tidak mengubah sistem.</value>
+  </data>
+
+  <data name="Install_Downloading" xml:space="preserve">
+    <value>Mengunduh {0}</value>
+  </data>
+
+  <data name="Install_Bytes" xml:space="preserve">
+    <value>{0} / {1} MB</value>
+  </data>
+
+  <data name="Install_AfterDownload" xml:space="preserve">
+    <value>Setelah selesai: cocokkan SHA-256 → ekstrak → buka blokir file</value>
+  </data>
+
+  <data name="Install_StageVerifying" xml:space="preserve">
+    <value>Mencocokkan SHA-256…</value>
+  </data>
+
+  <data name="Install_StageExtracting" xml:space="preserve">
+    <value>Mengekstrak…</value>
+  </data>
+
+  <data name="Install_StageUnblocking" xml:space="preserve">
+    <value>Membuka blokir file…</value>
+  </data>
+
+  <data name="Install_StageDone" xml:space="preserve">
+    <value>Terpasang.</value>
+  </data>
+
+  <data name="Install_Winget" xml:space="preserve">
+    <value>Pasang lewat winget</value>
+  </data>
+
+  <data name="Install_WingetDesc" xml:space="preserve">
+    <value>Terpasang untuk sistem dan bisa diperbarui lewat winget.</value>
+  </data>
+
+  <data name="Install_WingetCommand" xml:space="preserve">
+    <value>winget install Genymobile.scrcpy</value>
+  </data>
+
+  <data name="Install_Existing" xml:space="preserve">
+    <value>Pakai folder yang sudah ada</value>
+  </data>
+
+  <data name="Install_ExistingDesc" xml:space="preserve">
+    <value>Pilih folder berisi scrcpy.exe dan adb.exe.</value>
+  </data>
+
+  <data name="Install_PickFolder" xml:space="preserve">
+    <value>Pilih folder…</value>
+  </data>
+
+  <data name="Install_FolderInvalid" xml:space="preserve">
+    <value>Folder tidak lengkap, file hilang: {0}</value>
+  </data>
+
+  <data name="Install_FolderOk" xml:space="preserve">
+    <value>Folder valid: {0}</value>
+  </data>
+
+  <data name="Install_Start" xml:space="preserve">
+    <value>Pasang</value>
+  </data>
+
+  <data name="Install_Cancel" xml:space="preserve">
+    <value>Batalkan unduhan</value>
+  </data>
+
+  <data name="Install_Progress" xml:space="preserve">
+    <value>Memasang… {0}%</value>
+  </data>
+
+  <data name="Install_Failed" xml:space="preserve">
+    <value>Pemasangan gagal: {0}</value>
+  </data>
+
+  <data name="Install_WingetFailed" xml:space="preserve">
+    <value>winget keluar dengan kode {0}. Lihat output di atas.</value>
+  </data>
+
+  <data name="Install_WingetNotFound" xml:space="preserve">
+    <value>winget tidak ditemukan. Pakai "Unduh otomatis" atau pasang App Installer dari Microsoft Store.</value>
+  </data>
+
+  <data name="Verify_Heading" xml:space="preserve">
+    <value>Memastikan semuanya berjalan</value>
+  </data>
+
+  <data name="Verify_HeadingFailed" xml:space="preserve">
+    <value>{0} pemeriksaan gagal</value>
+  </data>
+
+  <data name="Verify_FailedIntro" xml:space="preserve">
+    <value>Perbaiki masing-masing, lalu periksa ulang.</value>
+  </data>
+
+  <data name="Verify_GroupScrcpy" xml:space="preserve">
+    <value>scrcpy</value>
+  </data>
+
+  <data name="Verify_GroupAdb" xml:space="preserve">
+    <value>ADB</value>
+  </data>
+
+  <data name="Verify_GroupPhone" xml:space="preserve">
+    <value>HP</value>
+  </data>
+
+  <data name="Verify_ScrcpyFiles" xml:space="preserve">
+    <value>File lengkap</value>
+  </data>
+
+  <data name="Verify_ScrcpyRuns" xml:space="preserve">
+    <value>scrcpy bisa dijalankan</value>
+  </data>
+
+  <data name="Verify_AdbRuns" xml:space="preserve">
+    <value>ADB bisa dijalankan</value>
+  </data>
+
+  <data name="Verify_AdbServer" xml:space="preserve">
+    <value>Server ADB berjalan</value>
+  </data>
+
+  <data name="Verify_OtherAdb" xml:space="preserve">
+    <value>ADB lain ditemukan di PATH</value>
+  </data>
+
+  <data name="Verify_OtherAdbNote" xml:space="preserve">
+    <value>Mirraawwrring tetap memakai ADB bawaan scrcpy agar tidak bentrok.</value>
+  </data>
+
+  <data name="Verify_NoOtherAdb" xml:space="preserve">
+    <value>Tidak ada ADB lain di PATH</value>
+  </data>
+
+  <data name="Verify_PhoneAuthorized" xml:space="preserve">
+    <value>USB debugging aktif &amp; diizinkan</value>
+  </data>
+
+  <data name="Verify_PhoneInjection" xml:space="preserve">
+    <value>Uji kontrol (Security settings)</value>
+  </data>
+
+  <data name="Verify_PhoneInjectionNote" xml:space="preserve">
+    <value>khusus Xiaomi</value>
+  </data>
+
+  <data name="Verify_Skipped" xml:space="preserve">
+    <value>dilewati</value>
+  </data>
+
+  <data name="Verify_Progress" xml:space="preserve">
+    <value>Memeriksa {0}/{1}…</value>
+  </data>
+
+  <data name="Verify_SkipPhone" xml:space="preserve">
+    <value>Lewati cek HP</value>
+  </data>
+
+  <data name="Verify_CopyLog" xml:space="preserve">
+    <value>Salin log</value>
+  </data>
+
+  <data name="Verify_BackToInstall" xml:space="preserve">
+    <value>Kembali ke Pasang</value>
+  </data>
+
+  <data name="Verify_FixRedownload" xml:space="preserve">
+    <value>Unduh ulang</value>
+  </data>
+
+  <data name="Verify_FixKillAdb" xml:space="preserve">
+    <value>Hentikan &amp; ulangi</value>
+  </data>
+
+  <data name="Verify_FixUsbDebugging" xml:space="preserve">
+    <value>Cara mengaktifkan</value>
+  </data>
+
+  <data name="Verify_FixSecurity" xml:space="preserve">
+    <value>Lihat caranya</value>
+  </data>
+
+  <data name="Verify_ScrcpyRunsFailedTitle" xml:space="preserve">
+    <value>scrcpy tidak bisa dijalankan</value>
+  </data>
+
+  <data name="Verify_ScrcpyRunsFailedDesc" xml:space="preserve">
+    <value>scrcpy.exe diblokir atau dikarantina antivirus.</value>
+  </data>
+
+  <data name="Verify_AdbServerFailedTitle" xml:space="preserve">
+    <value>Server ADB gagal berjalan</value>
+  </data>
+
+  <data name="Verify_AdbServerFailedDesc" xml:space="preserve">
+    <value>Port 5037 dipakai ADB versi lain (mis. Android Studio).</value>
+  </data>
+
+  <data name="Verify_PhoneFailedTitle" xml:space="preserve">
+    <value>HP belum siap</value>
+  </data>
+
+  <data name="Verify_FilesFailedTitle" xml:space="preserve">
+    <value>File scrcpy tidak lengkap</value>
+  </data>
+
+  <data name="Phone_Heading" xml:space="preserve">
+    <value>Aktifkan USB debugging di HP</value>
+  </data>
+
+  <data name="Phone_Intro" xml:space="preserve">
+    <value>HP terdeteksi lewat USB, tapi Windows belum melihat antarmuka ADB-nya.</value>
+  </data>
+
+  <data name="Phone_IntroNone" xml:space="preserve">
+    <value>Colok HP dengan kabel data, lalu ikuti langkah di bawah.</value>
+  </data>
+
+  <data name="Phone_Step1" xml:space="preserve">
+    <value>Settings › About phone, ketuk OS version 7 kali sampai muncul pesan developer.</value>
+  </data>
+
+  <data name="Phone_Step2" xml:space="preserve">
+    <value>Buka Settings › Additional settings › Developer options.</value>
+  </data>
+
+  <data name="Phone_Step3" xml:space="preserve">
+    <value>Nyalakan USB debugging.</value>
+  </data>
+
+  <data name="Phone_Step4" xml:space="preserve">
+    <value>Khusus Xiaomi: nyalakan juga USB debugging (Security settings) agar HP bisa dikontrol. Butuh data seluler dan akun Xiaomi.</value>
+  </data>
+
+  <data name="Phone_Step5" xml:space="preserve">
+    <value>Tekan Allow pada popup di HP, centang Always allow.</value>
+  </data>
+
+  <data name="Phone_StatusTitle" xml:space="preserve">
+    <value>Status HP</value>
+  </data>
+
+  <data name="Phone_StatusUsb" xml:space="preserve">
+    <value>Tersambung USB</value>
+  </data>
+
+  <data name="Phone_StatusUsbDetail" xml:space="preserve">
+    <value>{0} · mode Transfer file</value>
+  </data>
+
+  <data name="Phone_StatusUsbNone" xml:space="preserve">
+    <value>Belum tercolok</value>
+  </data>
+
+  <data name="Phone_StatusDebugging" xml:space="preserve">
+    <value>USB debugging</value>
+  </data>
+
+  <data name="Phone_StatusDebuggingOff" xml:space="preserve">
+    <value>Belum aktif</value>
+  </data>
+
+  <data name="Phone_StatusDebuggingOn" xml:space="preserve">
+    <value>Aktif</value>
+  </data>
+
+  <data name="Phone_StatusDebuggingBlind" xml:space="preserve">
+    <value>Aktif, adb belum melihat</value>
+  </data>
+
+  <data name="Phone_StatusAuth" xml:space="preserve">
+    <value>Izin dari PC</value>
+  </data>
+
+  <data name="Phone_StatusAuthWaiting" xml:space="preserve">
+    <value>Menunggu</value>
+  </data>
+
+  <data name="Phone_StatusAuthOk" xml:space="preserve">
+    <value>Diizinkan</value>
+  </data>
+
+  <data name="Phone_StatusControl" xml:space="preserve">
+    <value>Kontrol (Security settings)</value>
+  </data>
+
+  <data name="Phone_StatusControlPending" xml:space="preserve">
+    <value>Diuji setelah tersambung</value>
+  </data>
+
+  <data name="Phone_StatusControlOk" xml:space="preserve">
+    <value>Diizinkan</value>
+  </data>
+
+  <data name="Phone_StatusControlBlocked" xml:space="preserve">
+    <value>Diblokir, aktifkan Security settings</value>
+  </data>
+
+  <data name="Phone_AutoRefresh" xml:space="preserve">
+    <value>Diperiksa otomatis tiap 2 detik</value>
+  </data>
+
+  <data name="Phone_WifiOnly" xml:space="preserve">
+    <value>Pakai Wi-Fi saja</value>
+  </data>
+
+  <data name="Done_Heading" xml:space="preserve">
+    <value>scrcpy &amp; ADB siap dipakai</value>
+  </data>
+
+  <data name="Done_Sub" xml:space="preserve">
+    <value>Semua pemeriksaan lolos.</value>
+  </data>
+
+  <data name="Done_SubWarnings" xml:space="preserve">
+    <value>Ada peringatan, tetapi scrcpy dan ADB berjalan.</value>
+  </data>
+
+  <data name="Done_Scrcpy" xml:space="preserve">
+    <value>scrcpy</value>
+  </data>
+
+  <data name="Done_Adb" xml:space="preserve">
+    <value>ADB</value>
+  </data>
+
+  <data name="Done_AdbValue" xml:space="preserve">
+    <value>Bawaan scrcpy · port 5037</value>
+  </data>
+
+  <data name="Done_Location" xml:space="preserve">
+    <value>Lokasi</value>
+  </data>
+
+  <data name="Done_NextTitle" xml:space="preserve">
+    <value>Berikutnya: sambungkan HP</value>
+  </data>
+
+  <data name="Done_Usb" xml:space="preserve">
+    <value>Pakai kabel USB</value>
+  </data>
+
+  <data name="Done_UsbDesc" xml:space="preserve">
+    <value>Nyalakan USB debugging, colok kabel data, lalu izinkan popup di HP.</value>
+  </data>
+
+  <data name="Done_Wireless" xml:space="preserve">
+    <value>Tanpa kabel</value>
+  </data>
+
+  <data name="Done_WirelessDesc" xml:space="preserve">
+    <value>Android 11+: pair lewat Wireless debugging dengan kode 6 digit.</value>
+  </data>
+
+  <data name="Done_CheckUpdates" xml:space="preserve">
+    <value>Periksa pembaruan scrcpy saat aplikasi dibuka</value>
+  </data>
+
+  <data name="Done_Open" xml:space="preserve">
+    <value>Buka Mirraawwrring</value>
+  </data>
+
+  <data name="Main_OpenSetup" xml:space="preserve">
+    <value>Setup…</value>
+  </data>
 </root>

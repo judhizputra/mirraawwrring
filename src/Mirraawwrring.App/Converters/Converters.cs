@@ -39,6 +39,14 @@ public sealed class InvertedBoolToVisibilityConverter : IValueConverter
         value is Visibility.Collapsed;
 }
 
+/// <summary>Kebalikan bool.</summary>
+public sealed class InvertedBoolConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not true;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not true;
+}
+
 /// <summary>null/kosong → Collapsed.</summary>
 public sealed class NullToCollapsedConverter : IValueConverter
 {

@@ -258,6 +258,20 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     /// <summary>Pesan singkat untuk ditampilkan View (MessageBox).</summary>
     public event Action<string>? MessageRequested;
 
+    /// <summary>View membuka wizard setup; setelah tertutup View memanggil <see cref="ReinitializeAsync"/>.</summary>
+    public event Action? SetupRequested;
+
+    [RelayCommand]
+    private void OpenSetup() => SetupRequested?.Invoke();
+
+    /// <summary>Dipanggil setelah wizard setup selesai: lokasi tools mungkin berubah, jalankan ulang inisialisasi.</summary>
+    public async Task ReinitializeAsync()
+    {
+        _initialized = false;
+        _adbServerOk = false;
+        await InitializeAsync();
+    }
+
     public async Task InitializeAsync()
     {
         if (_initialized)

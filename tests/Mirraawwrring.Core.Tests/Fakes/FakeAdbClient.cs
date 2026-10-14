@@ -90,10 +90,34 @@ public sealed class FakeAdbClient : IAdbClient
         return MdnsFailure is not null ? Task.FromException<IReadOnlyList<MdnsService>>(MdnsFailure) : Task.FromResult(MdnsResponse);
     }
 
-    public Task<AdbServerStartResult> StartServerAsync(CancellationToken cancellationToken = default) => Task.FromResult(new AdbServerStartResult(true, false, false, ""));
-    public Task<ProcessResult> KillServerAsync(CancellationToken cancellationToken = default) => Task.FromResult(ProcessResult.Ok());
-    public Task<ProcessResult> VersionAsync(CancellationToken cancellationToken = default) => Task.FromResult(ProcessResult.Ok("Android Debug Bridge version 1.0.41"));
-    public Task<ProcessResult> ShellAsync(string serial, IReadOnlyList<string> command, TimeSpan? timeout = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    public Task<AdbServerStartResult> StartServerAsync(CancellationToken cancellationToken = default)
+    {
+        Calls.Add("start-server");
+        return Task.FromResult(StartServerResponse);
+    }
+
+    public Task<ProcessResult> KillServerAsync(CancellationToken cancellationToken = default)
+    {
+        Calls.Add("kill-server");
+        return Task.FromResult(ProcessResult.Ok());
+    }
+
+    public Task<ProcessResult> VersionAsync(CancellationToken cancellationToken = default)
+    {
+        Calls.Add("version");
+        return Task.FromResult(VersionResponse);
+    }
+    public Func<string, IReadOnlyList<string>, ProcessResult> ShellResponse { get; set; } = (_, _) => ProcessResult.Ok();
+
+    public AdbServerStartResult StartServerResponse { get; set; } = new(true, false, false, "* daemon started successfully");
+
+    public ProcessResult VersionResponse { get; set; } = ProcessResult.Ok("Android Debug Bridge version 1.0.41\nVersion 37.0.0");
+
+    public Task<ProcessResult> ShellAsync(string serial, IReadOnlyList<string> command, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
+    {
+        Calls.Add($"shell {serial} {string.Join(' ', command)}");
+        return Task.FromResult(ShellResponse(serial, command));
+    }
     public Task<ProcessResult> RunAsync(IReadOnlyList<string> arguments, TimeSpan? timeout = null, bool binaryStdout = false, bool quiet = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 }
 

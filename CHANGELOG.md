@@ -4,6 +4,15 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 4 — Wizard setup
+- `UsbProbe` (WMI `Win32_PnPEntity`): deteksi HP tercolok dari tabel VID (`UsbVendorTable`, mudah ditambah) / MTP, dan antarmuka ADB (`USB\Class_FF&SubClass_42&Prot_01`); `UsbWatcher` memakai `Win32_DeviceChangeEvent` + polling 2 detik; `PhoneStatusEvaluator` menggabungkan dengan adb (TidakTercolok / TercolokDebuggingMati / DebuggingAktifTapiAdbTidakMelihat / BelumDiizinkan / Siap).
+- `InjectionProbe`: `adb shell input keyevent 0`, deteksi INJECT_EVENTS, cache per sesi per device, uji ulang.
+- `SetupService`: unduh dari manifest dengan progress & bisa dibatalkan, verifikasi SHA-256 (file dihapus jika tidak cocok), ekstrak `folderInZip` ke `<exe>\scrcpy\` dengan perlindungan path traversal, hapus `Zone.Identifier`; winget (`Genymobile.scrcpy`) dengan output streaming; validasi folder yang sudah ada; cek internet (HEAD).
+- `VerificationService`: file scrcpy lengkap, `scrcpy --version`, `adb version`, start-server (deteksi bentrok), adb lain di PATH (peringatan), HP diizinkan, uji injeksi; aksi perbaikan: unduh ulang, `"<adb lain>" kill-server`, panduan USB debugging, panduan Security settings.
+- Jendela wizard (mockup Setup1–Setup4 termasuk 3b Gagal dan 3c HP): stepper, Deteksi (live saat USB berubah), Pasang (3 opsi, progress unduhan, output winget, dialog pilih folder), Verifikasi (live per baris, log, kartu error + tombol perbaikan, lewati cek HP), USB debugging belum aktif (langkah HyperOS + status HP tiap 2 detik), Selesai (versi, lokasi, kartu USB/Tanpa kabel, opsi cek pembaruan).
+- Wizard muncul otomatis saat scrcpy/adb tidak ditemukan dan bisa dibuka dari tombol "Setup…" di bar status; setelah selesai, jendela utama inisialisasi ulang.
+- 203 unit test.
+
 ### Fase 3 — Koneksi nirkabel
 - `AddressUtil` (validasi IP:port, kode 6 digit, port default 5555) dan `WirelessService`: pair → tunggu koneksi otomatis via mDNS 5 detik → connect manual ke port koneksi; Sambung via IP dengan riwayat (maks 10, terbaru di depan); Aktifkan Wi-Fi dari USB (IP wlan0 → `adb tcpip 5555` → connect).
 - `MdnsWatcher`: polling `adb mdns services` tiap 5 detik; HP yang Wireless debugging-nya aktif tetapi belum tersambung tampil di daftar perangkat sebagai kartu "HP di jaringan" dengan tombol Sambung.

@@ -48,6 +48,23 @@ HP dan PC di Wi-Fi yang sama. Di HP: Opsi pengembang › Wireless debugging.
 - [ ] Aktifkan Wi-Fi dari kabel USB (HP tersambung USB, Wi-Fi HP menyala): pesan "Wi-Fi aktif. Tersambung ke ip:5555"; kartu Wi-Fi muncul; cabut kabel USB → kartu USB hilang, kartu Wi-Fi tetap; mirroring lewat Wi-Fi berjalan.
 - [ ] Aktifkan Wi-Fi tanpa HP USB: pesan "Sambungkan HP lewat kabel USB dulu".
 
+## Fase 4 — Wizard setup
+
+Untuk memaksa wizard: hapus/ganti nama folder `scrcpy\` di samping exe (dan pastikan scrcpy tidak ada di PATH), lalu jalankan aplikasi.
+
+- [ ] Tanpa scrcpy: wizard muncul otomatis di atas jendela utama; baris scrcpy "Tidak ditemukan", ADB sesuai kondisi PATH, internet "Tersedia".
+- [ ] Colok HP dengan USB debugging MATI: dalam ≤ 2 detik baris "HP · USB debugging" menjadi "Belum aktif" dengan deskripsi merek (mis. "Xiaomi tersambung USB…"); nyalakan USB debugging → berubah menjadi "Belum diizinkan"/"Siap" tanpa menekan Periksa ulang.
+- [ ] "Cara mengaktifkan" membuka layar langkah HyperOS; status HP di kanan berubah live; "Lewati" kembali ke Deteksi.
+- [ ] Pasang › Unduh otomatis: progress MB berjalan, "Batalkan unduhan" menghentikan dan tombol kembali ke "Pasang"; unduhan penuh → verifikasi hash → ekstrak ke `scrcpy\` → file tidak lagi "diblokir" (klik kanan › Properties tanpa tombol Unblock) → otomatis ke Verifikasi.
+- [ ] Pasang › winget: output winget tampil di kotak; setelah selesai, lokasi scrcpy = symlink winget yang di-resolve.
+- [ ] Pasang › Pakai folder yang sudah ada: folder tanpa `scrcpy-server` ditolak dengan daftar file hilang; folder valid → Pasang → Verifikasi; `settings.json` berisi `customScrcpyPath`.
+- [ ] Verifikasi dengan HP tersambung & diizinkan: semua baris hijau, "Uji kontrol" hijau (Security settings aktif) atau kuning dengan tombol "Lihat caranya" (HyperOS memblokir); otomatis ke Selesai.
+- [ ] Verifikasi tanpa HP: grup HP gagal → otomatis ke layar USB debugging; colok HP + izinkan → tombol Lanjut aktif → Verifikasi ulang lolos.
+- [ ] Bentrok adb (jalankan `adb start-server` dari Android SDK yang versinya berbeda dulu): baris "Server ADB berjalan" gagal dengan tombol "Hentikan & ulangi"; tombol menjalankan `"<adb lain>" kill-server` lalu verifikasi ulang lolos.
+- [ ] Karantina scrcpy.exe (ganti nama sementara): "scrcpy tidak bisa dijalankan" dengan tombol "Unduh ulang" yang kembali ke Pasang.
+- [ ] Selesai: versi 4.1, lokasi folder; "Tanpa kabel" menutup wizard dan membuka dialog Pair; "Buka Mirraawwrring" menutup wizard, status bar jendela utama menjadi "adb siap"/"menunggu perangkat" dengan "scrcpy 4.1".
+- [ ] Tombol "Setup…" di bar status membuka wizard lagi kapan saja.
+
 ## Belum tercakup (fase berikutnya)
 
-Wizard setup, toolbar, file browser: ditambahkan saat fasenya selesai.
+Toolbar, file browser: ditambahkan saat fasenya selesai.

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mirraawwrring.App.Resources;
 using Mirraawwrring.App.ViewModels;
+using Mirraawwrring.App.ViewModels.Setup;
 using Mirraawwrring.App.Views;
 using Mirraawwrring.Core;
 using Mirraawwrring.Core.Logging;
@@ -107,6 +108,9 @@ public partial class App : Application
         services.AddTransient<ConnectIpViewModel>();
         services.AddTransient<ConnectIpWindow>();
         services.AddSingleton<Func<ConnectIpWindow>>(sp => sp.GetRequiredService<ConnectIpWindow>);
+        services.AddTransient<SetupViewModel>();
+        services.AddTransient<SetupWindow>();
+        services.AddSingleton<Func<SetupWindow>>(sp => sp.GetRequiredService<SetupWindow>);
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

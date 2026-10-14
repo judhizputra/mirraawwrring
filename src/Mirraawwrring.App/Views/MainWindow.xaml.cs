@@ -13,13 +13,15 @@ public partial class MainWindow : Window
     private readonly Func<HyperOsGuideWindow> _guideFactory;
     private readonly Func<PairWirelessWindow> _pairFactory;
     private readonly Func<ConnectIpWindow> _connectFactory;
+    private readonly Func<SetupWindow> _setupFactory;
 
-    public MainWindow(MainViewModel viewModel, Func<HyperOsGuideWindow> guideFactory, Func<PairWirelessWindow> pairFactory, Func<ConnectIpWindow> connectFactory)
+    public MainWindow(MainViewModel viewModel, Func<HyperOsGuideWindow> guideFactory, Func<PairWirelessWindow> pairFactory, Func<ConnectIpWindow> connectFactory, Func<SetupWindow> setupFactory)
     {
         _viewModel = viewModel;
         _guideFactory = guideFactory;
         _pairFactory = pairFactory;
         _connectFactory = connectFactory;
+        _setupFactory = setupFactory;
         InitializeComponent();
         DataContext = viewModel;
         SourceInitialized += (_, _) => WindowTheming.Apply(this);
@@ -28,6 +30,7 @@ public partial class MainWindow : Window
         viewModel.MessageRequested += ShowMessage;
         viewModel.PairWirelessRequested += ShowPairWireless;
         viewModel.ConnectIpRequested += ShowConnectIp;
+        viewModel.SetupRequested += OnSetupRequested;
         viewModel.LogLines.CollectionChanged += OnLogChanged;
     }
 
@@ -50,6 +53,25 @@ public partial class MainWindow : Window
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         await _viewModel.InitializeAsync();
+        if (!_viewModel.ToolsReady)
+        {
+            // scrcpy/adb tidak ditemukan: wizard setup muncul otomatis (§6.1).
+            await ShowSetupAsync();
+        }
+    }
+
+    private async void OnSetupRequested() => await ShowSetupAsync();
+
+    private async Task ShowSetupAsync()
+    {
+        var setup = _setupFactory();
+        setup.Owner = this;
+        setup.ShowDialog();
+        await _viewModel.ReinitializeAsync();
+        if (setup.OpenPairAfterClose && _viewModel.ToolsReady)
+        {
+            ShowPairWireless();
+        }
     }
 
     private void OnLogChanged(object? sender, NotifyCollectionChangedEventArgs e)

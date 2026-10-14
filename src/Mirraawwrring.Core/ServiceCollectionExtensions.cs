@@ -1,7 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Mirraawwrring.Core.Adb;
+using Mirraawwrring.Core.Devices;
 using Mirraawwrring.Core.IO;
+using Mirraawwrring.Core.Setup;
+using Mirraawwrring.Core.Usb;
 using Mirraawwrring.Core.Processes;
 using Mirraawwrring.Core.Scrcpy;
 using Mirraawwrring.Core.Settings;
@@ -29,6 +32,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISettingsStore, SettingsStore>();
         services.AddSingleton<WirelessService>();
         services.AddSingleton<MdnsWatcher>();
+
+        services.AddSingleton<IUsbProbe, WmiUsbProbe>();
+        services.AddSingleton<UsbWatcher>();
+        services.AddSingleton<InjectionProbe>();
+        services.TryAddSingleton(_ => new HttpClient { DefaultRequestHeaders = { { "User-Agent", "Mirraawwrring" } } });
+        services.AddSingleton<SetupService>();
+        services.AddSingleton<VerificationService>();
         return services;
     }
 }

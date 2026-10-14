@@ -29,4 +29,9 @@ internal static class NativeMethods
     public static extern nint GetWindow(nint hwnd, uint cmd);
 
     public const uint GW_OWNER = 4;
+
+    /// <summary>Dipakai untuk menghapus alternate data stream (<c>file:Zone.Identifier</c>).</summary>
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool DeleteFile(string path);
 }
