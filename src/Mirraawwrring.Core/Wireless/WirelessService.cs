@@ -23,6 +23,7 @@ public sealed class WirelessService(IAdbClient adb, ISettingsStore settings, ILo
     public static readonly TimeSpan AutoConnectTimeout = TimeSpan.FromSeconds(5);
     public static readonly TimeSpan AutoConnectPollInterval = TimeSpan.FromSeconds(1);
     public static readonly TimeSpan TcpIpRestartDelay = TimeSpan.FromSeconds(2);
+    public static readonly TimeSpan QrPollInterval = TimeSpan.FromSeconds(1);
 
     private readonly TimeProvider _time = timeProvider ?? TimeProvider.System;
 
@@ -42,7 +43,20 @@ public sealed class WirelessService(IAdbClient adb, ISettingsStore settings, ILo
             return new PairOutcome(false, null, "Kode penyambungan harus 6 digit.");
         }
 
-        var pair = await adb.PairAsync(pairingHostPort.Trim(), normalizedCode, cancellationToken).ConfigureAwait(false);
+        return await PairWithPasswordAsync(pairingHostPort, normalizedCode, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// <c>adb pair host:port password</c> tanpa aturan 6 digit: dipakai QR pairing (password acak dari QR) dan oleh <see cref="PairAsync"/>.
+    /// </summary>
+    public async Task<PairOutcome> PairWithPasswordAsync(string pairingHostPort, string password, CancellationToken cancellationToken = default)
+    {
+        if (!AddressUtil.TryParseHostPort(pairingHostPort, out var host, out _))
+        {
+            return new PairOutcome(false, null, "Format harus IP:port, sesuai yang tampil di dialog HP.");
+        }
+
+        var pair = await adb.PairAsync(pairingHostPort.Trim(), password, cancellationToken).ConfigureAwait(false);
         if (!pair.Success)
         {
             logger.LogWarning("Pairing gagal: {Message}", pair.Message);
@@ -54,6 +68,42 @@ public sealed class WirelessService(IAdbClient adb, ISettingsStore settings, ILo
         return serial is null
             ? new PairOutcome(true, null, pair.Message)
             : new PairOutcome(true, serial, pair.Message);
+    }
+
+    /// <summary>
+    /// QR pairing: poll <c>adb mdns services</c> sampai HP (yang sudah memindai QR) mengumumkan layanan pairing bernama
+    /// <paramref name="serviceName"/>, lalu kembalikan layanannya. Null jika <paramref name="timeout"/> habis.
+    /// </summary>
+    public async Task<MdnsService?> WaitForPairingServiceAsync(string serviceName, TimeSpan timeout, CancellationToken cancellationToken = default)
+    {
+        var deadline = _time.GetUtcNow() + timeout;
+        while (true)
+        {
+            IReadOnlyList<MdnsService> services;
+            try
+            {
+                services = await adb.GetMdnsServicesAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                logger.LogDebug(ex, "adb mdns services gagal saat menunggu QR pairing");
+                services = [];
+            }
+
+            var found = QrPairing.FindPairingService(services, serviceName);
+            if (found is not null)
+            {
+                logger.LogInformation("HP memindai QR: layanan {Name} di {Address}", found.Name, found.Address);
+                return found;
+            }
+
+            if (_time.GetUtcNow() >= deadline)
+            {
+                return null;
+            }
+
+            await Task.Delay(QrPollInterval, _time, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     /// <summary>Poll <c>adb devices</c> tiap 1 detik; adb biasanya langsung tersambung lewat mDNS setelah pairing.</summary>

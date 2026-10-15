@@ -112,6 +112,16 @@ Buat paket dengan `.\scripts\publish.ps1 -BundleScrcpy`, lalu uji di PC lain (at
 - [ ] Seluruh alur dengan HP sungguhan (Fase 1–6) diulang memakai exe hasil publish, bukan `bin\Debug`.
 - [ ] Antivirus/Defender tidak mengkarantina exe single-file (kalau ya, catat nama deteksinya).
 
+## Fase 8 — QR pairing & pembaruan scrcpy
+
+- [ ] Pair wireless › "Pakai QR code": QR tampil; di HP buka Wireless debugging › Pair device with QR code dan pindai → dalam ≤ 5 detik status "HP ditemukan di ip:port, pairing…" → "Tersambung: adb-…"; dialog tertutup, kartu Wi-Fi muncul. Catat apakah adb melihat layanan `_adb-tls-pairing._tcp` (log `adb mdns services`); kalau tidak pernah muncul, mDNS adb di PC ini bermasalah (firewall/Bonjour).
+- [ ] Tutup dialog saat masih menunggu QR: log berhenti menampilkan `adb mdns services` tiap detik.
+- [ ] Pindai QR dengan HP lain / QR kedaluwarsa: tidak ada efek; setelah 5 menit status "Belum ada HP yang memindai".
+- [ ] Cek pembaruan: dengan scrcpy 4.1 dari folder aplikasi, tautan "scrcpy X tersedia" muncul di bar status beberapa detik setelah mulai (butuh internet). Klik → dialog Ya/Tidak → Ya: bar status menunjukkan persen unduhan, lalu "scrcpy X terpasang"; versi di bar status berubah; `data\scrcpy-manifest.json` berisi versi baru; mirroring masih jalan dengan versi baru (periksa log scrcpy untuk opsi yang tidak dikenali).
+- [ ] Pembaruan ditolak bila mirroring berjalan ("Hentikan mirroring dulu").
+- [ ] scrcpy dari winget / folder sendiri: tautan tetap muncul, tetapi dialognya hanya menawarkan membuka halaman rilis.
+- [ ] Matikan "Periksa pembaruan scrcpy saat aplikasi dibuka" (wizard Selesai, atau `checkScrcpyUpdates: false`): tidak ada permintaan ke GitHub di log.
+
 ## Belum tercakup
 
-Fase 8 (opsional): QR pairing, cek pembaruan scrcpy.
+Semua fase selesai. Item di atas yang belum dicentang adalah pekerjaan verifikasi dengan HP sungguhan.

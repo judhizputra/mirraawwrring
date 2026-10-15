@@ -12,6 +12,7 @@ using Mirraawwrring.Core.Adb;
 using Mirraawwrring.Core.Logging;
 using Mirraawwrring.Core.Scrcpy;
 using Mirraawwrring.Core.Settings;
+using Mirraawwrring.Core.Setup;
 using Mirraawwrring.Core.Tools;
 using Mirraawwrring.Core.Wireless;
 
@@ -39,7 +40,11 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     private readonly IAppPaths _paths;
     private readonly WirelessService _wireless;
     private readonly MdnsWatcher _mdns;
+    private readonly IToolLocator _locator;
+    private readonly UpdateChecker _updates;
+    private readonly SetupService _setup;
     private readonly ILogger<MainViewModel> _logger;
+    private UpdateCheckResult? _update;
     private readonly SynchronizationContext _ui;
     private readonly Dictionary<string, DeviceDetails> _detailsCache = new(StringComparer.Ordinal);
     private readonly HashSet<string> _detailsInFlight = new(StringComparer.Ordinal);
@@ -57,10 +62,16 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         IAppPaths paths,
         WirelessService wireless,
         MdnsWatcher mdns,
+        IToolLocator locator,
+        UpdateChecker updates,
+        SetupService setup,
         ILogger<MainViewModel> logger)
     {
         _wireless = wireless;
         _mdns = mdns;
+        _locator = locator;
+        _updates = updates;
+        _setup = setup;
         _watcher = watcher;
         _adb = adb;
         _sessions = sessions;
@@ -267,6 +278,105 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void OpenSetup() => SetupRequested?.Invoke();
 
+    // ---------- Pembaruan scrcpy (Fase 8, §5.7) ----------
+
+    /// <summary>Teks tautan di bar status ("scrcpy 5.0.1 tersedia"); kosong = tidak ada pembaruan / belum dicek.</summary>
+    [ObservableProperty]
+    public partial string UpdateText { get; set; } = string.Empty;
+
+    /// <summary>View menampilkan dialog pembaruan (pasang / buka halaman rilis).</summary>
+    public event Action<UpdateCheckResult>? UpdateRequested;
+
+    /// <summary>Pasang otomatis hanya jika hash resmi ada DAN scrcpy yang dipakai berada di folder <c>scrcpy\</c> aplikasi (bukan winget/folder sendiri).</summary>
+    public bool CanInstallUpdate => _update is { CanInstall: true } && _tools.Current.ScrcpySource == ToolSource.BundledFolder;
+
+    private async Task CheckUpdatesAsync(string installedVersion)
+    {
+        var result = await _updates.CheckAsync(installedVersion);
+        if (result is null || !result.IsNewer)
+        {
+            return;
+        }
+
+        Post(() =>
+        {
+            _update = result;
+            UpdateText = Strings.Format("Update_Available", result.Latest.Version);
+        });
+    }
+
+    [RelayCommand]
+    private void ShowUpdate()
+    {
+        if (_update is not null)
+        {
+            UpdateRequested?.Invoke(_update);
+        }
+    }
+
+    public void OpenReleasePage()
+    {
+        var url = _update?.Latest.HtmlUrl;
+        if (string.IsNullOrEmpty(url))
+        {
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or IOException)
+        {
+            _logger.LogWarning(ex, "Tidak bisa membuka {Url}", url);
+        }
+    }
+
+    /// <summary>Unduh + verifikasi SHA-256 + ekstrak ke folder scrcpy aplikasi, simpan manifest override, lalu inisialisasi ulang.</summary>
+    public async Task InstallUpdateAsync()
+    {
+        var manifest = _update?.VerifiedManifest;
+        if (manifest is null || !CanInstallUpdate)
+        {
+            return;
+        }
+
+        if (_sessions.Sessions.Count > 0)
+        {
+            MessageRequested?.Invoke(Strings.Get("Update_SessionsRunning"));
+            return;
+        }
+
+        var previousStatus = StatusText;
+        try
+        {
+            // adb.exe di folder scrcpy sedang dipakai server adb; hentikan polling dan server supaya file bisa ditimpa.
+            await _watcher.StopAsync();
+            await _mdns.StopAsync();
+            await _adb.KillServerAsync();
+            var progress = new Progress<SetupProgress>(p =>
+            {
+                var detail = p.Stage == SetupStage.Downloading && p.Fraction is { } f ? $"{(int)(f * 100)}%" : p.Stage.ToString();
+                StatusText = Strings.Format("Update_Downloading", manifest.Version, detail);
+            });
+            await _setup.DownloadAndInstallAsync(manifest, progress);
+            _setup.SaveManifestOverride(manifest);
+            _logger.LogWarning("scrcpy diperbarui ke {Version}. Argumen scrcpy diverifikasi terhadap --help 4.1; periksa reference/scrcpy-4.1-help.txt bila ada opsi yang tidak dikenali.", manifest.Version);
+            _tools.Update(_locator.Locate(_settings.Current.CustomScrcpyPath));
+            _update = null;
+            UpdateText = string.Empty;
+            MessageRequested?.Invoke(Strings.Format("Update_Done", manifest.Version));
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _logger.LogError(ex, "Pembaruan scrcpy gagal");
+            StatusText = previousStatus;
+            MessageRequested?.Invoke(Strings.Format("Update_Failed", ex.Message));
+        }
+
+        await ReinitializeAsync();
+    }
+
     /// <summary>Dipanggil setelah wizard setup selesai: lokasi tools mungkin berubah, jalankan ulang inisialisasi.</summary>
     public async Task ReinitializeAsync()
     {
@@ -310,6 +420,10 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
             {
                 var version = await _sessions.GetVersionAsync();
                 ScrcpyVersionText = version is null ? string.Empty : Strings.Format("Main_ScrcpyVersion", version);
+                if (version is not null && _settings.Current.CheckScrcpyUpdates)
+                {
+                    _ = CheckUpdatesAsync(version);
+                }
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {

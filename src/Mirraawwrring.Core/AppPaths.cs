@@ -23,6 +23,9 @@ public interface IAppPaths
     /// <summary><c>&lt;exe&gt;\config\scrcpy-manifest.json</c>.</summary>
     string ScrcpyManifestFile { get; }
 
+    /// <summary><c>&lt;data&gt;\scrcpy-manifest.json</c>: ditulis setelah pembaruan scrcpy otomatis, diutamakan atas manifest bawaan.</summary>
+    string ScrcpyManifestOverrideFile { get; }
+
     /// <summary><c>%LOCALAPPDATA%\Microsoft\WinGet\Links\scrcpy.exe</c> (symlink buatan winget).</summary>
     string WingetScrcpyLink { get; }
 
@@ -64,6 +67,7 @@ public sealed class AppPaths : IAppPaths
 
     public string ScrcpyBundleDirectory => Path.Combine(ExeDirectory, "scrcpy");
     public string ScrcpyManifestFile => Path.Combine(ExeDirectory, "config", "scrcpy-manifest.json");
+    public string ScrcpyManifestOverrideFile => Path.Combine(DataDirectory, "scrcpy-manifest.json");
 
     public string WingetScrcpyLink => Path.Combine(LocalAppData, "Microsoft", "WinGet", "Links", "scrcpy.exe");
 

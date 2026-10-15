@@ -1422,4 +1422,64 @@ Pilih Tidak untuk hanya menyalin file ke folder ini.</value>
   <data name="Size_GB" xml:space="preserve">
     <value>{0} GB</value>
   </data>
+
+  <data name="Pair_CodeMode" xml:space="preserve">
+    <value>Pakai kode 6 digit</value>
+  </data>
+
+  <data name="Pair_QrHeading" xml:space="preserve">
+    <value>Scan QR dari HP</value>
+  </data>
+
+  <data name="Pair_QrHint" xml:space="preserve">
+    <value>Di HP: Developer options › Wireless debugging › Pair device with QR code, lalu arahkan kamera ke kode ini. Pairing berjalan otomatis setelah HP memindainya.</value>
+  </data>
+
+  <data name="Pair_QrWaiting" xml:space="preserve">
+    <value>Menunggu HP memindai QR…</value>
+  </data>
+
+  <data name="Pair_QrFound" xml:space="preserve">
+    <value>HP ditemukan di {0}, pairing…</value>
+  </data>
+
+  <data name="Pair_QrTimeout" xml:space="preserve">
+    <value>Belum ada HP yang memindai. Klik "Pakai kode 6 digit" lalu "Pakai QR code" untuk membuat kode baru.</value>
+  </data>
+
+  <data name="Update_Available" xml:space="preserve">
+    <value>scrcpy {0} tersedia</value>
+  </data>
+
+  <data name="Update_Title" xml:space="preserve">
+    <value>Pembaruan scrcpy</value>
+  </data>
+
+  <data name="Update_InstallPrompt" xml:space="preserve">
+    <value>scrcpy {0} tersedia (terpasang {1}).
+
+Unduh dan pasang sekarang? Paket resmi diverifikasi dengan SHA-256 dari dokumentasi scrcpy, lalu diekstrak ke folder scrcpy\ di samping aplikasi. Mirroring yang sedang berjalan harus dihentikan dulu.</value>
+  </data>
+
+  <data name="Update_OpenPrompt" xml:space="preserve">
+    <value>scrcpy {0} tersedia (terpasang {1}).
+
+Tidak dipasang otomatis: hash resmi tidak ditemukan di dokumentasi rilis, atau scrcpy yang dipakai berada di luar folder aplikasi (winget / folder sendiri). Buka halaman rilis?</value>
+  </data>
+
+  <data name="Update_SessionsRunning" xml:space="preserve">
+    <value>Hentikan mirroring dulu sebelum memperbarui scrcpy.</value>
+  </data>
+
+  <data name="Update_Downloading" xml:space="preserve">
+    <value>Memperbarui scrcpy {0}… {1}</value>
+  </data>
+
+  <data name="Update_Done" xml:space="preserve">
+    <value>scrcpy {0} terpasang. Flag scrcpy diverifikasi untuk 4.1; kalau ada opsi yang tidak jalan, lihat log.</value>
+  </data>
+
+  <data name="Update_Failed" xml:space="preserve">
+    <value>Pembaruan gagal: {0}</value>
+  </data>
 </root>

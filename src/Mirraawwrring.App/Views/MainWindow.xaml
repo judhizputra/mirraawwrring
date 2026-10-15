@@ -400,6 +400,18 @@
                 <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{Binding StatusText}" VerticalAlignment="Center" />
                 <TextBlock Style="{StaticResource Style.Text.Muted}" Text="{Binding ScrcpyVersionText}" Margin="14,0,0,0" VerticalAlignment="Center" />
                 <Button Style="{StaticResource Style.Button.Subtle}" Content="{loc:Str Main_OpenSetup}" Command="{Binding OpenSetupCommand}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                <Button Command="{Binding ShowUpdateCommand}" Content="{Binding UpdateText}" Margin="6,0,0,0" VerticalAlignment="Center" AutomationProperties.Name="{Binding UpdateText}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource Style.Button.Subtle}">
+                            <Setter Property="Foreground" Value="{StaticResource Brush.Link}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding UpdateText}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Style="{StaticResource Style.Button}" Height="40" Content="{loc:Str Main_OpenRecordings}" Command="{Binding OpenRecordingsFolderCommand}" Margin="0,0,10,0" />

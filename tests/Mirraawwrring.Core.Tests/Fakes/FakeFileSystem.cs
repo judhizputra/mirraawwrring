@@ -66,6 +66,7 @@ public sealed class FakeAppPaths : IAppPaths
     public string SettingsFile => Path.Combine(DataDirectory, "settings.json");
     public string ScrcpyBundleDirectory => Path.Combine(ExeDirectory, "scrcpy");
     public string ScrcpyManifestFile => Path.Combine(ExeDirectory, "config", "scrcpy-manifest.json");
+    public string ScrcpyManifestOverrideFile => Path.Combine(DataDirectory, "scrcpy-manifest.json");
     public string WingetScrcpyLink { get; init; } = @"C:\Users\u\AppData\Local\Microsoft\WinGet\Links\scrcpy.exe";
     public string AndroidSdkAdb { get; init; } = @"C:\Users\u\AppData\Local\Android\Sdk\platform-tools\adb.exe";
     public string RecordingsDirectory { get; init; } = @"C:\Users\u\Videos\Mirraawwrring";

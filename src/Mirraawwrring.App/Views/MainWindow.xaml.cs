@@ -34,6 +34,7 @@ public partial class MainWindow : Window
         viewModel.ConnectIpRequested += ShowConnectIp;
         viewModel.SetupRequested += OnSetupRequested;
         viewModel.ToolbarRequested += OnToolbarRequested;
+        viewModel.UpdateRequested += OnUpdateRequested;
         viewModel.LogLines.CollectionChanged += OnLogChanged;
     }
 
@@ -64,6 +65,28 @@ public partial class MainWindow : Window
     }
 
     private async void OnSetupRequested() => await ShowSetupAsync();
+
+    /// <summary>Pembaruan scrcpy (§5.7): pasang otomatis hanya dengan hash resmi; kalau tidak, cukup buka halaman rilis.</summary>
+    private async void OnUpdateRequested(Core.Setup.UpdateCheckResult update)
+    {
+        var title = Strings.Get("Update_Title");
+        if (_viewModel.CanInstallUpdate)
+        {
+            var answer = MessageBox.Show(this, Strings.Format("Update_InstallPrompt", update.Latest.Version, update.InstalledVersion), title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (answer == MessageBoxResult.Yes)
+            {
+                await _viewModel.InstallUpdateAsync();
+            }
+        }
+        else
+        {
+            var answer = MessageBox.Show(this, Strings.Format("Update_OpenPrompt", update.Latest.Version, update.InstalledVersion), title, MessageBoxButton.OKCancel, MessageBoxImage.Information);
+            if (answer == MessageBoxResult.OK)
+            {
+                _viewModel.OpenReleasePage();
+            }
+        }
+    }
 
     /// <summary>Toolbar samping per sesi scrcpy; menutup sendiri saat sesi berakhir.</summary>
     private async void OnToolbarRequested(Core.Scrcpy.ScrcpySession session, DeviceItemViewModel item, Core.Scrcpy.ScrcpyOptions options)

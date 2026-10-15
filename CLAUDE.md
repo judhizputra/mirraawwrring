@@ -2,7 +2,7 @@
 
 Aplikasi desktop Windows (WPF, .NET 10, C#) untuk mirror dan kontrol HP Android lewat **scrcpy**. Spesifikasi lengkap ada di `PROMPT.md`; file ini adalah ringkasan operasional supaya sesi berikutnya bisa langsung bekerja. **Perbarui file ini setiap kali arsitektur berubah.**
 
-Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): Fase 0–7 selesai (aplikasi lengkap, paket rilis lewat `scripts/publish.ps1`). Tersisa Fase 8 yang opsional: QR pairing (dialog Pair) dan cek pembaruan scrcpy (`AppSettings.CheckScrcpyUpdates` sudah ada, logikanya belum; aturan §5.7: hash dari `doc/windows.md` tag rilis, tanpa hash jangan pasang otomatis). Fitur yang butuh HP sungguhan belum diverifikasi: ikuti `docs/manual-test.md`.
+Status fase (lihat `PROMPT.md` §10 dan `CHANGELOG.md`): semua fase (0–8) selesai, termasuk QR pairing dan cek pembaruan scrcpy. Pekerjaan berikutnya adalah verifikasi dengan HP sungguhan lewat `docs/manual-test.md` dan perbaikan dari hasilnya.
 
 ## Perintah
 
@@ -30,7 +30,8 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
   Scrcpy/                      ScrcpyOptions + MirrorMode, ScrcpyArgumentBuilder (opsi → argumen), ScrcpyLogClassifier,
                                ScrcpySession (satu proses scrcpy: log terklasifikasi, InjectionBlocked, HWND), ScrcpySessionManager (banyak sesi, env ADB, --version)
   Settings/                    AppSettings (model settings.json), SettingsStore (load/save atomic)
-  Wireless/                    AddressUtil (validasi host:port, kode), WirelessService (pair/connect/tcpip + riwayat), MdnsWatcher (polling mdns 5 s)
+  Wireless/                    AddressUtil (validasi host:port, kode), WirelessService (pair/connect/tcpip + riwayat; PairWithPasswordAsync + WaitForPairingServiceAsync untuk QR),
+                               MdnsWatcher (polling mdns 5 s), QrPairing (sesi QR: nama layanan + password, format WIFI:T:ADB;S:;P:;;)
   Usb/                         UsbVendorTable (VID → merek), UsbProbeParser (murni) + WmiUsbProbe (WMI) + UsbWatcher, PhoneStatusEvaluator (USB + adb → PhoneUsbStatus)
   Devices/InjectionProbe       uji `input keyevent 0`, cache per serial
   Devices/DeviceActions        SEMUA perintah tombol toolbar (§5.8): keyevent, volume + cadangan, rotasi, notifikasi, show_touches,
@@ -38,7 +39,8 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
   Input/Hotkey                 parser "Ctrl+Shift+S" → HotkeyModifiers (= MOD_*) + virtual key (murni)
   Files/                       RemoteEntry + RemotePath (path POSIX, breadcrumb, pintasan, validasi nama), RemoteListingParser (murni: find -exec stat),
                                RemoteFileService (list, pull/push + TransferProgress, mkdir/mv/rm; konfirmasi hapus di UI)
-  Setup/                       ScrcpyManifest, SetupService (unduh/hash/ekstrak/unblock, winget, validasi folder, cek internet), VerificationService (7 pemeriksaan + FixAction)
+  Setup/                       ScrcpyManifest, SetupService (unduh/hash/ekstrak/unblock, winget, validasi folder, cek internet; LoadManifest memakai override data\scrcpy-manifest.json),
+                               VerificationService (7 pemeriksaan + FixAction), UpdateChecker (releases/latest GitHub + SHA-256 dari doc/windows.md → UpdateCheckResult)
   Interop/                     NativeMethods (EnumWindows dsb.), WindowFinder (cari HWND jendela scrcpy dari PID),
                                DockPlacement (posisi toolbar kanan/kiri scrcpy dalam piksel fisik, murni)
 src/Mirraawwrring.App/         WPF
@@ -49,10 +51,11 @@ src/Mirraawwrring.App/         WPF
   Themes/Controls.Main.xaml    Style.ComboBox, Style.ModeCard (RadioButton kartu), Style.DeviceList/DeviceItem, Style.Badge
   Converters/Converters.cs     EnumToBool (RadioButton↔enum), InvertedBoolToVisibility, NullToCollapsed
   Views/MainWindow             jendela utama (mockup Main/Empty); HyperOsGuideWindow = panduan Security settings
-  Views/PairWirelessWindow     dialog Pair (mockup Pair); logika 6 kotak digit di code-behind
+  Views/PairWirelessWindow     dialog Pair (mockup Pair); logika 6 kotak digit di code-behind; mode QR (gambar QR dari QRCoder, polling mDNS di VM, Cancel saat ditutup)
   Views/ConnectIpWindow        dialog Sambung via IP + riwayat
   ViewModels/MainViewModel     daftar perangkat + kandidat mDNS, mode/kualitas/opsi (disimpan ke settings), log, status, Mulai/Hentikan mirroring,
-                               event ke View: PairWirelessRequested, ConnectIpRequested, HyperOsGuideRequested, MessageRequested
+                               cek pembaruan scrcpy (UpdateText di bar status, CanInstallUpdate, InstallUpdateAsync: stop watcher + kill-server → SetupService → relokasi tools),
+                               event ke View: PairWirelessRequested, ConnectIpRequested, HyperOsGuideRequested, MessageRequested, UpdateRequested
   ViewModels/DeviceItemViewModel  satu kartu perangkat (subtitle, badge, IsMirroring); MdnsCandidateViewModel = kartu "HP di jaringan"
   ViewModels/PairWirelessViewModel, ConnectIpViewModel  dialog nirkabel (event Completed → View menutup dialog)
   ViewModels/Setup/            SetupViewModel (navigasi + footer per langkah) dan halaman: DetectPage, InstallPage, VerifyPage, PhonePage, DonePage
@@ -152,6 +155,8 @@ VID dibaca dari `DeviceID` (`USB\VID_XXXX&PID_YYYY\…`) oleh `UsbProbeParser`; 
 - **Hotkey screenshot** memakai `RegisterHotKey` global yang hanya didaftarkan saat jendela scrcpy/toolbar foreground; kalau aplikasi lain sudah memakai kombinasi itu, pendaftaran gagal dan dicatat di log. Ubah lewat `screenshotHotkey` di settings.json (belum ada UI).
 - **DPI campuran** (monitor dengan skala berbeda) belum diuji dengan sungguhan; PC pengembang 100%.
 - **Format `stat` toybox** (`%F|%s|%Y|%n`) belum diverifikasi di HP sungguhan; parser toleran (baris tak cocok dilewati dan dicatat Debug). Progres di dalam satu file besar tidak diketahui (adb pull/push mencetak progres dengan `\r`, bukan baris).
+- **Pembaruan scrcpy otomatis** hanya ke folder `scrcpy\` aplikasi (`ToolSource.BundledFolder`) dan hanya dengan hash dari `doc/windows.md`; `ScrcpyArgumentBuilder` tetap diverifikasi terhadap `--help` 4.1, jadi setelah pembaruan periksa log scrcpy untuk opsi yang tidak dikenali dan jalankan resep "Memperbarui versi scrcpy yang dibundel" untuk mengunci versi baru di `config/scrcpy-manifest.json`. Rilis scrcpy juga menyediakan `SHA256SUMS.txt`; belum dipakai (spesifikasi memilih `doc/windows.md`).
+- **QR pairing** mengandalkan `adb mdns services` melihat layanan `_adb-tls-pairing._tcp` yang diumumkan HP setelah memindai QR; kalau mDNS adb tidak jalan di PC (firewall), mode QR tidak akan menemukan HP meski pairing kode tetap bisa.
 - **Hapus di HP** selalu lewat dialog konfirmasi (`FilesPanelViewModel.Confirm`); jangan tambahkan jalur hapus tanpa konfirmasi (PROMPT.md §9).
 - Pengembangan tanpa scrcpy terpasang: salin isi `scrcpy-win64-v4.1` ke `src/Mirraawwrring.App/bin/Debug/net10.0-windows/scrcpy/` (folder bin tidak masuk git).
 - Fitur yang butuh HP fisik belum teruji otomatis; lihat `docs/manual-test.md`.

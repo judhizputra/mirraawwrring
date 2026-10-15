@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton(_ => new HttpClient { DefaultRequestHeaders = { { "User-Agent", "Mirraawwrring" } } });
         services.AddSingleton<SetupService>();
         services.AddSingleton<VerificationService>();
+        services.AddSingleton<UpdateChecker>();
         return services;
     }
 }

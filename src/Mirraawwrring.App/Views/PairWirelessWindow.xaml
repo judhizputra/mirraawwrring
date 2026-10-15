@@ -16,6 +16,7 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <conv:NullToCollapsedConverter x:Key="NullToCollapsed" />
+        <conv:InvertedBoolToVisibilityConverter x:Key="InvBoolToVis" />
         <Style x:Key="Digit" TargetType="TextBox" BasedOn="{StaticResource Style.TextBox}">
             <Setter Property="Width" Value="44" />
             <Setter Property="Height" Value="48" />
@@ -49,8 +50,26 @@
             </StackPanel>
         </Border>
 
+        <!-- Mode QR (Fase 8): QR di kiri, petunjuk + status di kanan -->
+        <Border Style="{StaticResource Style.Card}" Margin="0,18,0,0" Padding="14" Visibility="{Binding IsQrMode, Converter={StaticResource BoolToVisibility}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Background="White" CornerRadius="{StaticResource Radius.Card}" Padding="8" VerticalAlignment="Top">
+                    <Image Width="168" Height="168" Source="{Binding QrImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" AutomationProperties.Name="QR pairing" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Top">
+                    <TextBlock Style="{StaticResource Style.Text.Heading}" Text="{loc:Str Pair_QrHeading}" />
+                    <TextBlock Style="{StaticResource Style.Text.Muted}" Margin="0,6,0,10" LineHeight="18" Text="{loc:Str Pair_QrHint}" />
+                    <TextBlock Style="{StaticResource Style.Text.Secondary}" Foreground="{StaticResource Brush.AccentText}" Text="{Binding QrStatusText}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
         <!-- Langkah 1: Pairing -->
-        <StackPanel Margin="0,18,0,0" IsEnabled="{Binding IsStep1Enabled}">
+        <StackPanel Margin="0,18,0,0" IsEnabled="{Binding IsStep1Enabled}" Visibility="{Binding IsQrMode, Converter={StaticResource InvBoolToVis}}">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                 <Border Style="{StaticResource StepNumber}" Background="{StaticResource Brush.Accent}">
                     <TextBlock Text="1" FontSize="{StaticResource FontSize.Tiny}" FontWeight="Bold" Foreground="{StaticResource Brush.OnAccent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -124,8 +143,8 @@
 
         <!-- Footer -->
         <Grid Margin="0,18,0,0">
-            <TextBlock VerticalAlignment="Center" FontSize="{StaticResource FontSize.Small}" Foreground="{StaticResource Brush.TextDisabled}"
-                       Text="{loc:Str Pair_Qr}" ToolTip="{loc:Str Main_NotYet}" />
+            <Button Style="{StaticResource Style.Button.Subtle}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource Brush.Link}"
+                    Content="{Binding QrModeText}" Command="{Binding ToggleQrModeCommand}" AutomationProperties.Name="{Binding QrModeText}" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Style="{StaticResource Style.Button}" Height="40" Content="{loc:Str Pair_Cancel}" IsCancel="True" Margin="0,0,10,0" />
                 <Button Style="{StaticResource Style.Button.Accent}" Content="{Binding PrimaryText}" Command="{Binding PrimaryCommand}" IsDefault="True" Padding="20,0" />

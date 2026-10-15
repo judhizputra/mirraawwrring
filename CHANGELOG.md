@@ -4,6 +4,13 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Fase 8 — QR pairing & cek pembaruan scrcpy (opsional)
+- **QR pairing** di dialog Pair wireless (tombol "Pakai QR code"): aplikasi membuat nama layanan `mirraawwrring-xxxxxxxx` + password acak, menampilkan QR berformat `WIFI:T:ADB;S:<nama>;P:<password>;;` (seperti Android Studio; pustaka QRCoder), lalu mem-poll `adb mdns services` tiap 1 detik sampai HP yang memindai QR mengumumkan layanan `_adb-tls-pairing._tcp` dengan nama itu, kemudian `adb pair host:port password` dan alur koneksi otomatis/port manual yang sama dengan mode kode. Tidak perlu server mDNS di PC. Timeout 5 menit; polling berhenti saat dialog ditutup.
+- `WirelessService.PairWithPasswordAsync` (tanpa aturan 6 digit) dan `WaitForPairingServiceAsync`; `QrPairing` (sesi QR, pencarian layanan) murni dan diuji.
+- **Cek pembaruan scrcpy** (`UpdateChecker`, hanya jika "Periksa pembaruan" aktif di settings): saat mulai, membandingkan tag `releases/latest` GitHub dengan versi `scrcpy --version`. Jika lebih baru, tautan "scrcpy X tersedia" muncul di bar status. Pasang otomatis hanya bila SHA-256 untuk `scrcpy-win64-vX.zip` ditemukan di `doc/windows.md` pada tag itu DAN scrcpy yang dipakai berasal dari folder `scrcpy\` aplikasi; prosesnya: hentikan polling + `adb kill-server`, unduh, verifikasi hash, ekstrak menimpa, simpan manifest baru ke `data\scrcpy-manifest.json` (dipakai wizard untuk unduh ulang), cari ulang tools, inisialisasi ulang. Kalau tidak memenuhi syarat, hanya menawarkan membuka halaman rilis.
+- Diuji di PC ini: QR pairing end-to-end dengan adb palsu (layanan mDNS bernama sesuai QR → pair → tersambung otomatis → dialog tertutup, kartu Wi-Fi muncul); cek pembaruan nyata menemukan scrcpy 5.0.1 dengan hash resmi dan pemasangannya ke folder `scrcpy\` berjalan (lihat catatan keterbatasan: flag diverifikasi untuk 4.1).
+- 310 unit test.
+
 ### Fase 7 — Distribusi & dokumentasi
 - `scripts/publish.ps1`: versi dari `Directory.Build.props`, unit test (bisa dilewati `-SkipTests`), `dotnet publish` win-x64 self-contained single-file terkompresi ke `dist\Mirraawwrring-<versi>\` (exe ±60 MB, plus `config\scrcpy-manifest.json`, README, CHANGELOG), `-BundleScrcpy` mengunduh scrcpy sesuai manifest, memverifikasi SHA-256 (tidak cocok = berhenti dan hapus), mengekstrak ke `scrcpy\` dan Unblock-File; zip `dist\Mirraawwrring-<versi>-win-x64.zip` (`-NoZip` untuk melewati).
 - Diuji: publish dengan `-BundleScrcpy` di PC ini (hash cocok), exe hasil publish berjalan portable (`data\` di samping exe) dan menemukan scrcpy bundel ("menunggu perangkat · scrcpy 4.1").

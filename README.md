@@ -5,7 +5,7 @@ Aplikasi desktop Windows untuk menampilkan (mirror) dan mengontrol HP Android da
 Fitur:
 
 - **Wizard setup**: mendeteksi scrcpy/ADB/internet/HP, mengunduh scrcpy resmi (SHA-256 diverifikasi) atau memakai winget / folder yang sudah ada, memverifikasi semuanya berjalan, dan memandu mengaktifkan USB debugging (termasuk langkah khusus Xiaomi/HyperOS).
-- **Jendela utama**: daftar HP (USB, Wi-Fi, dan HP di jaringan via mDNS), Pair wireless dengan kode 6 digit, Sambung via IP dengan riwayat, Aktifkan Wi-Fi dari kabel USB, mode (mirror + kontrol, lihat saja, layar HP mati, hemat data), kualitas, opsi scrcpy, panel log.
+- **Jendela utama**: daftar HP (USB, Wi-Fi, dan HP di jaringan via mDNS), Pair wireless dengan kode 6 digit atau QR code, Sambung via IP dengan riwayat, Aktifkan Wi-Fi dari kabel USB, mode (mirror + kontrol, lihat saja, layar HP mati, hemat data), kualitas, opsi scrcpy, panel log.
 - **Toolbar samping** yang menempel di jendela scrcpy: Power, volume, putar layar, Kembali/Home/Aplikasi terbaru, notifikasi, screenshot (hotkey `Ctrl+Shift+S`), rekam layar, file browser, install APK, kirim clipboard, menu lainnya.
 - **File browser**: jelajahi penyimpanan HP, simpan ke PC, kirim ke HP (termasuk drag & drop), folder baru, ganti nama, hapus dengan konfirmasi.
 
@@ -68,6 +68,10 @@ Di Xiaomi/HyperOS tanpa "USB debugging (Security settings)", tombol yang butuh i
 ## File browser
 
 Tombol folder di toolbar membuka panel file HP di sampingnya (lebarnya bisa ditarik). Pintasan Download/DCIM/Pictures/Documents/Movies, pilih banyak file lalu "Simpan ke PC" (default `Downloads\Mirraawwrring`, bisa diubah), "Kirim ke HP" atau tarik file dari Explorer ke panel (file `.apk` ditawarkan untuk di-install), folder baru, ganti nama, hapus (selalu dengan konfirmasi), dan pencarian di folder aktif.
+
+## Pembaruan scrcpy
+
+Saat dibuka, aplikasi membandingkan versi scrcpy yang dipakai dengan rilis terbaru di GitHub (bisa dimatikan lewat centang di layar terakhir wizard atau `"checkScrcpyUpdates": false`). Jika ada versi baru, tautan "scrcpy X tersedia" muncul di bar status. Pemasangan otomatis hanya dilakukan bila SHA-256 resmi ditemukan di dokumentasi rilis scrcpy dan scrcpy yang dipakai berada di folder `scrcpy\` aplikasi; selain itu aplikasi hanya membuka halaman rilis. Opsi scrcpy di aplikasi ini diverifikasi untuk 4.1; setelah memperbarui, periksa panel Log kalau ada opsi yang tidak dikenali.
 
 ## Masalah umum
 

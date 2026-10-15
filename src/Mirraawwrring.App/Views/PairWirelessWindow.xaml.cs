@@ -20,6 +20,7 @@ public partial class PairWirelessWindow : Window
         DataContext = viewModel;
         SourceInitialized += (_, _) => WindowTheming.Apply(this);
         viewModel.Completed += () => Dispatcher.InvokeAsync(() => DialogResult = true);
+        Closed += (_, _) => viewModel.Cancel();
 
         foreach (var child in DigitPanel.Children)
         {

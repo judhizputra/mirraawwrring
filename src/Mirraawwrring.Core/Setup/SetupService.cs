@@ -38,7 +38,32 @@ public sealed class SetupService(IAppPaths paths, IProcessRunner runner, HttpCli
     public static readonly string[] RequiredFiles = ["scrcpy.exe", "adb.exe", "scrcpy-server"];
     public const string WingetPackageId = "Genymobile.scrcpy";
 
-    public ScrcpyManifest LoadManifest() => ScrcpyManifest.Load(paths.ScrcpyManifestFile);
+    /// <summary>Manifest aktif: override di folder data (hasil pembaruan otomatis) kalau ada, kalau tidak manifest bawaan.</summary>
+    public ScrcpyManifest LoadManifest()
+    {
+        if (File.Exists(paths.ScrcpyManifestOverrideFile))
+        {
+            try
+            {
+                return ScrcpyManifest.Load(paths.ScrcpyManifestOverrideFile);
+            }
+            catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException or InvalidDataException)
+            {
+                logger.LogWarning(ex, "Manifest override rusak, memakai manifest bawaan: {Path}", paths.ScrcpyManifestOverrideFile);
+            }
+        }
+
+        return ScrcpyManifest.Load(paths.ScrcpyManifestFile);
+    }
+
+    /// <summary>Simpan manifest versi baru ke folder data setelah pembaruan otomatis berhasil.</summary>
+    public void SaveManifestOverride(ScrcpyManifest manifest)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(paths.ScrcpyManifestOverrideFile)!);
+        File.WriteAllText(paths.ScrcpyManifestOverrideFile, System.Text.Json.JsonSerializer.Serialize(manifest, ManifestJson));
+    }
+
+    private static readonly System.Text.Json.JsonSerializerOptions ManifestJson = new() { WriteIndented = true, PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase };
 
     /// <summary>Cek koneksi internet dengan HEAD ke URL manifest (timeout 6 detik).</summary>
     public async Task<bool> HasInternetAsync(ScrcpyManifest manifest, CancellationToken cancellationToken = default)
