@@ -104,3 +104,7 @@ docs/manual-test.md        checklist uji manual dengan HP sungguhan
 ```
 
 Peta arsitektur dan resep menambah fitur ada di `CLAUDE.md`; riwayat perubahan di `CHANGELOG.md`.
+
+## Lisensi
+
+Kode Mirraawwrring dilisensikan di bawah [MIT License](LICENSE). scrcpy dan ADB yang dibundel atau diunduh wizard adalah karya pihak ketiga dengan lisensi masing-masing (scrcpy: Apache License 2.0; `LICENSE.txt`-nya ikut berada di folder `scrcpy\`).

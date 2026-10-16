@@ -4,6 +4,9 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Lisensi (16 Okt 2026)
+- File `LICENSE` (MIT, © 2026 Yudhistira EP) dan bagian Lisensi di README (scrcpy/ADB tetap Apache 2.0 dengan `LICENSE.txt` di folder `scrcpy\`).
+
 ### Minimize ke tray (16 Okt 2026)
 - Minimize jendela utama menyembunyikannya ke ikon tray (area notifikasi), bukan ke taskbar; sesi scrcpy dan toolbar tetap berjalan. Klik kiri ikon = tampilkan lagi; klik kanan = menu Tampilkan/Keluar. Balon petunjuk muncul sekali per proses. Ikon tray hanya terlihat selama jendela disembunyikan (`Views/TrayIcon.cs`, WinForms `NotifyIcon`).
 - Setting baru `minimizeToTray` (default true) di `settings.json`; belum ada UI.
