@@ -24,6 +24,7 @@ Siapkan: folder `scrcpy\` (hasil ekstrak scrcpy-win64-v4.1) di samping `Mirraaww
 - [ ] Mulai mirroring: jendela scrcpy berjudul "Mirraawwrring - <model>" muncul tanpa jendela konsol; log scrcpy masuk ke panel Log; badge kartu menjadi "Mirroring"; tombol berubah "Hentikan mirroring".
 - [ ] Hentikan mirroring menutup jendela scrcpy; badge kembali "Terhubung".
 - [ ] Tutup jendela scrcpy dari tombol X-nya: badge dan tombol kembali normal (sesi terdeteksi berakhir).
+- [ ] Tombol Mulai mirroring berikon segitiga; setelah mirroring HP terpilih berjalan, tombol menjadi "Hentikan mirroring" berikon kotak; pilih HP lain yang tidak di-mirror → kembali segitiga.
 - [ ] Mode Lihat saja: tidak bisa klik/ketik di jendela scrcpy. Mode Layar HP mati: layar HP padam, tampilan di PC tetap. Mode Hemat data: log scrcpy menunjukkan `--max-size=1024 --video-bit-rate=4M --max-fps=30`.
 - [ ] Rekam ke file: file `Videos\Mirraawwrring\scrcpy_<tanggal>.mp4` ada dan bisa diputar setelah sesi ditutup; "Buka folder rekaman" membuka foldernya.
 - [ ] Xiaomi tanpa "USB debugging (Security settings)": banner kuning "Kontrol diblokir HyperOS" muncul saat scrcpy melaporkan INJECT_EVENTS; "Lihat langkahnya" membuka jendela panduan.
@@ -74,6 +75,9 @@ Mulai mirroring dari jendela utama; toolbar muncul di kanan jendela scrcpy setel
 - [ ] Minimize scrcpy → toolbar ikut hilang; restore → muncul lagi. Tutup jendela scrcpy / Hentikan mirroring → toolbar hilang.
 - [ ] Klik tombol toolbar tidak memindahkan fokus keyboard dari jendela scrcpy (ketik di scrcpy tetap masuk ke HP setelah menekan tombol).
 - [ ] Power, Volume naik/turun, Kembali, Home, Aplikasi terbaru: HP merespons; tooltip menampilkan pintasan (Alt+P, Alt+↑, …).
+- [ ] Power saat HP bangun → HP tidur (log: `sh -c 'dumpsys power | grep mWakefulness'` lalu `input keyevent 26`). Power saat HP tidur/terkunci → HP bangun ke lockscreen (log: `input keyevent 224`), toast "HP dibangunkan". Catat nilai `mWakefulness` yang terbaca di log (Awake/Asleep/Dozing) di HyperOS/Android 16.
+- [ ] Mode Layar HP mati lewat Wi-Fi: biarkan melewati batas waktu layar HP (mis. 30 detik) → HP TIDAK terkunci dan mirroring tetap jalan (log scrcpy berisi `--screen-off-timeout=2147483`). Setelah mirroring dihentikan, batas waktu layar di Settings HP kembali ke nilai semula.
+- [ ] Mode Layar HP mati, kunci HP dengan tombol fisik → mirror hitam → Power di toolbar membangunkan; kalau mirror masih hitam, Lainnya › Nyalakan layar HP menyalakannya (catat mana yang perlu).
 - [ ] Putar layar: HP berputar 90° tiap klik (rotasi otomatis dimatikan); Buka notifikasi lalu klik lagi → panel tertutup.
 - [ ] Screenshot (tombol dan Ctrl+Shift+S saat jendela scrcpy aktif): file di `Pictures\Mirraawwrring\screenshot_<waktu>.png` sesuai layar HP, Ctrl+V di Paint menempelkan gambar, toast "Screenshot disimpan" → Buka membuka gambar, Folder membuka Explorer dengan file terpilih. Hotkey tidak bereaksi saat aplikasi lain yang aktif.
 - [ ] Ubah `screenshotHotkey` di `data\settings.json` (mis. "Ctrl+Alt+P"), buka ulang aplikasi → tooltip dan hotkey mengikuti.

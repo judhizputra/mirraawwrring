@@ -4,6 +4,14 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Perbaikan dari uji HP sungguhan (16 Okt 2026)
+- **Ikon tombol Mulai/Hentikan mirroring**: saat HP yang dipilih sedang di-mirror, ikonnya menjadi kotak (stop), bukan segitiga (play).
+- **HP terkunci di mode Layar HP mati** (laporan: tidak bisa membangunkan HP setelah terkunci otomatis):
+  - `--stay-awake` hanya berlaku saat dicolok USB, jadi lewat Wi-Fi HP tetap tidur. Sekarang mode Layar HP mati dan opsi "Layar HP tetap menyala" juga mengirim `--screen-off-timeout=2147483` (nilai maksimum scrcpy; dikembalikan ke nilai awal saat scrcpy selesai), sehingga HP tidak terkunci otomatis selama mirroring lewat Wi-Fi sekalipun. Tooltip opsi menjelaskannya.
+  - Tombol **Power** di toolbar membaca `dumpsys power` (`mWakefulness`): kalau HP tidur/dozing dikirim KEYCODE_WAKEUP (224, pasti membangunkan) + toast "HP dibangunkan — Masih gelap? Lainnya › Nyalakan layar HP"; kalau bangun, KEYCODE_POWER (26) seperti tombol fisik. Sebelumnya selalu POWER, yang justru menidurkan HP bila ternyata sudah bangun dengan layar gelap.
+  - **Lainnya › Nyalakan layar HP** mengirim KEYCODE_WAKEUP dulu (bila injeksi tersedia) lalu Alt+Shift+O; Alt+Shift+O sendiri hanya menyalakan panel dan tidak membangunkan HP yang tidur.
+- 323 unit test.
+
 ### Fase 8 — QR pairing & cek pembaruan scrcpy (opsional)
 - **QR pairing** di dialog Pair wireless (tombol "Pakai QR code"): aplikasi membuat nama layanan `mirraawwrring-xxxxxxxx` + password acak, menampilkan QR berformat `WIFI:T:ADB;S:<nama>;P:<password>;;` (seperti Android Studio; pustaka QRCoder), lalu mem-poll `adb mdns services` tiap 1 detik sampai HP yang memindai QR mengumumkan layanan `_adb-tls-pairing._tcp` dengan nama itu, kemudian `adb pair host:port password` dan alur koneksi otomatis/port manual yang sama dengan mode kode. Tidak perlu server mDNS di PC. Timeout 5 menit; polling berhenti saat dialog ditutup.
 - `WirelessService.PairWithPasswordAsync` (tanpa aturan 6 digit) dan `WaitForPairingServiceAsync`; `QrPairing` (sesi QR, pencarian layanan) murni dan diuji.

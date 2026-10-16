@@ -21,7 +21,6 @@ public sealed class DeviceActionsTests : IDisposable
     [Fact]
     public async Task KeyEvents_UseDocumentedKeycodes()
     {
-        await _actions.PowerAsync(Serial);
         await _actions.BackAsync(Serial);
         await _actions.HomeAsync(Serial);
         await _actions.RecentsAsync(Serial);
@@ -30,13 +29,70 @@ public sealed class DeviceActionsTests : IDisposable
 
         Assert.Equal(
         [
-            $"shell {Serial} input keyevent 26",
             $"shell {Serial} input keyevent 4",
             $"shell {Serial} input keyevent 3",
             $"shell {Serial} input keyevent 187",
             $"shell {Serial} input keyevent 24",
             $"shell {Serial} input keyevent 25",
         ], _adb.Calls);
+    }
+
+    private const string DumpsysAwake = "  mWakefulness=Awake\n  mWakefulnessChanging=false\n";
+
+    // Android 13+: status global memakai mWakefulnessRaw, per grup tampilan mWakefulness.
+    private const string DumpsysAsleep13 = "  mWakefulnessRaw=Asleep\n  mWakefulnessChanging=false\n    mWakefulness=Asleep\n";
+
+    [Theory]
+    [InlineData(DumpsysAwake, DeviceWakefulness.Awake)]
+    [InlineData(DumpsysAsleep13, DeviceWakefulness.Asleep)]
+    [InlineData("mWakefulness=Dozing", DeviceWakefulness.Dozing)]
+    [InlineData("mWakefulness=Dreaming", DeviceWakefulness.Dreaming)]
+    [InlineData("mWakefulness=Weird", DeviceWakefulness.Unknown)]
+    [InlineData("", DeviceWakefulness.Unknown)]
+    public void ParseWakefulness_ReadsFirstValue(string dump, DeviceWakefulness expected) =>
+        Assert.Equal(expected, DeviceActions.ParseWakefulness(dump));
+
+    [Fact]
+    public async Task Power_Awake_SendsPowerToggle()
+    {
+        _adb.ShellResponse = (_, cmd) => cmd[0] == "sh" ? ProcessResult.Ok(DumpsysAwake) : ProcessResult.Ok();
+
+        var outcome = await _actions.PowerAsync(Serial);
+
+        Assert.False(outcome.WokeUp);
+        Assert.Equal([$"shell {Serial} sh -c dumpsys power | grep mWakefulness", $"shell {Serial} input keyevent 26"], _adb.Calls);
+    }
+
+    [Theory]
+    [InlineData(DumpsysAsleep13)]
+    [InlineData("mWakefulness=Dozing")]
+    public async Task Power_AsleepOrDozing_SendsWakeUp(string dump)
+    {
+        _adb.ShellResponse = (_, cmd) => cmd[0] == "sh" ? ProcessResult.Ok(dump) : ProcessResult.Ok();
+
+        var outcome = await _actions.PowerAsync(Serial);
+
+        Assert.True(outcome.WokeUp);
+        Assert.True(outcome.Result.Succeeded);
+        Assert.Equal($"shell {Serial} input keyevent 224", _adb.Calls[^1]);
+    }
+
+    [Fact]
+    public async Task Power_StateUnreadable_FallsBackToPowerToggle()
+    {
+        _adb.ShellResponse = (_, cmd) => cmd[0] == "sh" ? ProcessResult.Fail(1, "", "dumpsys: not found") : ProcessResult.Ok();
+
+        var outcome = await _actions.PowerAsync(Serial);
+
+        Assert.False(outcome.WokeUp);
+        Assert.Equal($"shell {Serial} input keyevent 26", _adb.Calls[^1]);
+    }
+
+    [Fact]
+    public async Task WakeUp_SendsWakeUpKeycode()
+    {
+        await _actions.WakeUpAsync(Serial);
+        Assert.Equal([$"shell {Serial} input keyevent 224"], _adb.Calls);
     }
 
     [Fact]

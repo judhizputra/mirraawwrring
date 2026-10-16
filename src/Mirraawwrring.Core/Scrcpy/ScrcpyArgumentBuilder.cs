@@ -16,7 +16,7 @@ public sealed record ScrcpyLaunchPlan(IReadOnlyList<string> Arguments, string Wi
 /// <list type="number">
 /// <item>Mode Hemat data menang atas resolusi/bitrate/FPS manual (selalu 1024 px · 4M · 30 fps).</item>
 /// <item>Mode Lihat saja (<c>--no-control</c>) membuat opsi Input UHID diabaikan (tidak ada input yang dikirim).</item>
-/// <item>Mode Layar HP mati sudah menyertakan <c>--stay-awake</c>; opsi "Layar HP tetap menyala" tidak menduplikasinya.</item>
+/// <item>Mode Layar HP mati sudah menyertakan <c>--stay-awake --screen-off-timeout</c>; opsi "Layar HP tetap menyala" tidak menduplikasinya.</item>
 /// <item>Resolusi "Asli" dan FPS "Tanpa batas" = flag tidak dikirim; bitrate selalu dikirim.</item>
 /// </list>
 /// </summary>
@@ -31,6 +31,13 @@ public sealed class ScrcpyArgumentBuilder(IAppPaths paths, TimeProvider time)
     /// tidak pernah ditulis dan filenya tak bisa diputar. Matroska tetap bisa diputar walau terpotong, jadi rekaman headless memakai .mkv.
     /// </summary>
     public const string HeadlessRecordFileExtension = ".mkv";
+
+    /// <summary>
+    /// <c>--stay-awake</c> hanya berlaku saat HP dicolok USB. Lewat Wi-Fi, HP tetap tidur sesuai batas waktu layarnya dan mirroring menjadi
+    /// hitam (terutama mode Layar HP mati), jadi batas waktu layar dinaikkan sementara dengan <c>--screen-off-timeout</c>: nilai maksimum
+    /// yang diterima scrcpy (0x7FFFFFFF / 1000 detik). scrcpy mengembalikan nilai awal saat selesai (juga lewat proses pembersih di HP).
+    /// </summary>
+    public const int ScreenOffTimeoutSeconds = 2147483;
 
     public const int DataSaverMaxSize = 1024;
     public const int DataSaverBitRateMbps = 4;
@@ -56,7 +63,6 @@ public sealed class ScrcpyArgumentBuilder(IAppPaths paths, TimeProvider time)
                 break;
             case MirrorMode.ScreenOff:
                 args.Add("--turn-screen-off");
-                args.Add("--stay-awake");
                 break;
             case MirrorMode.MirrorAndControl:
             case MirrorMode.DataSaver:
@@ -103,10 +109,11 @@ public sealed class ScrcpyArgumentBuilder(IAppPaths paths, TimeProvider time)
             args.Add("--fullscreen");
         }
 
-        if (options.StayAwake && options.Mode != MirrorMode.ScreenOff)
+        if (options.StayAwake || options.Mode == MirrorMode.ScreenOff)
         {
-            // Aturan 3.
+            // Aturan 3: satu kali, baik dari opsi maupun dari mode Layar HP mati.
             args.Add("--stay-awake");
+            args.Add($"--screen-off-timeout={Invariant(ScreenOffTimeoutSeconds)}");
         }
 
         string? recordPath = null;

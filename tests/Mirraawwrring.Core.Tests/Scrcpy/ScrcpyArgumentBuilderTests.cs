@@ -46,6 +46,28 @@ public sealed class ScrcpyArgumentBuilderTests
 
         Assert.Contains("--turn-screen-off", plan.Arguments);
         Assert.Equal(1, plan.Arguments.Count(a => a == "--stay-awake"));
+        Assert.Equal(1, plan.Arguments.Count(a => a == "--screen-off-timeout=2147483"));
+    }
+
+    [Fact]
+    public void ScreenOff_WithoutStayAwakeOption_StillKeepsDeviceAwake()
+    {
+        var plan = Builder.Build(new ScrcpyOptions { Mode = MirrorMode.ScreenOff, StayAwake = false }, Serial, "M");
+
+        Assert.Contains("--stay-awake", plan.Arguments);
+        Assert.Contains("--screen-off-timeout=2147483", plan.Arguments);
+    }
+
+    [Fact]
+    public void StayAwake_AlsoRaisesScreenOffTimeout_ForWifi()
+    {
+        var on = Builder.Build(new ScrcpyOptions { StayAwake = true }, Serial, "M");
+        var off = Builder.Build(new ScrcpyOptions { StayAwake = false }, Serial, "M");
+
+        Assert.Contains("--stay-awake", on.Arguments);
+        Assert.Contains("--screen-off-timeout=2147483", on.Arguments);
+        Assert.DoesNotContain("--stay-awake", off.Arguments);
+        Assert.DoesNotContain(off.Arguments, a => a.StartsWith("--screen-off-timeout", StringComparison.Ordinal));
     }
 
     [Fact]

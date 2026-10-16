@@ -77,6 +77,7 @@ Saat dibuka, aplikasi membandingkan versi scrcpy yang dipakai dengan rilis terba
 
 - **"Server ADB gagal berjalan" / port 5037 bentrok**: ada adb versi lain (Android Studio, platform-tools di PATH). Wizard Verifikasi menawarkan tombol "Hentikan & ulangi" yang menjalankan `"<adb lain>" kill-server`; Mirraawwrring selalu memakai adb dari folder scrcpy-nya sendiri.
 - **HP tidak muncul**: pastikan kabel data (bukan hanya pengisian), USB debugging aktif, dan popup "Allow USB debugging" di HP disetujui. Wizard Deteksi menampilkan status HP secara live.
+- **Mode Layar HP mati lalu tampilan hitam**: HP tertidur/terkunci (mis. dikunci dengan tombol fisik). Klik **Power** di toolbar untuk membangunkannya; kalau masih gelap, **Lainnya › Nyalakan layar HP**. Selama mirroring, mode ini dan opsi "Layar HP tetap menyala" menaikkan batas waktu layar HP sementara supaya HP tidak terkunci sendiri, juga lewat Wi-Fi; nilainya dikembalikan saat mirroring selesai.
 - **Kontrol tidak jalan di Xiaomi**: aktifkan USB debugging (Security settings) (butuh akun Xiaomi + data seluler) atau pakai Input UHID.
 - **Log**: panel Log di jendela utama (bisa disalin) atau `data\logs\Mirraawwrring-<tanggal>.log`.
 

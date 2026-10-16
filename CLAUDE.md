@@ -34,7 +34,7 @@ src/Mirraawwrring.Core/        logika, TANPA WPF (target net10.0-windows, boleh 
                                MdnsWatcher (polling mdns 5 s), QrPairing (sesi QR: nama layanan + password, format WIFI:T:ADB;S:;P:;;)
   Usb/                         UsbVendorTable (VID → merek), UsbProbeParser (murni) + WmiUsbProbe (WMI) + UsbWatcher, PhoneStatusEvaluator (USB + adb → PhoneUsbStatus)
   Devices/InjectionProbe       uji `input keyevent 0`, cache per serial
-  Devices/DeviceActions        SEMUA perintah tombol toolbar (§5.8): keyevent, volume + cadangan, rotasi, notifikasi, show_touches,
+  Devices/DeviceActions        SEMUA perintah tombol toolbar (§5.8): keyevent, Power pintar (dumpsys power → WAKEUP 224 bila tidur, POWER 26 bila bangun), volume + cadangan, rotasi, notifikasi, show_touches,
                                screenshot (exec-out screencap → Pictures), install APK, info device; tabel RequiresInjection; Chords (Ctrl+V, Alt+O)
   Input/Hotkey                 parser "Ctrl+Shift+S" → HotkeyModifiers (= MOD_*) + virtual key (murni)
   Files/                       RemoteEntry + RemotePath (path POSIX, breadcrumb, pintasan, validasi nama), RemoteListingParser (murni: find -exec stat),
@@ -151,6 +151,7 @@ VID dibaca dari `DeviceID` (`USB\VID_XXXX&PID_YYYY\…`) oleh `UsbProbeParser`; 
 - **adb lain di PATH** (Android SDK) bisa bentrok di port 5037; aplikasi selalu memakai adb dari folder scrcpy dan mengatur env `ADB` saat menjalankan scrcpy.
 - **Menutup aplikasi menghentikan semua sesi scrcpy** (ScrcpySessionManager.Dispose lewat DI). Toolbar bergantung pada aplikasi, jadi ini disengaja.
 - **Rekaman dari toolbar = .mkv**, bukan .mp4: proses scrcpy `--no-window` hanya bisa dihentikan dengan kill, dan MP4 tanpa trailer tidak bisa diputar. Rekaman dari opsi "Rekam ke file" di jendela utama tetap .mp4 (scrcpy ditutup normal lewat jendelanya).
+- **HP tidur saat mirroring:** `--stay-awake` hanya berlaku lewat USB, jadi mode Layar HP mati dan opsi "Layar HP tetap menyala" juga mengirim `--screen-off-timeout=2147483` (maksimum scrcpy, dikembalikan saat selesai). Kalau HP tetap tidur (dikunci manual), tombol Power membaca `mWakefulness` dari `dumpsys power` dan mengirim KEYCODE_WAKEUP; "Nyalakan layar HP" = WAKEUP + Alt+Shift+O. Nilai `mWakefulness` di HyperOS/Android 16 belum diverifikasi (parser menerima `mWakefulness=` dan `mWakefulnessRaw=`; tak terbaca → POWER biasa).
 - **Cadangan `cmd media_session volume --adj`** saat injeksi diblokir belum diverifikasi di HyperOS. Cadangan `screenrecord` untuk rekaman tidak dibuat (rekaman tidak butuh injeksi).
 - **Hotkey screenshot** memakai `RegisterHotKey` global yang hanya didaftarkan saat jendela scrcpy/toolbar foreground; kalau aplikasi lain sudah memakai kombinasi itu, pendaftaran gagal dan dicatat di log. Ubah lewat `screenshotHotkey` di settings.json (belum ada UI).
 - **DPI campuran** (monitor dengan skala berbeda) belum diuji dengan sungguhan; PC pengembang 100%.

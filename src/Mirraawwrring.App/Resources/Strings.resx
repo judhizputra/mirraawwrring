@@ -181,6 +181,9 @@
   <data name="Main_OptStayAwake" xml:space="preserve">
     <value>Layar HP tetap menyala</value>
   </data>
+  <data name="Main_OptStayAwakeTip" xml:space="preserve">
+    <value>HP tidak tidur dan tidak terkunci otomatis selama mirroring. Lewat USB dipakai --stay-awake; karena itu tidak berlaku lewat Wi-Fi, batas waktu layar HP juga dinaikkan sementara dan dikembalikan saat mirroring selesai. Mode Layar HP mati selalu memakai ini.</value>
+  </data>
   <data name="Main_OptRecord" xml:space="preserve">
     <value>Rekam ke file (Videos\Mirraawwrring)</value>
   </data>
@@ -1195,6 +1198,12 @@
 
   <data name="Toast_ScreenOn" xml:space="preserve">
     <value>Layar HP dinyalakan</value>
+  </data>
+  <data name="Toast_WokeUp" xml:space="preserve">
+    <value>HP dibangunkan</value>
+  </data>
+  <data name="Toast_WokeUpHint" xml:space="preserve">
+    <value>Masih gelap? Lainnya › Nyalakan layar HP</value>
   </data>
 
   <data name="Toast_Open" xml:space="preserve">

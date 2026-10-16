@@ -51,6 +51,7 @@
 
     <!-- Terisi (fill), tanpa stroke -->
     <Geometry x:Key="Icon.Play">M6,4 L20,12 L6,20 Z</Geometry>
+    <Geometry x:Key="Icon.Stop">M6,6 H18 V18 H6 Z</Geometry>
 
     <Style x:Key="Style.Icon" TargetType="Path">
         <Setter Property="Width" Value="18" />

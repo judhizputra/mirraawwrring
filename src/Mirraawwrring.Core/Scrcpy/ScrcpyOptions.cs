@@ -9,7 +9,7 @@ public enum MirrorMode
     /// <summary>Hanya menampilkan layar (<c>--no-control</c>).</summary>
     ViewOnly,
 
-    /// <summary>Layar HP dimatikan, tetap tampil di PC (<c>--turn-screen-off --stay-awake</c>).</summary>
+    /// <summary>Layar HP dimatikan, tetap tampil di PC (<c>--turn-screen-off</c> + HP dijaga tetap bangun, lihat <see cref="ScrcpyOptions.StayAwake"/>).</summary>
     ScreenOff,
 
     /// <summary>1024 px · 4 Mbps · 30 fps untuk Wi-Fi lambat.</summary>
@@ -40,6 +40,10 @@ public sealed record ScrcpyOptions
 
     public bool Fullscreen { get; init; }
 
+    /// <summary>
+    /// HP tidak tidur/terkunci otomatis selama mirroring: <c>--stay-awake</c> (hanya berlaku saat dicolok USB) plus
+    /// <c>--screen-off-timeout</c> (berlaku juga lewat Wi-Fi; scrcpy mengembalikan nilai awalnya saat selesai). Selalu aktif di mode <see cref="MirrorMode.ScreenOff"/>.
+    /// </summary>
     public bool StayAwake { get; init; }
 
     /// <summary>Rekam ke file di Videos\Mirraawwrring.</summary>

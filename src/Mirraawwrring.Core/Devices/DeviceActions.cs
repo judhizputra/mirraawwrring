@@ -25,6 +25,12 @@ public sealed class DeviceActions(IAdbClient adb, IAppPaths paths, TimeProvider 
     public const int KeyPower = 26;
     public const int KeyAppSwitch = 187;
 
+    /// <summary>KEYCODE_WAKEUP: membangunkan HP tanpa menidurkannya kalau sudah bangun (KEYCODE_POWER = toggle).</summary>
+    public const int KeyWakeUp = 224;
+
+    private static readonly System.Text.RegularExpressions.Regex WakefulnessPattern =
+        new(@"mWakefulness(?:Raw)?=(\w+)", System.Text.RegularExpressions.RegexOptions.Compiled);
+
     public const string ScreenshotFilePrefix = "screenshot_";
     public static readonly TimeSpan InstallTimeout = TimeSpan.FromMinutes(3);
     public static readonly TimeSpan ScreenshotTimeout = TimeSpan.FromSeconds(20);
@@ -54,7 +60,58 @@ public sealed class DeviceActions(IAdbClient adb, IAppPaths paths, TimeProvider 
     public Task<ProcessResult> KeyEventAsync(string serial, int keyCode, CancellationToken cancellationToken = default) =>
         adb.ShellAsync(serial, ["input", "keyevent", keyCode.ToString(CultureInfo.InvariantCulture)], cancellationToken: cancellationToken);
 
-    public Task<ProcessResult> PowerAsync(string serial, CancellationToken ct = default) => KeyEventAsync(serial, KeyPower, ct);
+    /// <summary>
+    /// Tombol Power. HP yang sedang tidur/terkunci (mis. setelah batas waktu layar di mode Layar HP mati) dibangunkan dengan KEYCODE_WAKEUP,
+    /// yang pasti membangunkan; HP yang bangun ditidurkan dengan KEYCODE_POWER seperti tombol fisik. Status dibaca dari <c>dumpsys power</c>
+    /// (<c>mWakefulness</c>); kalau tidak terbaca, dikirim KEYCODE_POWER.
+    /// </summary>
+    public async Task<PowerOutcome> PowerAsync(string serial, CancellationToken ct = default)
+    {
+        var state = await GetWakefulnessAsync(serial, ct).ConfigureAwait(false);
+        var wake = state is DeviceWakefulness.Asleep or DeviceWakefulness.Dozing;
+        var result = await KeyEventAsync(serial, wake ? KeyWakeUp : KeyPower, ct).ConfigureAwait(false);
+        return new PowerOutcome(result, wake);
+    }
+
+    /// <summary>KEYCODE_WAKEUP tanpa cek status (dipakai sebelum "Nyalakan layar HP").</summary>
+    public Task<ProcessResult> WakeUpAsync(string serial, CancellationToken ct = default) => KeyEventAsync(serial, KeyWakeUp, ct);
+
+    /// <summary><c>dumpsys power</c> disaring di HP (<c>grep mWakefulness</c>) supaya hanya satu-dua baris yang kembali dan tercatat di log.</summary>
+    public async Task<DeviceWakefulness> GetWakefulnessAsync(string serial, CancellationToken ct = default)
+    {
+        try
+        {
+            var result = await adb.ShellAsync(serial, ["sh", "-c", "dumpsys power | grep mWakefulness"], cancellationToken: ct).ConfigureAwait(false);
+            return result.Succeeded ? ParseWakefulness(result.StandardOutput) : DeviceWakefulness.Unknown;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogDebug(ex, "dumpsys power tidak terbaca");
+            return DeviceWakefulness.Unknown;
+        }
+    }
+
+    /// <summary>
+    /// Baris <c>mWakefulness=Awake|Asleep|Dozing|Dreaming</c> dari <c>dumpsys power</c> (Android 5–12), atau <c>mWakefulnessRaw=</c>
+    /// (Android 13+, status global sebelum per grup tampilan). Nilai pertama yang ditemukan yang dipakai.
+    /// </summary>
+    public static DeviceWakefulness ParseWakefulness(string dumpsysPower)
+    {
+        var match = WakefulnessPattern.Match(dumpsysPower ?? string.Empty);
+        if (!match.Success)
+        {
+            return DeviceWakefulness.Unknown;
+        }
+
+        return match.Groups[1].Value.ToLowerInvariant() switch
+        {
+            "awake" => DeviceWakefulness.Awake,
+            "asleep" => DeviceWakefulness.Asleep,
+            "dozing" => DeviceWakefulness.Dozing,
+            "dreaming" => DeviceWakefulness.Dreaming,
+            _ => DeviceWakefulness.Unknown,
+        };
+    }
 
     public Task<ProcessResult> BackAsync(string serial, CancellationToken ct = default) => KeyEventAsync(serial, KeyBack, ct);
 
@@ -205,6 +262,19 @@ public sealed class DeviceActions(IAdbClient adb, IAppPaths paths, TimeProvider 
         }
     }
 }
+
+/// <summary>Status bangun HP dari <c>dumpsys power</c> (<c>mWakefulness</c>).</summary>
+public enum DeviceWakefulness
+{
+    Unknown,
+    Awake,
+    Asleep,
+    Dozing,
+    Dreaming,
+}
+
+/// <summary>Hasil tombol Power: <see cref="WokeUp"/> = HP sedang tidur sehingga dibangunkan (KEYCODE_WAKEUP), bukan ditidurkan.</summary>
+public sealed record PowerOutcome(ProcessResult Result, bool WokeUp);
 
 /// <summary>Identitas tombol toolbar (untuk tabel butuh-injeksi dan log).</summary>
 public enum DeviceAction

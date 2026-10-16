@@ -301,8 +301,17 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
 
     // ---------- Tombol ----------
 
+    /// <summary>Power: HP yang tidur dibangunkan (KEYCODE_WAKEUP, lihat <see cref="DeviceActions.PowerAsync"/>) dan diberi toast petunjuk; HP yang bangun ditidurkan.</summary>
     [RelayCommand]
-    private Task PowerAsync() => RunInjectionAsync(DeviceAction.Power, s => _actions.PowerAsync(s));
+    private async Task PowerAsync()
+    {
+        PowerOutcome? outcome = null;
+        await RunInjectionAsync(DeviceAction.Power, async s => (outcome = await _actions.PowerAsync(s)).Result);
+        if (outcome is { WokeUp: true, Result.Succeeded: true })
+        {
+            ShowToast(Strings.Get("Toast_WokeUp"), Strings.Get("Toast_WokeUpHint"), error: false);
+        }
+    }
 
     [RelayCommand]
     private Task VolumeUpAsync() => VolumeAsync(up: true);
@@ -574,8 +583,32 @@ public sealed partial class ToolbarViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private Task ScreenOffAsync() => SendChordAsync(DeviceActions.Chords.ScreenOff, "Toast_ScreenOff");
 
+    /// <summary>
+    /// MOD+Shift+o hanya menyalakan panel layar; HP yang sudah tidur/terkunci tidak bangun karenanya. Jadi bila injeksi tersedia,
+    /// kirim KEYCODE_WAKEUP dulu (gagal diam-diam, kecuali ketahuan diblokir), lalu kombinasi tombolnya ke jendela scrcpy.
+    /// </summary>
     [RelayCommand]
-    private Task ScreenOnAsync() => SendChordAsync(DeviceActions.Chords.ScreenOn, "Toast_ScreenOn");
+    private async Task ScreenOnAsync()
+    {
+        if (!InjectionBlocked && _device is not null)
+        {
+            try
+            {
+                var result = await _actions.WakeUpAsync(_device.Serial);
+                if (!result.Succeeded && result.CombinedOutput.Contains(InjectionProbe.BlockedMarker, StringComparison.Ordinal))
+                {
+                    _injection.Forget(_device.Serial);
+                    SetInjectionBlocked(true);
+                }
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogDebug(ex, "KEYCODE_WAKEUP gagal");
+            }
+        }
+
+        await SendChordAsync(DeviceActions.Chords.ScreenOn, "Toast_ScreenOn");
+    }
 
     private async Task SendChordAsync(ScrcpyKeyChord chord, string toastKey)
     {
