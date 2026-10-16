@@ -4,6 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <!-- WinForms hanya untuk NotifyIcon (ikon tray); WPF tidak menyediakannya. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- WFO0003: analyzer WinForms minta DPI diatur lewat API-nya; DPI aplikasi ini diatur WPF lewat app.manifest. -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
     <AssemblyName>Mirraawwrring</AssemblyName>
     <RootNamespace>Mirraawwrring.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -19,6 +23,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mirraawwrring.Core\Mirraawwrring.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- UseWindowsForms menambah global using System.Windows.Forms yang bentrok dengan tipe WPF (TextBox, DragEventArgs, …); hanya TrayIcon.cs yang meng-import-nya. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,21 +4,25 @@ using System.Windows.Controls;
 using Mirraawwrring.App.Interop;
 using Mirraawwrring.App.Resources;
 using Mirraawwrring.App.ViewModels;
+using Mirraawwrring.Core.Settings;
 
 namespace Mirraawwrring.App.Views;
 
 public partial class MainWindow : Window
 {
     private readonly MainViewModel _viewModel;
+    private readonly ISettingsStore _settings;
+    private readonly TrayIcon _tray;
     private readonly Func<HyperOsGuideWindow> _guideFactory;
     private readonly Func<PairWirelessWindow> _pairFactory;
     private readonly Func<ConnectIpWindow> _connectFactory;
     private readonly Func<SetupWindow> _setupFactory;
     private readonly Func<ToolbarWindow> _toolbarFactory;
 
-    public MainWindow(MainViewModel viewModel, Func<HyperOsGuideWindow> guideFactory, Func<PairWirelessWindow> pairFactory, Func<ConnectIpWindow> connectFactory, Func<SetupWindow> setupFactory, Func<ToolbarWindow> toolbarFactory)
+    public MainWindow(MainViewModel viewModel, ISettingsStore settings, Func<HyperOsGuideWindow> guideFactory, Func<PairWirelessWindow> pairFactory, Func<ConnectIpWindow> connectFactory, Func<SetupWindow> setupFactory, Func<ToolbarWindow> toolbarFactory)
     {
         _viewModel = viewModel;
+        _settings = settings;
         _guideFactory = guideFactory;
         _pairFactory = pairFactory;
         _connectFactory = connectFactory;
@@ -28,6 +32,9 @@ public partial class MainWindow : Window
         DataContext = viewModel;
         SourceInitialized += (_, _) => WindowTheming.Apply(this);
         Loaded += OnLoaded;
+        _tray = new TrayIcon(Strings.Get("Main_Title"), RestoreFromTray, Close);
+        StateChanged += OnStateChanged;
+        Closed += (_, _) => _tray.Dispose();
         viewModel.HyperOsGuideRequested += ShowGuide;
         viewModel.MessageRequested += ShowMessage;
         viewModel.PairWirelessRequested += ShowPairWireless;
@@ -36,6 +43,26 @@ public partial class MainWindow : Window
         viewModel.ToolbarRequested += OnToolbarRequested;
         viewModel.UpdateRequested += OnUpdateRequested;
         viewModel.LogLines.CollectionChanged += OnLogChanged;
+    }
+
+    // ---------- Minimize ke tray ----------
+
+    /// <summary>Minimize → sembunyikan jendela (hilang dari taskbar) dan tampilkan ikon tray; sesi scrcpy dan toolbar tetap jalan.</summary>
+    private void OnStateChanged(object? sender, EventArgs e)
+    {
+        if (WindowState == WindowState.Minimized && _settings.Current.MinimizeToTray)
+        {
+            Hide();
+            _tray.Show();
+        }
+    }
+
+    private void RestoreFromTray()
+    {
+        _tray.Hide();
+        Show();
+        WindowState = WindowState.Normal;
+        Activate();
     }
 
     private async void ShowPairWireless()

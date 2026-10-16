@@ -7,6 +7,7 @@ Fitur:
 - **Wizard setup**: mendeteksi scrcpy/ADB/internet/HP, mengunduh scrcpy resmi (SHA-256 diverifikasi) atau memakai winget / folder yang sudah ada, memverifikasi semuanya berjalan, dan memandu mengaktifkan USB debugging (termasuk langkah khusus Xiaomi/HyperOS).
 - **Jendela utama**: daftar HP (USB, Wi-Fi, dan HP di jaringan via mDNS), Pair wireless dengan kode 6 digit atau QR code, Sambung via IP dengan riwayat, Aktifkan Wi-Fi dari kabel USB, mode (mirror + kontrol, lihat saja, layar HP mati, hemat data), kualitas, opsi scrcpy, panel log.
 - **Toolbar samping** yang menempel di jendela scrcpy: Power, volume, putar layar, Kembali/Home/Aplikasi terbaru, notifikasi, screenshot (hotkey `Ctrl+Shift+S`), rekam layar, file browser, install APK, kirim clipboard, menu lainnya.
+- **Minimize ke tray**: minimize jendela utama menyembunyikannya ke ikon tray; mirroring tetap jalan. Klik ikonnya untuk membuka lagi (matikan dengan `"minimizeToTray": false` di `data\settings.json`).
 - **File browser**: jelajahi penyimpanan HP, simpan ke PC, kirim ke HP (termasuk drag & drop), folder baru, ganti nama, hapus dengan konfirmasi.
 
 ## Kebutuhan

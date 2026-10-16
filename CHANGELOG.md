@@ -4,6 +4,10 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Minimize ke tray (16 Okt 2026)
+- Minimize jendela utama menyembunyikannya ke ikon tray (area notifikasi), bukan ke taskbar; sesi scrcpy dan toolbar tetap berjalan. Klik kiri ikon = tampilkan lagi; klik kanan = menu Tampilkan/Keluar. Balon petunjuk muncul sekali per proses. Ikon tray hanya terlihat selama jendela disembunyikan (`Views/TrayIcon.cs`, WinForms `NotifyIcon`).
+- Setting baru `minimizeToTray` (default true) di `settings.json`; belum ada UI.
+
 ### Perbaikan dari uji HP sungguhan (16 Okt 2026)
 - **Ikon tombol Mulai/Hentikan mirroring**: saat HP yang dipilih sedang di-mirror, ikonnya menjadi kotak (stop), bukan segitiga (play).
 - **HP terkunci di mode Layar HP mati** (laporan: tidak bisa membangunkan HP setelah terkunci otomatis):

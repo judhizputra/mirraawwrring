@@ -1199,6 +1199,18 @@
   <data name="Toast_ScreenOn" xml:space="preserve">
     <value>Layar HP dinyalakan</value>
   </data>
+  <data name="Tray_Show" xml:space="preserve">
+    <value>Tampilkan Mirraawwrring</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Keluar</value>
+  </data>
+  <data name="Tray_BalloonTitle" xml:space="preserve">
+    <value>Mirraawwrring tetap berjalan</value>
+  </data>
+  <data name="Tray_BalloonText" xml:space="preserve">
+    <value>Jendela disembunyikan ke tray; mirroring tetap jalan. Klik ikon tray untuk membukanya lagi. Matikan lewat "minimizeToTray": false di settings.json.</value>
+  </data>
   <data name="Toast_WokeUp" xml:space="preserve">
     <value>HP dibangunkan</value>
   </data>

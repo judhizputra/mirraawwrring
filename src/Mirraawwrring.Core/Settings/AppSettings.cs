@@ -29,4 +29,7 @@ public sealed class AppSettings
 
     /// <summary>Lebar panel file browser di samping toolbar (DIP), bisa di-resize.</summary>
     public double FilesPanelWidth { get; set; } = 496;
+
+    /// <summary>Minimize jendela utama = sembunyikan ke ikon tray (bukan ke taskbar). Belum ada UI; ubah di settings.json.</summary>
+    public bool MinimizeToTray { get; set; } = true;
 }

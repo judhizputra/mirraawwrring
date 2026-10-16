@@ -50,7 +50,8 @@ src/Mirraawwrring.App/         WPF
   Themes/Controls.xaml         style: Style.Window, Style.Button(.Accent/.Icon/.Subtle), Style.TextBox, Style.CheckBox, Style.Panel, Style.Card, ToolTip, ScrollBar
   Themes/Controls.Main.xaml    Style.ComboBox, Style.ModeCard (RadioButton kartu), Style.DeviceList/DeviceItem, Style.Badge
   Converters/Converters.cs     EnumToBool (RadioButton↔enum), InvertedBoolToVisibility, NullToCollapsed
-  Views/MainWindow             jendela utama (mockup Main/Empty); HyperOsGuideWindow = panduan Security settings
+  Views/MainWindow             jendela utama (mockup Main/Empty); minimize → Hide() + TrayIcon bila AppSettings.MinimizeToTray; HyperOsGuideWindow = panduan Security settings
+  Views/TrayIcon               ikon tray (WinForms NotifyIcon, satu-satunya pemakaian WinForms; file ini tidak meng-import System.Windows untuk menghindari ambiguitas)
   Views/PairWirelessWindow     dialog Pair (mockup Pair); logika 6 kotak digit di code-behind; mode QR (gambar QR dari QRCoder, polling mDNS di VM, Cancel saat ditutup)
   Views/ConnectIpWindow        dialog Sambung via IP + riwayat
   ViewModels/MainViewModel     daftar perangkat + kandidat mDNS, mode/kualitas/opsi (disimpan ke settings), log, status, Mulai/Hentikan mirroring,

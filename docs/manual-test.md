@@ -24,6 +24,7 @@ Siapkan: folder `scrcpy\` (hasil ekstrak scrcpy-win64-v4.1) di samping `Mirraaww
 - [ ] Mulai mirroring: jendela scrcpy berjudul "Mirraawwrring - <model>" muncul tanpa jendela konsol; log scrcpy masuk ke panel Log; badge kartu menjadi "Mirroring"; tombol berubah "Hentikan mirroring".
 - [ ] Hentikan mirroring menutup jendela scrcpy; badge kembali "Terhubung".
 - [ ] Tutup jendela scrcpy dari tombol X-nya: badge dan tombol kembali normal (sesi terdeteksi berakhir).
+- [ ] Minimize jendela utama saat mirroring jalan → jendela hilang dari taskbar, ikon Mirraawwrring muncul di tray dengan balon petunjuk (sekali); jendela scrcpy + toolbar tetap ada. Klik kiri ikon → jendela kembali, ikon hilang. Klik kanan → Tampilkan / Keluar; Keluar menutup aplikasi dan semua sesi scrcpy. `"minimizeToTray": false` → minimize biasa ke taskbar.
 - [ ] Tombol Mulai mirroring berikon segitiga; setelah mirroring HP terpilih berjalan, tombol menjadi "Hentikan mirroring" berikon kotak; pilih HP lain yang tidak di-mirror → kembali segitiga.
 - [ ] Mode Lihat saja: tidak bisa klik/ketik di jendela scrcpy. Mode Layar HP mati: layar HP padam, tampilan di PC tetap. Mode Hemat data: log scrcpy menunjukkan `--max-size=1024 --video-bit-rate=4M --max-fps=30`.
 - [ ] Rekam ke file: file `Videos\Mirraawwrring\scrcpy_<tanggal>.mp4` ada dan bisa diputar setelah sesi ditutup; "Buka folder rekaman" membuka foldernya.

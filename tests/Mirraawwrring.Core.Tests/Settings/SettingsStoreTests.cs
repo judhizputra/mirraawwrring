@@ -35,6 +35,7 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.True(s.Options.ForwardAudio);
         Assert.Null(s.CustomScrcpyPath);
         Assert.Empty(s.ConnectionHistory);
+        Assert.True(s.MinimizeToTray);
     }
 
     [Fact]
@@ -47,6 +48,7 @@ public sealed class SettingsStoreTests : IDisposable
             s.LastDeviceSerial = "R58N12ABCDE";
             s.ConnectionHistory.Add("192.168.1.20:5555");
             s.CustomScrcpyPath = @"D:\tools\scrcpy";
+            s.MinimizeToTray = false;
         });
 
         Assert.True(File.Exists(_paths.SettingsFile));
@@ -59,6 +61,7 @@ public sealed class SettingsStoreTests : IDisposable
         Assert.Equal("R58N12ABCDE", reloaded.LastDeviceSerial);
         Assert.Equal(["192.168.1.20:5555"], reloaded.ConnectionHistory);
         Assert.Equal(@"D:\tools\scrcpy", reloaded.CustomScrcpyPath);
+        Assert.False(reloaded.MinimizeToTray);
     }
 
     [Fact]
